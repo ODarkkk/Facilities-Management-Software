@@ -1,0 +1,312 @@
+// $(document).ready(function() {
+//   // Event listener for the "Select" button in the modal
+//   $("#selectOfficeButton").click(function() {
+//       // Get the selected value from the combobox
+//       var selectedOffice = $("#officeSelect").val();
+
+//       // Here you can do what you need with the selected office,
+//       // such as sending another AJAX request to fetch specific data of the selected office and updating the page, etc.
+      
+//       // For now, we'll just display the selected value in the console
+//       console.log("Selected Office: " + selectedOffice);
+      
+//       // Close the modal
+//       $("#officeModal").modal("hide");
+//   });
+
+//   // Function to fetch offices and display the dropdown
+//   const fetchOffices = async () => {
+//       try {
+//           const response = await fetch('fetch_offices.php');
+//           const data = await response.text();
+//           const officeDropdown = document.getElementById('officeDropdown');
+//           officeDropdown.innerHTML = data;
+//           officeDropdown.addEventListener('change', (event) => {
+//               const selectedOfficeId = event.target.value;
+//               console.log(`Selected office ID: ${selectedOfficeId}`);
+//               // Add functionality for handling the selected office
+//           });
+//       } catch (error) {
+//           console.error('Error fetching office dropdown:', error);
+//       }
+//   };
+
+//   // Function to show the office selection menu
+//   const showOfficeSelection = () => {
+//       const officeSelection = document.getElementById('officeSelection');
+//       officeSelection.classList.toggle('d-none');
+//   };
+
+//   // Check if the user clicks outside of the office selection menu
+//   const handleClickOutside = (event) => {
+//       if (!event.target.closest('.office-selection')) {
+//           showOfficeSelection();
+//       }
+//   };
+
+//   // Attach event listeners
+//   document.getElementById('toggleButton').addEventListener('click', showOfficeSelection);
+//   document.addEventListener('click', handleClickOutside);
+//   fetchOffices();
+
+//   // Now add event listener for the select button
+//   $("#selectOfficeButton").click(function() {
+//       // Get the selected office
+//       const officeSelectElement = document.getElementById('officeSelect');
+//       const selectedOfficeIndex = officeSelectElement.selectedIndex;
+//       const selectedOffice = officeSelectElement.options[selectedOfficeIndex].value;
+
+//       // Do something with the selected office
+//       console.log(`Selected office: ${selectedOffice}`);
+//   });
+// });
+
+
+function goBack() {
+  window.history.back()
+}
+
+function toggleMode() {
+  const body = document.body;
+  const button = document.getElementById('toggleButton');
+
+  if (body.classList.contains('dark-mode')) {
+    // Muda para o Light Mode
+    body.classList.remove('dark-mode');
+    body.classList.add('light-mode');
+    button.innerHTML = 'Dark Mode';
+  } else {
+    // Muda para o Dark Mode
+    body.classList.remove('light-mode');
+    body.classList.add('dark-mode');
+    button.innerHTML = 'Light Mode';
+  }
+}
+// function updateSelectedBuildingOffice() {
+//     const selectedBuilding = $("#buildingSelect option:selected").text();
+//     const selectedOffice = $("#officeSelect option:selected").text();
+//     $("#selectedBuildingOffice").text(`Building: ${selectedBuilding}, Office: ${selectedOffice}`);
+// }
+
+// // Call the function on page load
+// $(document).ready(function() {
+//     updateSelectedBuildingOffice();
+// });
+
+// // Call the function when there's a change in the office selection
+// $("#officeSelect").change(function() {
+//     updateSelectedBuildingOffice();
+// });
+
+$(document).ready(function() {
+  $("#selectOfficeButton").click(function() {
+    const selectedOffice = $("#officeSelect").val();
+    const date = $("#dateFilter").val();
+
+    // const officeSelectElement = document.getElementById('officeSelect');
+    // const selectedOfficeIndex = officeSelectElement.selectedIndex;
+    // const selectedOfficeId = officeSelectElement.options[selectedOfficeIndex].value;
+
+    // Enviar o ID do escritório para room_list.php usando AJAX
+    // $.ajax({
+    //   url: 'room_list.php',
+    //   type: 'POST',
+    //   data:{
+    //     dateFilter: date,
+
+    //   },
+      // success: function(response) {
+      //   $("#roomList").html(response);
+
+          // Lidar com a resposta, se necessário
+          // window.alert("certo");
+          // console.log("Valor enviado com sucesso para room_list.php");
+      
+      // error: function(xhr, status, error) {
+      //   console.error("Error fetching room list:", error);
+
+          // Lidar com erros, se houver
+          // window.alert("Errado");
+          // console.error("Erro ao enviar valor para room_list.php:", error);
+      
+    // })
+    $.ajax({
+        url: 'room_list.php',
+        type: 'GET',
+        // type: 'GET',
+        data: {
+          dateFilter: date,
+          officeSelect: selectedOffice
+        },
+        success: function(response) {
+          $("#roomList").html(response);
+
+            // Lidar com a resposta, se necessário
+            // window.alert("certo");
+            // console.log("Valor enviado com sucesso para room_list.php");
+        },
+        error: function(xhr, status, error) {
+          console.error("Error fetching room list:", error);
+
+            // Lidar com erros, se houver
+            // window.alert("Errado");
+            // console.error("Erro ao enviar valor para room_list.php:", error);
+        }
+    });
+
+    // Fechar o modal
+    $("#officeModal").modal("hide");
+  });
+
+  // Function to fetch offices and display the dropdown
+  // const fetchOffices = async () => {
+  //   try {
+  //     const response = await fetch('fetch_offices.php');
+  //     const data = await response.text();
+  //     const officeDropdown = document.getElementById('officeSelect');
+  //     officeDropdown.innerHTML = data;
+  //     officeDropdown.addEventListener('change', (event) => {
+  //       const selectedOfficeId = event.target.value;
+  //       console.log(`Selected office ID: ${selectedOfficeId}`);
+  //     });
+  //   } catch (error) {
+  //     console.error('Error fetching office dropdown:', error);
+  //   }
+  // };
+
+  // // Call the function to fetch offices and display the dropdown
+  // const needsFetchOffices = document.body.dataset.needsFetchOffices === 'true';
+
+  // if (needsFetchOffices) {
+  //   fetchOffices();
+  // }
+
+  // const fetch = async () =>{
+  //   try{
+  //     const response = await fetch('fetch_offices.php');
+  //     const response2 = await fetch('fetch_buildings.php');
+  //     const data = await response.text();
+  //     const data2 = await response2.text();
+  //     const officeDropdown = document.getElementById('officeSelect');
+  //     officeDropdown.innerHTML = data;
+  //     const buildingDropdown = document.getElementById('buildingSelect');
+  //     buildingDropdown.innerHTML = data2;
+
+  //     officeDropdown.addEventListener('change', (event) => {
+  //       const selectedOfficeId = event.target.value;
+  //       console.log(selectedOfficeId);
+  //     });
+  //     buildingDropdown.addEventListener('change', (event) => {
+  //       const selectedBuildingId = event.target.value;
+  //       fetch(`fetch_offices.php?buildingId=${selectedBuildingId}`)
+  //             .then(response => response.text())
+  //             .then(data => {
+  //                   const officeSelect = document.getElementById('officeSelect');
+  //                   officeSelect.innerHTML = data;
+  //               })
+  //       console.log(selectedBuildingId);
+  //     });
+
+
+  //   }catch (error)
+  //   {
+  //    console.error('Error fetching dropdown:', error);
+  //   }
+  //   };
+  //    // Call the function to fetch offices and display the dropdown
+  //   const needsFetch = document.body.dataset.needsFetch === 'true';
+
+  //   if(needsFetch){
+  //     fetch();
+  //   }
+    
+      
+  
+  // const buildingSelect = document.getElementById('buildingSelect');
+  // const buildingDescriptionElement = document.getElementById('building-description');
+  
+  // buildingSelect.addEventListener('change', (event) => {
+  //     const selectedBuildingId = event.target.value;
+  //     const selectedOption = buildingSelect.options[buildingSelect.selectedIndex];
+  //     const buildingDescription = selectedOption.getAttribute('data-description');
+  //     buildingDescriptionElement.innerText = buildingDescription;
+  
+  //     fetch(`fetch_offices.php?buildingId=${selectedBuildingId}`)
+  //       .then(response => response.text())
+  //       .then(data => {
+  //             const officeSelect = document.getElementById('officeSelect');
+  //             officeSelect.innerHTML = data;
+  //         })
+  //       .catch(error => {
+  //             console.error("Error fetching office data:", error);
+  //         });
+  // });
+
+  const fetchOffices = async () => {
+    try {
+      const response = await fetch('fetch_offices.php');
+      const data = await response.text();
+      const officeDropdown = document.getElementById('officeSelect');
+      officeDropdown.innerHTML = data;
+    } catch (e) { 
+      console.error('Error fetching offices:', e.message);
+    }
+  };
+  
+  const fetchBuildings = async () => {
+    try {
+      const response = await fetch('fetch_buildings.php');
+      const data = await response.text();
+      const buildingDropdown = document.getElementById('buildingSelect');
+      buildingDropdown.innerHTML = data;
+    } catch (e) {
+      console.error('Error fetching buildings:', e.message);
+    }
+  };
+  
+  const fetchOfficesForBuilding = async (buildingId) => {
+    try {
+      const response = await fetch(`fetch_offices.php?buildingId=${encodeURIComponent(buildingId)}`);
+      const data = await response.text();
+      const officeSelect = document.getElementById('officeSelect');
+      officeSelect.innerHTML = data;
+    } catch (e) {
+      console.error('Error fetching offices for building:', e.message);
+    }
+  };
+  
+  const initDropdowns = async () => {
+    try {
+      await fetchOffices();
+      await fetchBuildings();
+  
+      const officeDropdown = document.getElementById('officeSelect');
+      officeDropdown.addEventListener('change', (event) => {
+        const selectedOfficeId = event.target.value;
+        console.log(selectedOfficeId);
+      });
+  
+      const buildingDropdown = document.getElementById('buildingSelect');
+      buildingDropdown.addEventListener('change', async (event) => {
+        const selectedBuildingId = event.target.value;
+        try {
+       await    fetchOfficesForBuilding(selectedBuildingId);
+        } catch (e) {
+          console.error('Error fetching offices for building:', e.message);
+        }
+        console.log(selectedBuildingId);
+      });
+    } catch (e) {
+      
+      console.trace("Message");
+      console.error('Error fetching dropdown:', e.message);
+    }
+  };
+  
+  // Call the function to fetch offices and display the dropdown
+  const needsFetch = document.body.dataset.needsFetch === 'true';
+  
+  if (needsFetch) {
+    initDropdowns();
+  }
+});

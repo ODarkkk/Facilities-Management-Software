@@ -1,0 +1,19 @@
+{
+  "name": "software_de_reserva_empresas",
+  "version": "1.0.0",
+  "description": "Software de reserva de instalações nas empresas",
+  "main": "index.js",
+  "scripts": {
+    "watch:sass": "node-sass -w bootstrap/scss ../style.css",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Diogo Anastácio",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "gulp": "^5.0.0",
+    "gulp-less": "^5.0.0",
+    "gulp-sass": "^5.1.0",
+    "node-sass": "^9.0.0"
+  }
+}

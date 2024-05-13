@@ -1,0 +1,18 @@
+/* Estilize a janela de login */
+.janela-login {
+    width: 300px;
+    height: 200px;
+    background-color: #fff;
+    position: fixed; /* Posicionamento fixo */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    z-index: 999; /* Garante que a janela esteja acima da janela maior */
+}
+
+/* Oculte os controles de fechamento (botão "X") */
+.janela-login .fechar {
+    display: none;
+}

@@ -308,6 +308,12 @@ $(document).ready(function () {
   }
 });
 
+
+
+
+
+
+//For marks
 $(document).ready(function () {
   $("#selectmarkButton").click(function () {
     const selectedOffice = $("#officeSelect").val();
@@ -319,7 +325,7 @@ $(document).ready(function () {
     const buildingSelect = $("#buildingSelect").val();
     const date = $("#dateFilter").val();
     $.ajax({
-      url: "room_list.php",
+      url: "mark_list.php",
       type: "GET",
       // type: 'GET',
       data: {
@@ -368,7 +374,17 @@ $(document).ready(function () {
       console.error("Error fetching buildings:", e.message);
     }
   };
-
+   const fetchrooms = async () =>{
+    try{
+      const response = await fetch("fetch_rooms.php");
+      const data = await response.text();
+      const roomDropdown = document.getElementById("roomSelect");
+      roomDropdown.innerHTML = data;
+      }catch(e){
+        console.error("Error fetching rooms:", e.message);
+        }
+    };
+   
   const fetchOfficesForBuilding = async (buildingId) => {
     try {
       const response = await fetch(
@@ -381,18 +397,31 @@ $(document).ready(function () {
       console.error("Error fetching offices for building:", e.message);
     }
   };
+  const fetchroomsforoffices = async (officeID) =>{
+  try{
+    const responde = await fetch(
+      `fecth_room.php?officeId=${encodeURIComponent(officeID)}`
+    );
+    const data = await responde.text();
+    const roomSelect = document.getElementById("roomSelect");
+   roomSelect.innerHTML = data;
+  }catch (e){
+    console.error("Error fetching rooms for office:", e.message);
+  }
+  };
 
   const initDropdowns = async () => {
     try {
       await fetchOffices();
       await fetchBuildings();
-
+      await fetchrooms();
+  
       const officeDropdown = document.getElementById("officeSelect");
       officeDropdown.addEventListener("change", (event) => {
         const selectedOfficeId = event.target.value;
         console.log(selectedOfficeId);
       });
-
+  
       const buildingDropdown = document.getElementById("buildingSelect");
       buildingDropdown.addEventListener("change", async (event) => {
         const selectedBuildingId = event.target.value;
@@ -403,11 +432,23 @@ $(document).ready(function () {
         }
         console.log(selectedBuildingId);
       });
+  
+      const roomDropdown = document.getElementById("roomSelect");
+      roomDropdown.addEventListener("change", async (event) => {
+        const selectedRoomId = event.target.value;
+        try {
+          await fetchroomsforoffices(selectedRoomId);
+        } catch (e) {
+          console.error("Error fetching rooms for office:", e.message);
+        }
+        console.log(selectedRoomId);
+      });
     } catch (e) {
       console.trace("Message");
       console.error("Error fetching dropdown:", e.message);
     }
   };
+  
 
   // Call the function to fetch offices and display the dropdown
   const needsFetch = document.body.dataset.needsFetch === "true";

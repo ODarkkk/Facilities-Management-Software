@@ -60,14 +60,15 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
 
             type: "GET",
             method: "GET",
-            url: "marks_list.php",
+            url: "mark_list.php",
             data: {
                 dateFilter: dateString,
+
                 // officeSelect: officeSelect
             },
             success: function(response) {
                 // Display the received HTML
-                $("#marklist").html(response);
+                $("#markList").html(response);
                 // Store the selected date in a JavaScript variable
                 selectedDate = dateString;;
                 // console.log(dateString)
@@ -322,7 +323,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
                                 fetch('fetch_rooms.php')
                                    .then(response => response.text())
                                    .then(data => {
-                                        const selectElement = document.getElementById('roomsSelect')
+                                        const selectElement  = document.getElementById('roomsSelect')
                                         selectElement.innerHTML = data;
                                     })
                                    .catch(error => {
@@ -336,7 +337,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
             </div>
             <div class="modal-footer">
                 <?php
-                echo "<button type='button' class='btn btn-primary' id='selectmarkButton'>Select</button>";
+                echo "<button type='button' class='btn btn-primary' id='Filter'>Select</button>";
                ?>
             </div>
         </div>

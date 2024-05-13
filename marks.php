@@ -62,7 +62,10 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
             method: "GET",
             url: "mark_list.php",
             data: {
-                dateFilter: dateString,
+                dateFilter: selectedDate,
+                    // officeSelect: officeSelect,
+                    // roomSelect: roomSelect,
+                    // buildingSelect: buildingSelect
 
                 // officeSelect: officeSelect
             },
@@ -83,7 +86,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
 
             $.ajax({
                 type: "GET",
-                url: "room_list.php",
+                url: "mark_list.php",
                 data: {
                     dateFilter: selectedDate,
                     officeSelect: officeSelect,
@@ -114,7 +117,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
     </script>
 </head>
 
-<body data-needs-fetch="true">
+<body data-needs-fetchrooms="true">
 
     <?php
 
@@ -320,7 +323,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
                     <div class="tab-pane fade show active" id="rooms" role="tabpanel" aria-labelledby="rooms-tab">
                         <select class="form-select" id="roomSelect">
                             <script>
-                                fetch('fetch_rooms.php')
+                                fetch('fetch_room.php')
                                    .then(response => response.text())
                                    .then(data => {
                                         const selectElement  = document.getElementById('roomsSelect')

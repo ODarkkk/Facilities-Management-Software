@@ -14,17 +14,17 @@ $office_condition = '';
 $room_condition = '';
 $building_condition = '';
 
-switch ($selectedFilter) {
-    case 'office':
-        $office_condition = "AND offices_room.office_id = ?";
-        break;
-    case 'room':
-        $room_condition = "AND room.room_id = ?";
-        break;
-    case 'building':
-        $building_condition = "AND offices.building_id = ?";
-        break;
-}
+// switch ($selectedFilter) {
+//     case 'office':
+//         $office_condition = "AND offices_room.office_id = ?";
+//         break;
+//     case 'room':
+//         $room_condition = "AND room.room_id = ?";
+//         break;
+//     case 'building':
+//         $building_condition = "AND offices.building_id = ?";
+//         break;
+// }
 
 
 $sql = "SELECT 
@@ -42,9 +42,8 @@ people.user,
 bookmarks.bookmark_id,
 bookmarks.selected_date, 
 bookmarks.start_hour,
-bookmarks.end_hour,
-FROM 
-offices_room
+bookmarks.end_hour
+FROM offices_room
 ". ($selectedFilter === 'office'? "
 INNER JOIN offices ON offices_room.office_id = offices.office_id" : ""). "
 ". ($selectedFilter === 'building'? "
@@ -52,25 +51,28 @@ INNER JOIN building_offices ON building_offices.office_id = offices.office_id
 INNER JOIN building ON building.building_id = building_offices.building_id" : ""). "
 ". ($selectedFilter === 'room'? "
 INNER JOIN room room on room.room_id = offices_room.room_id" : ""). "
-INNER JOIN bookmark bookmarks ON room.room_id = bookmarks.room_id 
-  AND bookmarks.selected_date =?
+INNER JOIN bookmark bookmarks ON offices_room.room_id = bookmarks.room_id 
+  AND bookmarks.selected_date = ?
   AND bookmarks.active = ". $active ."
 INNER JOIN people on people.people_id = bookmarks.people_id  
 ". (isset($_GET['search'])? "
 WHERE 
 people.user LIKE ?
-OR offices.office_name LIKE ?
-OR building.building_name LIKE ?
-OR room.room_name LIKE ?
+".($SelectedFilter === 'office'? "
 OR offices.office_id LIKE ?
-OR building.building_id LIKE ?
-OR room.room_id LIKE ?"
-: "")."
+OR offices.office_name LIKE ?":"")."
+". ($selectedFilter === 'building'? "
+OR building.building_id LIKE ? 
+OR building.building_name LIKE ?": ""). "
+". ($SelectedFilter === 'room0'? "
+OR room.room_name LIKE ? 
+OR room.room_id LIKE ?": ""). "
+.": "")."
 ORDER BY 
-bookmarks.bookmarks_id;
+bookmarks.bookmark_id;
 ";
 
-
+echo $sql;
 $stmt = $conn->prepare($sql);
 
 switch ($selectedFilter) {
@@ -91,7 +93,8 @@ switch ($selectedFilter) {
         $stmt->bind_param("ssssssss", $selectedDate, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like, $building_id, $searchbar_like, $searchbar_like);
         break;
     default:
-        $stmt->bind_param("ssss", $selectedDate, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like, $building_id, $searchbar_like, $searchbar_like);
+    $searchbar_like = '%' . $searchbar . '%';
+        $stmt->bind_param("sssssss", $selectedDate, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like);
         break;
 }
 

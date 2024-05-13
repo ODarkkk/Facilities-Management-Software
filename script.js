@@ -353,6 +353,9 @@ $(document).ready(function () {
     // Fechar o modal
     $("#officeModal").modal("hide");
   });
+  document.addEventListener('DOMContentLoaded', function() {
+    // Call the function to fetch rooms
+    const needsFetchRooms = document.body.dataset.needsFetchRooms === 'true';
   const fetchOffices = async () => {
     try {
       const response = await fetch("fetch_offices.php");
@@ -363,7 +366,9 @@ $(document).ready(function () {
       console.error("Error fetching offices:", e.message);
     }
   };
-
+ 
+  
+  
   const fetchBuildings = async () => {
     try {
       const response = await fetch("fetch_buildings.php");
@@ -376,7 +381,7 @@ $(document).ready(function () {
   };
    const fetchrooms = async () =>{
     try{
-      const response = await fetch("fetch_rooms.php");
+      const response = await fetch("fetch_room.php");
       const data = await response.text();
       const roomDropdown = document.getElementById("roomSelect");
       roomDropdown.innerHTML = data;
@@ -453,7 +458,8 @@ $(document).ready(function () {
   // Call the function to fetch offices and display the dropdown
   const needsFetch = document.body.dataset.needsFetch === "true";
 
-  if (needsFetch) {
-    initDropdowns();
+  if (needsFetchRooms) {
+    fetchrooms();
   }
 });
+})

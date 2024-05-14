@@ -2,8 +2,9 @@
 // Include the database configuration file
 include_once('config.php');
 
-$selectedBuildingId = isset($_GET['selectedBuildingId'])? : null;
+$selectedBuildingId = isset($_GET['selectedBuildingId'])?$_GET['selectedBuildingId']:null;
 
+// echo  $selectedBuildingId;
 
 if (isset($_GET['selectedBuildingId'])) {
     $sql = "SELECT * FROM offices AS o
@@ -19,8 +20,8 @@ if (isset($_GET['selectedBuildingId'])) {
 $stmt = $conn->prepare($sql);
 
 // If a building ID was selected, bind it to the statement
-if ($selectedBuildingId !== null) {
-    $stmt->bind_param("i", $$selectedBuildingId);
+if ($selectedBuildingId != null) {
+    $stmt->bind_param("i", $selectedBuildingId);
 }
 
 // Execute the statement
@@ -40,6 +41,7 @@ if ($result->num_rows > 0) {
  
     // End the select element
     echo "</select>";
+   
     
 } else {
     echo "<option value=''>No rooms found</option>";

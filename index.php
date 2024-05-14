@@ -74,15 +74,17 @@ if (!isset($_SESSION['user_id'])) {
             }
 
         });
-        $("#dateFilter").change(function() {
+        $("#dateFilter, #search").change(function() {
             var selectedDate = $("#dateFilter").val();
             var officeSelect = $("#officeSelect").val();
+            var search = $("#search").val();
             $.ajax({
                 type: "GET",
                 url: "room_list.php",
                 data: {
                     dateFilter: selectedDate,
-                    officeSelect: officeSelect
+                    officeSelect: officeSelect,
+                    search:search
                 },
                 success: function(response) {
                     // Display the received HTML
@@ -199,6 +201,13 @@ if (!isset($_SESSION['user_id'])) {
 <input type="date" class="form-control" id="dateFilter" name="dateFilter">
     </div>
 
+    <nav class="navbar navbar-light bg-light">
+  <form class="form-inline">
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" id="search">
+    </div>
+  </form>
+</nav>
 
     <!-- <div class="container mt-5">
 

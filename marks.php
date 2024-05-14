@@ -78,10 +78,10 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
             }
 
         });
-        $("#dateFilter").change(function() {
-            var selectedDate = $("#dateFilter").val();
-            var filter = $("#filter").val();
-            var search = $("#search").val();
+        $("#dateFilter, #marksearch, #filter").change(function() {
+            const selectedDate = $("#dateFilter").val();
+            const filter = $("#filter").val();
+            const search = $("#marksearch").val();
 
 
             $.ajax({
@@ -210,7 +210,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
     <nav class="navbar navbar-light bg-light">
   <form class="form-inline">
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" id="search" oninput="searchChanged()">
+      <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" id="marksearch" oninput="searchChanged()">
     </div>
   </form>
 </nav>

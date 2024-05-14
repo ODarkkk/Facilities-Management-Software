@@ -2,10 +2,10 @@
 include_once("config.php"); // Adjust the include file as needed
 
 // Get the selected filter value from the AJAX request
-$selectedFilter = isset($_GET['filter']) ? $_GET['filter'] : '';
+$selectedFilter = isset($_GET['filter']) ? $_GET['filter'] : null;
 $selectedDate = isset($_GET['dateFilter']) ? $_GET['dateFilter'] : date('Y-m-d');
 
-$searchbar = isset($_GET['search']) ? $_GET['search'] : '';
+$searchbar = isset($_GET['search']) ? $_GET['search'] : null;
 $active = isset($_GET['active']) ? $_GET['active'] : 1;
 
 
@@ -160,6 +160,7 @@ $roomList = '';
 // </div>
 // <button type='button' class='btn btn-primary' data-mdb-ripple-init>
 //   <i class='fas fa-search'></i>
+
 // </button>
 // </div>";
 // echo $sql;

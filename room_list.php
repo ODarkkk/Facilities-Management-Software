@@ -36,10 +36,10 @@ if (isset($_GET["officeSelect"])) {
   offices_room.office_id = ? 
   AND offices_room.room_id IS NOT NULL
   " . (isset($_GET['search']) ? "
-  AND room.room_id like ?
+  AND room.room_id = ?
   OR
-  room.room_name LIKE ?
-  OR room.description LIKE ?" : "") . " 
+  room.room_name = ?
+  OR room.description = ?" : "") . " 
  
   ORDER BY 
   room.room_name;";
@@ -77,9 +77,9 @@ if (isset($_GET["officeSelect"])) {
   offices_room.office_id = (SELECT MIN(offices_room.office_id) FROM offices_room)
   AND offices_room.room_id IS NOT NULL
   " . (isset($_GET['search']) ? "
-   AND room.room_id LIKE '?' OR
-room.room_name LIKE ?
-OR room.description LIKE ?" : "") . " 
+   AND room.room_id = ? OR
+room.room_name = ?
+OR room.description = ?" : "") . " 
   
   ORDER BY 
   room.room_name;";
@@ -91,7 +91,6 @@ OR room.description LIKE ?" : "") . "
     $stmt->bind_param("ssss", $selectedDate, $selectedDate, $selectedDate, $selectedDate);
   }
 }
-echo $sql;
 // echo "Selected office ID: " . $selectedOfficeId; // Adicione esta linha para depuração
 
 // if ($selectedDate == null){

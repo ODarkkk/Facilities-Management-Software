@@ -6,13 +6,12 @@ $selectedFilter = isset($_GET['filter']) ? $_GET['filter'] : '';
 $selectedDate = isset($_GET['dateFilter']) ? $_GET['dateFilter'] : date('Y-m-d');
 
 $searchbar = isset($_GET['search']) ? $_GET['search'] : '';
-$active = isset($_GET['active']) ? $_GET['active'] : 1; 
+$active = isset($_GET['active']) ? $_GET['active'] : 1;
 
 
 
-$office_condition = '';
-$room_condition = '';
-$building_condition = '';
+$name = "selectedFilter";
+
 
 // switch ($selectedFilter) {
 //     case 'office':
@@ -27,76 +26,88 @@ $building_condition = '';
 // }
 
 
-$sql = "SELECT 
-". ($selectedFilter === 'office'? "
+$sql = "SELECT DISTINCT
+" . ($selectedFilter === 'office' ? "
 offices.office_id,
-offices.office_name," : ""). "
-". ($selectedFilter === 'building'? "
+offices.office_name," : "") . "
+" . ($selectedFilter === 'building' ? "
 buildings.building_id,
-buildings.building_name," : ""). "
-". ($selectedFilter === 'room'? "
+buildings.building_name," : "") . "
+" . ($selectedFilter === 'room' ? "
 room.room_id,
-room.room_name," : ""). "
-bookmarks.people_id,
+room.room_name," : "") . "
+people.people_id,
 people.user,
 bookmarks.bookmark_id,
 bookmarks.selected_date, 
 bookmarks.start_hour,
 bookmarks.end_hour
-FROM offices_room
-". ($selectedFilter === 'office'? "
-INNER JOIN offices ON offices_room.office_id = offices.office_id" : ""). "
-". ($selectedFilter === 'building'? "
+FROM bookmark bookmarks
+INNER JOIN offices_room ON offices_room.room_id = bookmarks.room_id
+" . ($selectedFilter === 'office' ? "
+INNER JOIN offices ON offices_room.office_id = offices.office_id" : "") . "
+" . ($selectedFilter === 'building' ? "
 INNER JOIN building_offices ON building_offices.office_id = offices.office_id
-INNER JOIN building ON building.building_id = building_offices.building_id" : ""). "
-". ($selectedFilter === 'room'? "
-INNER JOIN room room on room.room_id = offices_room.room_id" : ""). "
-INNER JOIN bookmark bookmarks ON offices_room.room_id = bookmarks.room_id 
-  AND bookmarks.selected_date = ?
-  AND bookmarks.active = ". $active ."
+INNER JOIN building ON building.building_id = building_offices.building_id" : "") . "
+" . ($selectedFilter === 'room' ? "
+INNER JOIN room room on room.room_id = offices_room.room_id" : "") . "
 INNER JOIN people on people.people_id = bookmarks.people_id  
-". (isset($_GET['search'])? "
-WHERE 
+WHERE
+bookmarks.selected_date = ?
+AND 
+bookmarks.active = " . $active . "
+" . (isset($_GET['search']) ? "
 people.user LIKE ?
-".($SelectedFilter === 'office'? "
+" . ($SelectedFilter === 'office' ? "
 OR offices.office_id LIKE ?
-OR offices.office_name LIKE ?":"")."
-". ($selectedFilter === 'building'? "
+OR offices.office_name LIKE ?" : "") . "
+" . ($selectedFilter === 'building' ? "
 OR building.building_id LIKE ? 
-OR building.building_name LIKE ?": ""). "
-". ($SelectedFilter === 'room0'? "
+OR building.building_name LIKE ?" : "") . "
+" . ($SelectedFilter === 'room0' ? "
 OR room.room_name LIKE ? 
-OR room.room_id LIKE ?": ""). "
-.": "")."
+OR room.room_id LIKE ?" : "") . "
+." : "") . "
 ORDER BY 
 bookmarks.bookmark_id;
 ";
 
-echo $sql;
+// echo $sql;
 $stmt = $conn->prepare($sql);
 
-switch ($selectedFilter) {
-    case 'office':
-        $office_id = isset($_GET["officeSelect"]) ? intval($_GET["officeSelect"]) : 1;
-        $searchbar_like = '%' . $searchbar . '%';
-        $stmt->bind_param("ssssssss", $selectedDate, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like, $office_id);
-        break;
-    case 'room':
-        $room_id = isset($_GET["roomSelect"]) ? intval($_GET["roomSelect"]) : 1;
-        $searchbar_like = '%' . $searchbar . '%';
-        $stmt->bind_param("ssssssss", $selectedDate, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like, $room_id, $searchbar_like);
-
-        break;
-    case 'building':
-        $building_id = isset($_GET["buildingSelect"]) ? intval($_GET["buildingSelect"]) : 1;
-        $searchbar_like = '%' . $searchbar . '%';
-        $stmt->bind_param("ssssssss", $selectedDate, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like, $building_id, $searchbar_like, $searchbar_like);
-        break;
-    default:
-    $searchbar_like = '%' . $searchbar . '%';
-        $stmt->bind_param("sssssss", $selectedDate, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like);
-        break;
+if (isset($_GET['search'])) {
+  $searchbar_like = '%' . $searchbar . '%';
+  $stmt->bind_param("sss", $selectedDate, $searchbar_like, $searchbar_like);
+} else {
+  $stmt->bind_param("s", $selectedDate);
 }
+// switch ($selectedFilter) {
+//   case 'office':
+//     if (isset($_GET['search'])) {
+//       $searchbar_like = '%' . $searchbar . '%';
+//       $stmt->bind_param("sssi", $selectedDate, $searchbar_like, $searchbar_like, $office_id);
+//     } else {
+//       $stmt->bind_param("si", $selectedDate, $office_id);
+//     }
+//     break;
+//   case 'room':
+//     if (isset($_GET['search'])) {
+//       $searchbar_like = '%' . $searchbar . '%';
+//       $stmt->bind_param("sssi", $selectedDate, $searchbar_like, $searchbar_like, $office_id);
+//     } else {
+//       $stmt->bind_param("si", $selectedDate, $office_id);
+//     }
+//     break;
+//   case 'building':
+//     $building_id = isset($_GET["buildingSelect"]) ? intval($_GET["buildingSelect"]) : 1;
+//     $searchbar_like = '%' . $searchbar . '%';
+//     $stmt->bind_param("ssssssss", $selectedDate, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like, $building_id, $searchbar_like, $searchbar_like);
+//     break;
+//   default:
+//     $searchbar_like = '%' . $searchbar . '%';
+//     $stmt->bind_param("sssssss", $selectedDate, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like);
+//     break;
+// }
 
 
 
@@ -129,65 +140,67 @@ switch ($selectedFilter) {
 $stmt->execute();
 $result = $stmt->get_result();
 $roomList = '';
-$stats = "";
-if($result->num_rows > 0)
-{
+
+// output data of each row
+// $stats = "<p>Filter: " . $selectedFilter . " </p>";
+// echo "<div class='container mt-5'>";
+// echo $stats;
+// echo "</div>";
+// echo "<br>";
+
+// echo "<script>
+// import {Input, Ripple, initMDB} from 'mdb-ui-kit';
+
+// initMDB({Input, Ripple});
+// </script>";
+// echo "<div class='input-group'>
+// <div class='form-outline' data-mdb-input-init>
+//   <input type='search' id='searchbar' class='form-control' />
+//   <label class='form-label' for='searchbar'>Search</label>
+// </div>
+// <button type='button' class='btn btn-primary' data-mdb-ripple-init>
+//   <i class='fas fa-search'></i>
+// </button>
+// </div>";
+// echo $sql;
+
+// echo "<br>";
+if ($result->num_rows > 0) {
 
 
-while ($row = $result->fetch_assoc()) {
+  while ($row = $result->fetch_assoc()) {
 
-  // Generate the HTML for each room
-  // $roomList .= '<div class="col-md-4">'  .
-  //     '<div class="card mb-4 ' . getRoomClass($row) . '">' .
-  //     '<div class="card-body">' .
-  //     '<h5 class="card-title">' . htmlspecialchars($row["room_name"]) . '</h5>' .
-  //     '<p class="card-text">' . htmlspecialchars($row["description"]) . '</p>' .
+    // Generate the HTML for each room
+    // $roomList .= '<div class="col-md-4">'  .
+    //     '<div class="card mb-4 ' . getRoomClass($row) . '">' .
+    //     '<div class="card-body">' .
+    //     '<h5 class="card-title">' . htmlspecialchars($row["room_name"]) . '</h5>' .
+    //     '<p class="card-text">' . htmlspecialchars($row["description"]) . '</p>' .
 
-  //     // $row["room_id"];
-  //     // $row["office_id"];~
-  //     '<button type="button" class="btn btn-primary" onclick="location.href=\'room_reserve.php?room_id=' . $row["room_id"] . '&selecteddate_js=' . $selectedDate . '\';">Reserve</button>' .
-  //     '</div>' .
-  //     '</div>' .
-  //     '</div>';
-  $roomList = '<div class="col-md-4">' .
-    '<div class="card mb-4 ' . getRoomClass($row) . '">' .
-    '<div class="card-body">' .
-    '<h5 class="card-title">' . htmlspecialchars($row["room_name"]) . '</h5>' .
-    '<p class="card-text">' . htmlspecialchars($row["description"]) . '</p>' .
-    '<p class="room-status ' . getRoomStatusClass($row) . '">' . getRoomStatusLabel($row) . '</p>' .
-    '<button type="button" class="btn btn-primary" onclick="location.href=\'room_reserve.php?room_id=' . $row["room_id"] . '&selecteddate_js=' . $selectedDate . '\';">Reserve</button>' .
-    '</div>' .
-    '</div>' .
-    '</div>';
-    
-     
-// Output the room list
-}
+    //     // $row["room_id"];
+    //     // $row["office_id"];~
+    //     '<button type="button" class="btn btn-primary" onclick="location.href=\'room_reserve.php?room_id=' . $row["room_id"] . '&selecteddate_js=' . $selectedDate . '\';">Reserve</button>' .
+    //     '</div>' .
+    //     '</div>' .
+    //     '</div>';
+    $roomList = '<div class="col-md-4">' .
+      '<div class="card mb-4"  >' .
+      '<div class="card-body">' .
+      '<h5 class="card-title">' . htmlspecialchars($row[$name."_name"]) . '</h5>' .
+      '<p class="card-text">' . htmlspecialchars($row["description"]) . '</p>' .
+      '<button type="button" class="btn btn-primary" onclick="location.href=\'room_reserve.php?room_id=' . $row["room_id"] . '&selecteddate_js=' . $selectedDate . '\';">Reserve</button>' .
+      '</div>' .
+      '</div>' .
+      '</div>';
 
-echo "< class='container mt-5'>
-< class='mb-3'>";
-  // output data of each row
-    $stats = "<p>Filter: " . $selectedFilter ." </p>";
-  
 
-echo $stats;
-echo "<div class='input-group'>
-<div class='form-outline' data-mdb-input-init>
-  <input type='search' id='searchbar' class='form-control' />
-  <label class='form-label' for='searchbar'>Search</label>
-</div>
-<button type='button' class='btn btn-primary' data-mdb-ripple-init>
-  <i class='fas fa-search'></i>
-</button>
-</div>";
-echo "</h2>";
-echo "<br>";
-echo $markList;
-echo "</div>";
-}
-else{
+    // Output the room list
+  }
+
+
+  echo $markList;
+  echo "</div>";
+} else {
   echo '<p>Message: No marks associated with the selected filters';
 }
 // Get the CSS class for the room based on its availability
-
-?>

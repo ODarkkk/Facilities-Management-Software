@@ -320,6 +320,10 @@ body {
   .dropdown:hover .dropdown-menu {
 	display: block;
   }
+
+
+/*Search bar*/
+
 /* .toggle-switch {
 	position: relative;
 	width: 100px;

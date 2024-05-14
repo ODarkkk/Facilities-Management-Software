@@ -80,18 +80,17 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
         });
         $("#dateFilter").change(function() {
             var selectedDate = $("#dateFilter").val();
-            var officeSelect = $("#officeSelect").val();
-            var roomSelect = $("#roomSelect").val();
-            var buildingSelect = $("#buildingSelect").val();
+            var filter = $("#filter").val();
+            var search = $("#search").val();
+
 
             $.ajax({
                 type: "GET",
                 url: "mark_list.php",
                 data: {
                     dateFilter: selectedDate,
-                    officeSelect: officeSelect,
-                    roomSelect: roomSelect,
-                    buildingSelect: buildingSelect
+                    Filter: filter,
+                    search: search
                 },
                 success: function(response) {
                     // Display the received HTML
@@ -208,7 +207,13 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
 <input type="date" class="form-control" id="dateFilter" name="dateFilter">
     </div>
 
-
+    <nav class="navbar navbar-light bg-light">
+  <form class="form-inline">
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" id="search" oninput="searchChanged()">
+    </div>
+  </form>
+</nav>
     <!-- <div class="container mt-5">
 
 
@@ -224,7 +229,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
 
     <div class="fixed-bottom">
         <div class="button-change">
-            <button class="beautiful-button" id="changeButton" data-bs-toggle="modal" data-bs-target="#officeModal">
+            <button class="beautiful-button" id="changeButton" data-bs-toggle="modal" data-bs-target="#SelectModal">
                 Change
             </button>
         </div>
@@ -268,11 +273,11 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
         </div>
     </div> --> 
     <!-- Modal for the nice combobox -->
-<div class="modal fade" id="officeModal" tabindex="-1" aria-labelledby="officeModalLabel" aria-hidden="true">
+<div class="modal fade" id="SelectModal" tabindex="-1" aria-labelledby="SelectModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="officeModalLabel">Select an Office or Building</h5>
+                <h5 class="modal-title" id="SelecteModalLabel">Select an Office, a Building or a room</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -289,12 +294,12 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
                 </ul>
                 <div class="tab-content" id="office-tabs-content">
                     <div class="tab-pane fade show active" id="offices" role="tabpanel" aria-labelledby="offices-tab">
-                        <select class="form-select" id="officeSelect">
+                        <select class="form-select" id="officeSelect2">
                             <script>
                                 fetch('fetch_offices.php')
                                    .then(response => response.text())
                                    .then(data => {
-                                        const selectElement = document.getElementById('officeSelect')
+                                        const selectElement = document.getElementById('officeSelect2')
                                         selectElement.innerHTML = data;
                                     })
                                    .catch(error => {
@@ -305,12 +310,12 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
                         </select>
                     </div>
                     <div class="tab-pane fade" id="buildings" role="tabpanel" aria-labelledby="buildings-tab">
-                        <select class="form-select" id="buildingSelect">
+                        <select class="form-select" id="buildingSelect2">
                             <script>
                                 fetch('fetch_buildings.php')
                                    .then(response => response.text())
                                    .then(data => {
-                                        const selectElement = document.getElementById('buildingSelect')
+                                        const selectElement = document.getElementById('buildingSelect2')
                                         selectElement.innerHTML = data;
                                     })
                                    .catch(error => {
@@ -320,13 +325,13 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
                             <!-- Options will be dynamically inserted here -->
                         </select>
                     </div>
-                    <div class="tab-pane fade show active" id="rooms" role="tabpanel" aria-labelledby="rooms-tab">
+                    <div class="tab-pane fade" id="rooms" role="tabpanel" aria-labelledby="rooms-tab">
                         <select class="form-select" id="roomSelect">
                             <script>
                                 fetch('fetch_room.php')
                                    .then(response => response.text())
                                    .then(data => {
-                                        const selectElement  = document.getElementById('roomsSelect')
+                                        const selectElement  = document.getElementById('roomSelect')
                                         selectElement.innerHTML = data;
                                     })
                                    .catch(error => {

@@ -13,7 +13,7 @@ include_once('config.php');
 // session_start();
 
 // Redirect to login page if the user is not logged in
-if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
+if (!isset($_SESSION['user_id'])) {
     header("location: login.php");
     exit(); // Ensure script stops after redirect
 }
@@ -90,7 +90,8 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
                 data: {
                     dateFilter: selectedDate,
                     Filter: filter,
-                    search: search
+                    search: search,
+                    
                 },
                 success: function(response) {
                     // Display the received HTML
@@ -101,17 +102,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
             });
         });
       
-        // var today = new Date();
-        // var dateString = today.toISOString().split('T')[0];
-        // // selectedDate = selectedDate.toISOString().split('T')[0];
-        // // Send the AJAX request with the selectedDate
-        // fetchRoomList();
-
-        // // Attach a change event listener to the date input element
-        // $("#dateFilter").change(function() {
-        //     fetchRoomList();
-        // });
-
+    
         });
     </script>
 </head>
@@ -293,7 +284,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
                     </li>
                 </ul>
                 <div class="tab-content" id="office-tabs-content">
-                    <div class="tab-pane fade show active" id="offices" role="tabpanel" aria-labelledby="offices-tab">
+                    <div class="tab-pane fade show active" value = "office" id="offices" role="tabpanel" aria-labelledby="offices-tab">
                         <select class="form-select" id="officeSelect2">
                             <script>
                                 fetch('fetch_offices.php')
@@ -309,7 +300,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
                             <!-- Options will be dynamically inserted here -->
                         </select>
                     </div>
-                    <div class="tab-pane fade" id="buildings" role="tabpanel" aria-labelledby="buildings-tab">
+                    <div class="tab-pane fade" value = "building" id="buildings" role="tabpanel" aria-labelledby="buildings-tab">
                         <select class="form-select" id="buildingSelect2">
                             <script>
                                 fetch('fetch_buildings.php')
@@ -325,7 +316,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
                             <!-- Options will be dynamically inserted here -->
                         </select>
                     </div>
-                    <div class="tab-pane fade" id="rooms" role="tabpanel" aria-labelledby="rooms-tab">
+                    <div class="tab-pane fade" value = "room" id="rooms" role="tabpanel" aria-labelledby="rooms-tab">
                         <select class="form-select" id="roomSelect">
                             <script>
                                 fetch('fetch_room.php')

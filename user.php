@@ -28,6 +28,21 @@ if (isset($_GET['userId'])) {
     // } 
 }
 
+if (isset($_POST['submit'])) {
+    $new_password = $_POST['new-password'];
+    $confirm_password = $_POST['confirm-new-password'];
+
+    if ($new_password !== $confirm_password) {
+        echo "New password and confirmed password do not match.";
+    }
+
+    if (!securePassword($new_password)) {
+        //password is invalid
+        echo "Password is invalid.";
+    } 
+   
+}
+
 
 ?>
 

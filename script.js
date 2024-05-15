@@ -340,7 +340,10 @@ $(document).ready(function () {
 
 //For marks
 $(document).ready(function () {
-  $("#Filter").click(function () {
+  // const filter = $("#filter").val();
+  const date = $("#dateFilter").val();
+  // const search = $("#marksearch").val();
+  // $("#Filter").click(function () {
     // const selectedOffice = $("#officeSelect").val();
     // // dateFilter: selectedDate,
     // //                 officeSelect: officeSelect,
@@ -348,24 +351,13 @@ $(document).ready(function () {
     // //                 buildingSelect: buildingSelect
     // const selectedroom = $("#roomSelect").val();
     // const buildingSelect = $("#buildingSelect").val();
-    const filter = $("#filter").val();
-    const date = $("#dateFilter").val();
-    const search = $("#marksearch").val();
+    const sendAjaxRequest = (data) => {
     $.ajax({
-      url: "mark_list.php",
       type: "GET",
-      // type: 'GET',
-      data: {
-        dateFilter: date,
-        Filter: filter,
-        search: search,
-      },
-      success: function (response) {
-        $("#marklist").html(response);
-
-        // Lidar com a resposta, se necessário
-        // window.alert("certo");
-        // console.log("Valor enviado com sucesso para room_list.php");
+      url: "mark_list.php",
+      data: data,
+      success: function(response) {
+        $("#markList").html(response);
       },
       error: function (xhr, status, error) {
         console.error("Error fetching room list:", error);
@@ -374,6 +366,53 @@ $(document).ready(function () {
         // window.alert("Errado");
         // console.error("Erro ao enviar valor para room_list.php:", error);
       },
+    });
+  };
+  $("#dateFilter, #marksearch, #filter").change(function() {
+    const selectedDate = $("#dateFilter").val();
+    const filter = $("#filter").val();
+    const search = $("#marksearch").val();
+    sendAjaxRequest({
+      dateFilter: selectedDate,
+      Filter: filter,
+      search: search
+    });
+  });
+  $("#Filter").click(function() {
+    const date = $("#dateFilter").val();
+    const filter = $("#filter").val();
+    const search = $("#marksearch").val();
+    const officeSelect = $("#officeSelect").val();
+    const buildingSelect = $("#buildingSelect").val();
+    const roomSelect = $("#roomSelect").val();
+
+    let type;
+    if (filter === 'room') {
+      type = {
+        type: filter,
+        value: roomSelect
+      };
+    } else if (filter === 'office') {
+      type = {
+        type: filter,
+        value: officeSelect
+      };
+    } else if (filter === 'building') {
+      type = {
+        type: filter,
+        value: buildingSelect
+      };
+    } else {
+      type = '';
+    }
+    sendAjaxRequest({
+      dateFilter: date,
+      Filter: filter,
+      search: search,
+      type: type,
+      officeSelect: officeSelect,
+      buildingSelect: buildingSelect,
+      roomSelect: roomSelect
     });
 
     // Fechar o modal

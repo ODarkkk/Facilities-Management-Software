@@ -120,11 +120,10 @@ OR room.description = ?" : "") . "
 $stmt->execute();
 $result = $stmt->get_result();
 $roomarray = array();
-$roomList = "";
 $stats = "";
 while ($row = $result->fetch_assoc()) {
 
-  $roomList = '<div class="col-md-4">' .
+  $roomarray[] = '<div class="col-md-4">' .
     '<div class="card mb-4 ' . getRoomClass($row) . '">' .
     '<div class="card-body">' .
     '<h5 class="card-title">' . htmlspecialchars($row["room_name"]) . '</h5>' .
@@ -134,7 +133,8 @@ while ($row = $result->fetch_assoc()) {
     '</div>' .
     '</div>' .
     '</div>';
-  $roomarray[] = $roomList;
+  
+
   $selectedOfficeId = $row['office_id'];
 
   // Output the room list
@@ -159,10 +159,14 @@ try {
 
   echo "</h2>";
   echo "<br>";
-
+  echo '<div class="container">';
+  echo '<div class="row">';
+  
   foreach ($roomarray as $room) {
     echo $room;
   }
+  echo "</div>";
+  echo "</div>";
   echo "</div>";
 } catch (Exception $e) {
   echo '<p>Message: No office associated with the selected building';

@@ -196,6 +196,7 @@ if (!isset($_SESSION['user_id'])) {
         ?>
        <label for="dateFilter" class="form-label">Date:</label>
 <input type="date" class="form-control" id="dateFilter" name="dateFilter">
+
     </div>
 
     <nav class="navbar navbar-light bg-light">

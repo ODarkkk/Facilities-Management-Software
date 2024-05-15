@@ -2,15 +2,17 @@
 include_once("config.php"); // Adjust the include file as needed
 
 // Get the selected filter value from the AJAX request
-$selectedFilter = isset($_GET['filter']) ? $_GET['filter'] : null;
 $selectedDate = isset($_GET['dateFilter']) ? $_GET['dateFilter'] : date('Y-m-d');
 
-$searchbar = isset($_GET['search']) ? $_GET['search'] : null;
+$searchbar = isset($_GET['marksearch']) ? $_GET['marksearch'] : null;
 $active = isset($_GET['active']) ? $_GET['active'] : 1;
 
+$type = isset($_GET['type']) ? $_GET['type'] : null;
+$filterType = $type ? $type->type : null;
+$filterValue = $type ? $type->value : null;
 
 
-$name = "selectedFilter";
+
 
 
 // switch ($selectedFilter) {
@@ -25,15 +27,16 @@ $name = "selectedFilter";
 //         break;
 // }
 
+if (is_null($filterType) && is_null($filterValue)) {
 
 $sql = "SELECT DISTINCT
-" . ($selectedFilter === 'office' ? "
+" . ($filterType === 'office' ? "
 offices.office_id,
 offices.office_name," : "") . "
-" . ($selectedFilter === 'building' ? "
+" . ($filterType === 'building' ? "
 buildings.building_id,
 buildings.building_name," : "") . "
-" . ($selectedFilter === 'room' ? "
+" . ($filterType === 'room' ? "
 room.room_id,
 room.room_name," : "") . "
 people.people_id,
@@ -44,12 +47,12 @@ bookmarks.start_hour,
 bookmarks.end_hour
 FROM bookmark bookmarks
 INNER JOIN offices_room ON offices_room.room_id = bookmarks.room_id
-" . ($selectedFilter === 'office' ? "
+" . ($filterType === 'office' ? "
 INNER JOIN offices ON offices_room.office_id = offices.office_id" : "") . "
-" . ($selectedFilter === 'building' ? "
+" . ($filterType === 'building' ? "
 INNER JOIN building_offices ON building_offices.office_id = offices.office_id
 INNER JOIN building ON building.building_id = building_offices.building_id" : "") . "
-" . ($selectedFilter === 'room' ? "
+" . ($filterType=== 'room' ? "
 INNER JOIN room room on room.room_id = offices_room.room_id" : "") . "
 INNER JOIN people on people.people_id = bookmarks.people_id  
 WHERE
@@ -58,19 +61,46 @@ AND
 bookmarks.active = " . $active . "
 " . (isset($_GET['search']) ? "
 people.user LIKE ?
-" . ($SelectedFilter === 'office' ? "
-OR offices.office_id LIKE ?
+" . ($filterType === 'office' ? "
+OR offices.office_id = " . $filterValue . "
 OR offices.office_name LIKE ?" : "") . "
-" . ($selectedFilter === 'building' ? "
-OR building.building_id LIKE ? 
+" . ($filterType === 'building' ? "
+OR building.building_id " . $filterValue . "
 OR building.building_name LIKE ?" : "") . "
-" . ($SelectedFilter === 'room0' ? "
-OR room.room_name LIKE ? 
+" . ($filterType === 'room' ? "
+OR room.room_name " . $filterValue . "
 OR room.room_id LIKE ?" : "") . "
 ." : "") . "
 ORDER BY 
 bookmarks.bookmark_id;
 ";
+}
+else{
+  $sql = "SELECT DISTINCT
+offices.*,
+buildings.*,
+room.*,
+bookmarks.bookmark_id,
+bookmarks.selected_date, 
+bookmarks.start_hour,
+bookmarks.end_hour
+FROM bookmark bookmarks,buildings, room, offices
+WHERE
+bookmarks.selected_date = ?
+AND 
+bookmarks.active = " . $active;
+if (isset($_GET['search'])) {
+  $sql .= " AND (
+                  people.user LIKE :user
+                  OR building.building_name LIKE :building_name
+                  OR offices.office_name LIKE :office_name
+                  OR room.room_name LIKE :room_name
+              )";
+}
+$sql .="ORDER BY 
+bookmarks.bookmark_id;
+";
+}
 
 // echo $sql;
 $stmt = $conn->prepare($sql);
@@ -139,7 +169,7 @@ if (isset($_GET['search'])) {
 
 $stmt->execute();
 $result = $stmt->get_result();
-$roomList = '';
+
 
 // output data of each row
 // $stats = "<p>Filter: " . $selectedFilter . " </p>";
@@ -167,7 +197,7 @@ $roomList = '';
 
 // echo "<br>";
 if ($result->num_rows > 0) {
-
+  $markarray = array();
 
   while ($row = $result->fetch_assoc()) {
 
@@ -184,7 +214,7 @@ if ($result->num_rows > 0) {
     //     '</div>' .
     //     '</div>' .
     //     '</div>';
-    $roomList = '<div class="col-md-4">' .
+    $markarray[] = '<div class="col-md-4">' .
       '<div class="card mb-4"  >' .
       '<div class="card-body">' .
       '<h5 class="card-title">' . htmlspecialchars($row[$name."_name"]) . '</h5>' .
@@ -197,9 +227,13 @@ if ($result->num_rows > 0) {
 
     // Output the room list
   }
-
-
-  echo $markList;
+  echo '<div class="container">';
+  echo '<div class="row">';
+  
+  foreach ($markarray as $mark) {
+    echo $mark;
+  }
+  echo "</div>";
   echo "</div>";
 } else {
   echo '<p>Message: No marks associated with the selected filters';

@@ -2,26 +2,25 @@
 // Include the database configuration file
 include_once('config.php');
 
-// Get the selected building ID
-$selectedBuildingId = null;
-$sql = null;
+$selectedBuildingId = isset($_GET['selectedBuildingId'])?$_GET['selectedBuildingId']:null;
 
-if (isset($_GET['buildingId'])) {
-    $selectedBuildingId = $_GET['buildingId'];
-    $sql = "SELECT * FROM building_offices AS b
-                           INNER JOIN offices AS o ON o.office_id = b.office_id
-                           WHERE b.building_Id = ?";
+// echo  $selectedBuildingId;
+
+if (isset($_GET['selectedBuildingId'])) {
+    $sql = "SELECT * FROM offices AS o
+                           INNER JOIN building_offices AS b ON b.office_id = o.office_id
+                           WHERE b.building_id = ?";
 } else {
-    $sql = "SELECT o.* FROM building_offices AS b
-                           INNER JOIN offices AS o ON o.office_id = b.office_id
-                           WHERE b.building_Id = (SELECT MIN(building_id) FROM building_offices)";
+    $sql = "SELECT * FROM offices AS o
+                           INNER JOIN building_offices AS b ON b.office_id = o.office_id
+                           WHERE b.building_id = (SELECT MIN(building_id) FROM building_offices)";
 }
 
 // Prepare the SQL statement
 $stmt = $conn->prepare($sql);
 
 // If a building ID was selected, bind it to the statement
-if ($selectedBuildingId !== null) {
+if ($selectedBuildingId != null) {
     $stmt->bind_param("i", $selectedBuildingId);
 }
 
@@ -33,7 +32,7 @@ $result = $stmt->get_result();
 // Check if there are results
 if ($result->num_rows > 0) {
     // Start the select element
-    echo "<select class='form-select' id='officeSelect' name='selectedOfficeId'>";
+    echo "<select class='form-select' id='roomSelect' name='selectedOfficeId'>";
 
     // Loop through results and print combobox options
     while($row = $result->fetch_assoc()) {
@@ -42,7 +41,8 @@ if ($result->num_rows > 0) {
  
     // End the select element
     echo "</select>";
+   
     
 } else {
-    echo "<option value=''>No offices found</option>";
+    echo "<option value=''>No rooms found</option>";
 }

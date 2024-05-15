@@ -7,43 +7,55 @@ include_once("config.php"); // Adjust the include file as needed
 
 // Get the selected date from the AJAX request
 $selectedDate = isset($_GET['dateFilter']) ? $_GET['dateFilter'] : date('Y-m-d');
+$search = isset($_GET['search']) ? $_GET['search'] : null;
+
 // $selectedOfficeId = isset($_GET["officeSelect"]) ? intval($_GET["officeSelect"]) : 1;
-if (isset($_GET["officeSelect"]))
-{
+if (isset($_GET["officeSelect"])) {
   $selectedOfficeId = $_GET["officeSelect"];
   $sql = "SELECT 
-offices_room.office_id,
-room.room_name,
-room.room_id,
-room.description,
-bookmarks.bookmark_id,
-bookmarks.selected_date, 
-bookmarks.start_hour,
-bookmarks.end_hour,
-CASE 
-  WHEN bookmarks.bookmark_id IS NOT NULL AND CURRENT_TIME() > bookmarks.end_hour AND bookmarks.selected_date = ? THEN 'available'
-  WHEN bookmarks.bookmark_id IS NOT NULL AND bookmarks.selected_date = ? OR CURRENT_TIME() > bookmarks.start_hour THEN 'partially-available'
-  WHEN bookmarks.bookmark_id IS NOT NULL AND CURRENT_TIME() < bookmarks.end_hour AND CURRENT_TIME() > bookmarks.start_hour AND bookmarks.selected_date = ? THEN 'Occupied'
-END AS availability_status
-FROM 
-offices_room
-INNER JOIN offices offices ON offices.office_id = offices_room.office_id
-INNER JOIN room room on room.room_id = offices_room.room_id
-LEFT JOIN bookmark bookmarks ON room.room_id = bookmarks.room_id 
-  AND bookmarks.selected_date = ?
-  AND bookmarks.active = 1
-WHERE 
-offices_room.office_id = ?
-AND offices_room.room_id IS NOT NULL
-ORDER BY 
-room.room_name;";
+  offices_room.office_id,
+  room.room_name,
+  room.room_id,
+  room.description,
+  bookmarks.bookmark_id,
+  bookmarks.selected_date, 
+  bookmarks.start_hour,
+  bookmarks.end_hour,
+  CASE 
+    WHEN bookmarks.bookmark_id IS NOT NULL AND CURRENT_TIME() > bookmarks.end_hour AND bookmarks.selected_date = ? THEN 'available'
+    WHEN bookmarks.bookmark_id IS NOT NULL AND bookmarks.selected_date = ? OR CURRENT_TIME() > bookmarks.start_hour THEN 'partially-available'
+    WHEN bookmarks.bookmark_id IS NOT NULL AND CURRENT_TIME() < bookmarks.end_hour AND CURRENT_TIME() > bookmarks.start_hour AND bookmarks.selected_date = ? THEN 'Occupied'
+  END AS availability_status
+  FROM 
+  offices_room
+  INNER JOIN room room ON room.room_id = offices_room.room_id
+  LEFT JOIN bookmark bookmarks ON room.room_id = bookmarks.room_id 
+    AND bookmarks.selected_date = ?
+    AND bookmarks.active = 1
+  WHERE 
+  offices_room.office_id = ? 
+  AND offices_room.room_id IS NOT NULL
+  " . (isset($_GET['search']) ? "
+  AND room.room_id = ?
+  OR
+  room.room_name = ?
+  OR room.description = ?" : "") . " 
+ 
+  ORDER BY 
+  room.room_name;";
+
   $stmt = $conn->prepare($sql);
-  $stmt->bind_param("ssssi", $selectedDate, $selectedDate, $selectedDate, $selectedDate, $selectedOfficeId);
-}
-else{
+  if (isset($_GET['search'])) {
+    $searchbar_like = '%' . $search . '%';
+    $stmt->bind_param("ssssisss", $selectedDate, $selectedDate, $selectedDate, $selectedDate, $selectedOfficeId, $searchbar_like, $searchbar_like, $searchbar_like);
+  } else {
+
+    $stmt->bind_param("ssssi", $selectedDate, $selectedDate, $selectedDate, $selectedDate, $selectedOfficeId);
+  }
+} else {
   $sql = "SELECT 
   offices_room.office_id,
-  offices_room.room_id,
+  room.room_id,
   room.room_name,
   room.description,
   bookmarks.bookmark_id,
@@ -57,7 +69,6 @@ else{
   END AS availability_status
   FROM 
   offices_room
-  INNER JOIN offices offices ON offices.office_id = offices_room.office_id
   INNER JOIN room room on room.room_id = offices_room.room_id
   LEFT JOIN bookmark bookmarks ON room.room_id = bookmarks.room_id 
     AND bookmarks.selected_date = ?
@@ -65,13 +76,21 @@ else{
   WHERE 
   offices_room.office_id = (SELECT MIN(offices_room.office_id) FROM offices_room)
   AND offices_room.room_id IS NOT NULL
+  " . (isset($_GET['search']) ? "
+   AND room.room_id = ? OR
+room.room_name = ?
+OR room.description = ?" : "") . " 
+  
   ORDER BY 
   room.room_name;";
-
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("ssss", $selectedDate, $selectedDate, $selectedDate, $selectedDate);
+  $stmt = $conn->prepare($sql);
+  if (isset($_GET['search'])) {
+    $searchbar_like = '%' . $search . '%';
+    $stmt->bind_param("sssssss", $selectedDate, $selectedDate, $selectedDate, $selectedDate, $searchbar_like, $searchbar_like, $searchbar_like);
+  } else {
+    $stmt->bind_param("ssss", $selectedDate, $selectedDate, $selectedDate, $selectedDate);
+  }
 }
-
 // echo "Selected office ID: " . $selectedOfficeId; // Adicione esta linha para depuração
 
 // if ($selectedDate == null){
@@ -100,23 +119,11 @@ $stmt->bind_param("ssss", $selectedDate, $selectedDate, $selectedDate, $selected
 
 $stmt->execute();
 $result = $stmt->get_result();
-$roomList = '';
+$roomarray = array();
+$roomList = "";
 $stats = "";
 while ($row = $result->fetch_assoc()) {
 
-  // Generate the HTML for each room
-  // $roomList .= '<div class="col-md-4">'  .
-  //     '<div class="card mb-4 ' . getRoomClass($row) . '">' .
-  //     '<div class="card-body">' .
-  //     '<h5 class="card-title">' . htmlspecialchars($row["room_name"]) . '</h5>' .
-  //     '<p class="card-text">' . htmlspecialchars($row["description"]) . '</p>' .
-
-  //     // $row["room_id"];
-  //     // $row["office_id"];~
-  //     '<button type="button" class="btn btn-primary" onclick="location.href=\'room_reserve.php?room_id=' . $row["room_id"] . '&selecteddate_js=' . $selectedDate . '\';">Reserve</button>' .
-  //     '</div>' .
-  //     '</div>' .
-  //     '</div>';
   $roomList = '<div class="col-md-4">' .
     '<div class="card mb-4 ' . getRoomClass($row) . '">' .
     '<div class="card-body">' .
@@ -127,34 +134,37 @@ while ($row = $result->fetch_assoc()) {
     '</div>' .
     '</div>' .
     '</div>';
-    $selectedOfficeId = $row['office_id'];
-     
-// Output the room list
+  $roomarray[] = $roomList;
+  $selectedOfficeId = $row['office_id'];
+
+  // Output the room list
 }
 $sql = "SELECT b.building_name, o.office_name from buildings as b 
 INNER JOIN building_offices bo on bo.building_id = b.building_id
 INNER JOIN offices o on o.office_id = bo.office_id
-WHERE o.office_id = $selectedOfficeId";
+WHERE bo.office_id = $selectedOfficeId";
 try {
-$result = $conn->query($sql);
+  $result = $conn->query($sql);
 
-echo "<div class='container mt-5'>
+  echo "<div class='container mt-5'>
 <h2 class='mb-3'>";
-if ($result->num_rows > 0) {
-  // output data of each row
-  while($row = $result->fetch_assoc()) {
-    $stats = "<p>Building: ". $row['building_name'] . "</p>" .
-    " </p>Office: " . $row['office_name'] ."</p>";
+  if ($result->num_rows > 0) {
+    // output data of each row
+    while ($row = $result->fetch_assoc()) {
+      $stats = "<p>Building: " . $row['building_name'] . "</p>" .
+        " </p>Office: " . $row['office_name'] . "</p>";
+    }
   }
-}
-echo $stats;
+  echo $stats;
 
-echo "</h2>";
-echo "<br>";
-echo $roomList;
-echo "</div>";
-}
-catch(Exception $e) {
+  echo "</h2>";
+  echo "<br>";
+
+  foreach ($roomarray as $room) {
+    echo $room;
+  }
+  echo "</div>";
+} catch (Exception $e) {
   echo '<p>Message: No office associated with the selected building';
   echo '<p>System error: ' .  $e->getMessage();
 }

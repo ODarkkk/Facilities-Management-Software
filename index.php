@@ -199,9 +199,11 @@ if (!isset($_SESSION['user_id'])) {
         ?>
        <label for="dateFilter" class="form-label">Date:</label>
 <input type="date" class="form-control" id="dateFilter" name="dateFilter">
+<br>
+
     </div>
 
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar">
   <form class="form-inline">
     <div class="input-group">
       <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" id="search">

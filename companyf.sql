@@ -393,7 +393,7 @@ ALTER TABLE `offices_room`
 -- Constraints for table `people`
 --
 ALTER TABLE `people`
-  ADD CONSTRAINT `people_Role_department_FK_1` FOREIGN KEY (`role_department_id`) REFERENCES `roles_department` (`roles_department_id`);
+  ADD CONSTRAINT `people_Role_department_FK` FOREIGN KEY (`role_department_id`) REFERENCES `roles_department` (`roles_department_id`);
 
 --
 -- Constraints for table `roles_department`

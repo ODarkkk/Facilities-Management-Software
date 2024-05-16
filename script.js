@@ -522,4 +522,39 @@ $(document).ready(function () {
   if (needsFetchRooms) {
     initDropdowns();
   }
-});
+})
+
+// $(document).ready(function() {
+//   // $('#department').ready(function() {
+//   //     var department_id = $(this).val();
+//   //     updateRoles(departmentId);
+//   // });
+//   $(document).ready(function() {
+//     // $('#department').ready(function() {
+//     //     var department_id = $(this).val();
+//     //     updateRoles(departmentId);
+//     // });
+//     $('#department').ready(function()
+//     {
+//         const department_id = $('#department').val();
+//         updateRoles(departmentId);
+//     })
+//     $('#department').change(function() {
+//         const department_id = $('#department').val();
+//         updateRoles(departmentId);
+//     })
+// });
+
+// function updateRoles(departmentId) {
+//     $.ajax({
+//         url: "get_roles.php",
+//         method: "GET",
+//         data: {
+//             department_id: departmentId
+//         },
+//         success: function(data) {
+//             $("#get_roles").html(data);
+//         }
+//     });
+// }
+// });

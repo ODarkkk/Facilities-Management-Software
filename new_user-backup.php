@@ -1,6 +1,3 @@
-
-
-
 <?php
 include_once('config.php');
 if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
@@ -9,26 +6,18 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
 }
 $edit = false;
 $error_message = "";
-$role = null;
-$selected = null;
 if (isset($_GET['userId'])) {
     $edit = true;
     $id = $_GET['userId'];
 
     // Prepare query with parameterized query
-    $stmt = $conn->prepare("SELECT p.people_id, p.user, p.name, rd.roles_department_id, d.department, r.role, p.photo, p.email, p.phone, p.admin, p.password_status, p.active 
-    FROM people p 
-    JOIN roles_department rd ON rd.roles_department_id = p.role_department_id 
-    JOIN department d ON d.department_id = rd.department_id 
-    JOIN roles r ON r.role_id = rd.role_id
-    WHERE p.people_id =?");
+    $stmt = $conn->prepare("SELECT p.people_id, p.user, p.name, d.department_id, d.department, p.photo, p.email, p.phone, p.admin, p.password_status, p.active FROM people p JOIN department d ON p.department_id = d.department_id WHERE p.people_id =?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result && $result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        // $role = $row['role_department_id'];
     }
     // if ($result && $result->num_rows > 0) {
     // $row = $result->fetch_assoc();
@@ -50,10 +39,12 @@ if (isset($_POST['submit'])) {
     if (!securePassword($new_password)) {
         //password is invalid
         $error_message = "Password is invalid.";
-    }
-    if ((error($error_message)) == "") {
-        $error_message = error($error_message);
-    }
+    } 
+    if ((error($error_message))=="")
+     {
+      $error_message = error($error_message);
+     }
+   
 }
 
 
@@ -72,37 +63,7 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="script.js"></script>
-    <script>
-    // $(document).ready(function() {
-    //     // $('#department').ready(function() {
-    //     //     var department_id = $(this).val();
-    //     //     updateRoles(departmentId);
-    //     // });
-    //     $('#department').ready(function()
-    //     {
-    //         const department_id = $('#department').val();
-    //         updateRoles(department_id);
-    //     })
-    //     $('#department').change(function() {
-    //         const department_id = $('#department').val();
-    //         updateRoles(department_id);
-    //     })
-    // });
 
-    function updateRoles(departmentId) {
-        $.ajax({
-            url: "get_roles.php",
-            type:"GET",
-            method: "GET",
-            data: {
-                department_id: departmentId
-            },
-            success: function(data) {
-                $("#role").html(data);
-            }
-        });
-    }
-</script>
     <script type="importmap">
         {
 		  "imports": {
@@ -188,12 +149,12 @@ if (isset($_POST['submit'])) {
                 ?>
                 <div class="col-md-6">
                     <label for="name" class="form-label">Department:</label>
-                    <select name="department" id="department" onchange="updateRoles(this.value)">
+                    <select name="department" id="department">
                         <option value="" selected disabled hidden>Select Department</option>
                         <?php
 
 
-                        $sql = "SELECT * FROM department";
+                        $sql = "SELECT * FROM `department`";
 
 
                         $result = $conn->query($sql);
@@ -203,36 +164,18 @@ if (isset($_POST['submit'])) {
                             // Output options for each department
 
                             while ($row2 = $result->fetch_assoc()) {
-                                $selected = ($row['role_department_id'] == $row2['department_id']) ? 'selected' : '';
+                                $selected = ($row['department_id'] == $row2['department_id']) ? 'selected' : '';
                                 echo "<option value='" . $row2['department_id'] . "' " . $selected . ">" . $row2['department'] . "</option>";
                             }
                         } else {
                             // Output a default option if no departments found
-                            echo "<option value=''>No results found</option>";
+                            echo "<option value=''>No departments found</option>";
                         }
 
                         ?>
 
                     </select>
                 </div>
-
-                <div class="col-md-6">
-                    <label for="name" class="form-label">Role:</label>
-                    <select name="role" id="role">
-                        <option value="" selected disabled hidden>Select Role</option>
-                        <script>
-                            // fetch('get_roles.php').then(response => response.text()).then(data => {
-                            //     const selectElement = document.getElementById('roleSelect')
-                            //     selectElement.innerHTML = data;
-                            // }).catch(error => {
-                            //     console.error("Error fetching data:", error);
-                            // });
-                        </script>
-
-                    </select>
-                </div>
-
-
                 <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control custom-input" name="Email" id="Email" value="<?php if ($edit) {
@@ -278,15 +221,15 @@ if (isset($_POST['submit'])) {
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="admin" name="admin" value="<?php if ($edit) {
-                                                                                                            echo $row['admin']; ?>" <?php if ($row['admin'] == 1) echo 'checked';
-                                                                                                                                } ?>>
+                      echo $row['admin']; ?>" <?php if ($row['admin'] == 1) echo 'checked';
+                   } ?>>
                         <label class="form-check-label" for="admin">
                             Admin
                         </label>
                     </div>
                     <?php
-                    if ($edit) {
-                        echo "<input type='hidden' id='peopleid' name='peopleId' value='" . $row['people_id'] . "' /> ";
+                    if($edit){
+                    echo "<input type='hidden' id='peopleid' name='peopleId' value='". $row['people_id']."' /> ";
                     }
                     if (isset($error_message)) {
                         echo "<p style='color: red;'>$error_message</p>";

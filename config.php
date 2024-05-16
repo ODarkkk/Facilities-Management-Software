@@ -9,6 +9,10 @@ session_start([
 
 //     echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
 // }
+// $servername = "rpx.h.filess.io";
+// $username = "company_exacthair";
+// $password = "407b8f9ebcb9893194d57c8e2e1cfaf370a62935";
+// $dbname = "company_exacthair";
 
 $servername = "localhost";
 $username = "DAnastacio";
@@ -22,6 +26,10 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+function error($error_message) {
+    return $error_message;
+  }
 
 
 function securePassword($password) {

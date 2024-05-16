@@ -5,7 +5,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
     exit(); // Ensure script stops after redirect
 }
 $edit = false;
-
+$error_message = "";
 if (isset($_GET['userId'])) {
     $edit = true;
     $id = $_GET['userId'];
@@ -33,13 +33,17 @@ if (isset($_POST['submit'])) {
     $confirm_password = $_POST['confirm-new-password'];
 
     if ($new_password !== $confirm_password) {
-        echo "New password and confirmed password do not match.";
+        $error_message = "New password and confirmed password do not match.";
     }
 
     if (!securePassword($new_password)) {
         //password is invalid
-        echo "Password is invalid.";
+        $error_message = "Password is invalid.";
     } 
+    if ((error($error_message))=="")
+     {
+      $error_message = error($error_message);
+     }
    
 }
 
@@ -106,7 +110,7 @@ if (isset($_POST['submit'])) {
     <div class="container mt-5">
         <h2>New User</h2>
         <div class="container mt-5 d-flex justify-content-center">
-            <form action="add_user.php" method="post">
+            <form action="add_user.php?edit=<?php echo $edit ?>$" method="post">
                 <!-- <h5>Admin Credentials</h5>
                 <div class="col-md-6">
                     <label for="admin-username" class="form-label">Admin-User</label>
@@ -123,13 +127,13 @@ if (isset($_POST['submit'])) {
 
 
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control custom-input" name="username" id="username" value="<?php if ($edit == true) {
+                    <input type="text" class="form-control custom-input" name="username" id="username" value="<?php if ($edit) {
                                                                                                                     echo $row['user'];
                                                                                                                 } ?>" required>
                 </div>
                 <div class="col-md-6">
                     <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control custom-input" name="Name" id="name" value="<?php if ($edit == true) {
+                    <input type="text" class="form-control custom-input" name="Name" id="name" value="<?php if ($edit) {
                                                                                                             echo $row['name'];
                                                                                                         } ?> " required>
                 </div>
@@ -138,7 +142,7 @@ if (isset($_POST['submit'])) {
                 ?>
                     <div class="col-md-6">
                         <label for="date_birth" class="form-label">date of birth</label>
-                        <input type="date" class="form-control custom-input" name="date" id="dath" required>
+                        <input type="date" class="form-control custom-input" name="date" id="date" required>
                     </div>
                 <?php
                 }
@@ -174,18 +178,18 @@ if (isset($_POST['submit'])) {
                 </div>
                 <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control custom-input" name="Email" id="Email" value="<?php if ($edit == true) {
+                    <input type="email" class="form-control custom-input" name="Email" id="Email" value="<?php if ($edit) {
                                                                                                                 echo $row['email'];
                                                                                                             } ?>" required>
                 </div>
                 <div class="col-md-6">
                     <label for="photo" class="form-label">Photo</label>
-                    <input type="file" class="form-control custom-input" name="photo" id="photo" value="<?php if ($edit == true) {
+                    <input type="file" class="form-control custom-input" name="photo" id="photo" value="<?php if ($edit) {
                                                                                                             echo $row['photo'];
                                                                                                         } ?>" required>
                 </div>
                 <?php
-                if ($edit != true) {
+                if ($edit == false) {
                 ?>
                     <div class="col-md-6">
                         <label for="nationality" class="form-label">Nationality</label>
@@ -196,7 +200,7 @@ if (isset($_POST['submit'])) {
                 ?>
                 <div class="col-md-6">
                     <label for="phone" class="form-label">phone</label>
-                    <input type="text" class="form-control custom-input" name="phone" id="phone" value="<?php if ($edit == true) {
+                    <input type="text" class="form-control custom-input" name="phone" id="phone" value="<?php if ($edit) {
                                                                                                             echo $row['name'];
                                                                                                         } ?>" required>
                 </div>
@@ -216,14 +220,17 @@ if (isset($_POST['submit'])) {
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="admin" name="admin" value="<?php if ($edit == true) {
-                                                                                                            echo $row['admin']; ?>" <?php if ($row['admin'] == 1) echo 'checked';
-                                                                                                                                } ?>>
+                        <input class="form-check-input" type="checkbox" id="admin" name="admin" value="<?php if ($edit) {
+                      echo $row['admin']; ?>" <?php if ($row['admin'] == 1) echo 'checked';
+                   } ?>>
                         <label class="form-check-label" for="admin">
                             Admin
                         </label>
                     </div>
                     <?php
+                    if($edit){
+                    echo "<input type='hidden' id=peopleid' name='peopleId' value=''".$row['people_id']."'' /> ";
+                    }
                     if (isset($error_message)) {
                         echo "<p style='color: red;'>$error_message</p>";
                     }

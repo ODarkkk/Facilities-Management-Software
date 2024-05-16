@@ -89,7 +89,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
 
   <div class="container mt-5">
     <h1>Users</h1>
-    <button type="button" onclick="location.href = 'user.php';" class="btn btn-success">New User</button>
+    <button type="button" onclick="location.href = 'new_user.php';" class="btn btn-success">New User</button>
 
     <table class="table">
       <thead>

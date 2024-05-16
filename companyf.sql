@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 06, 2024 at 06:26 PM
+-- Generation Time: May 16, 2024 at 11:40 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,8 +29,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `bookmark` (
   `bookmark_id` int(11) NOT NULL,
-  `room_id` int(11) DEFAULT NULL,
-  `people_id` int(55) DEFAULT NULL,
+  `room_id` int(11) NOT NULL,
+  `people_id` int(55) NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp(),
   `start_hour` time NOT NULL,
   `end_hour` time NOT NULL,
@@ -43,7 +43,6 @@ CREATE TABLE `bookmark` (
 --
 
 INSERT INTO `bookmark` (`bookmark_id`, `room_id`, `people_id`, `date`, `start_hour`, `end_hour`, `selected_date`, `active`) VALUES
-(1, 1, 1, '2024-01-02 01:49:18', '00:00:00', '00:00:00', '2024-03-10', 0),
 (6, 1, 3, '2024-06-13 23:00:00', '00:00:00', '00:00:00', '2024-06-14', 0),
 (7, 1, 3, '2024-05-06 23:00:00', '00:00:00', '00:00:00', '2024-05-07', 0),
 (8, 1, 3, '2024-05-06 23:00:00', '00:00:00', '00:00:00', '2024-05-07', 0),
@@ -74,27 +73,7 @@ CREATE TABLE `buildings` (
 
 INSERT INTO `buildings` (`building_id`, `building_name`, `description`) VALUES
 (1, 'Building 1', 'Main building'),
-(2, 'Head Office', 'Principal Building'),
-(3, 'Building 3', 'New building'),
-(4, 'Building 4', 'Old building'),
-(5, 'Building 3', 'New building'),
-(6, 'Building 4', 'Old building'),
-(7, 'Building 3', 'New building'),
-(8, 'Building 4', 'Old building'),
-(9, 'Building 3', 'New building'),
-(10, 'Building 4', 'Old building'),
-(11, 'Building 3', 'New building'),
-(12, 'Building 4', 'Old building'),
-(13, 'Building 3', 'New building'),
-(14, 'Building 4', 'Old building'),
-(15, 'Building 3', 'New building'),
-(16, 'Building 4', 'Old building'),
-(17, 'Building 3', 'New building'),
-(18, 'Building 4', 'Old building'),
-(19, 'Building 3', 'New building'),
-(20, 'Building 4', 'Old building'),
-(21, 'Building 3', 'New building'),
-(22, 'Building 4', 'Old building');
+(2, 'Head Office', 'Principal Building');
 
 -- --------------------------------------------------------
 
@@ -124,17 +103,16 @@ INSERT INTO `building_offices` (`building_id`, `office_id`) VALUES
 
 CREATE TABLE `department` (
   `department_id` int(11) NOT NULL,
-  `department` varchar(255) NOT NULL,
-  `role_id` int(11) NOT NULL
+  `department` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `department`
 --
 
-INSERT INTO `department` (`department_id`, `department`, `role_id`) VALUES
-(1, 'IT', 1),
-(2, 'HR', 2);
+INSERT INTO `department` (`department_id`, `department`) VALUES
+(1, 'IT'),
+(2, 'HR');
 
 -- --------------------------------------------------------
 
@@ -155,29 +133,7 @@ CREATE TABLE `offices` (
 
 INSERT INTO `offices` (`office_id`, `office_image`, `office_name`, `description`) VALUES
 (1, '', 'Office A', 'Main office'),
-(2, '', 'Office B', 'Secondary office'),
-(4, '', 'Office C', 'Third office'),
-(5, '', 'Office D', 'Fourth office'),
-(6, '', 'Office E', 'New office'),
-(7, '', 'Office F', 'Old office'),
-(8, '', 'Office E', 'New office'),
-(9, '', 'Office F', 'Old office'),
-(10, '', 'Office E', 'New office'),
-(11, '', 'Office F', 'Old office'),
-(12, '', 'Office E', 'New office'),
-(13, '', 'Office F', 'Old office'),
-(14, '', 'Office E', 'New office'),
-(15, '', 'Office F', 'Old office'),
-(16, '', 'Office E', 'New office'),
-(17, '', 'Office F', 'Old office'),
-(18, '', 'Office E', 'New office'),
-(19, '', 'Office F', 'Old office'),
-(20, '', 'Office E', 'New office'),
-(21, '', 'Office F', 'Old office'),
-(22, '', 'Office E', 'New office'),
-(23, '', 'Office F', 'Old office'),
-(24, '', 'Office E', 'New office'),
-(25, '', 'Office F', 'Old office');
+(2, '', 'Office B', 'Secondary office');
 
 -- --------------------------------------------------------
 
@@ -225,13 +181,7 @@ CREATE TABLE `people` (
 --
 
 INSERT INTO `people` (`people_id`, `user`, `name`, `date of birth`, `department_id`, `photo`, `password`, `email`, `phone`, `nationality`, `admin`, `password_status`, `active`) VALUES
-(1, 'john_doe', 'John Doe', '0000-00-00', 1, NULL, '123', 'john.doe@example.com', '1234567890', '', 1, 0, 0),
-(2, 'jane_smith', 'Jane Smith', '0000-00-00', 2, NULL, 'hashed_password', 'jane.smith@example.com', '9876543210', '', 0, 0, 0),
-(3, 'DAnastacio', 'Diogo Ferreira Anastácio', '0000-00-00', 1, NULL, '123456789', 'diogo.anastacio.30473@esgc.pt', '962187271', '', 1, 0, 0),
-(4, 'joe_bloggs', 'Joe Bloggs', '1990-01-01', 1, NULL, 'hashed_password', 'joe.bloggs@example.com', '1234567890', '', 0, 0, 0),
-(5, 'jane_doe', 'Jane Doe', '1995-01-01', 2, NULL, 'hashed_password', 'jane.doe@example.com', '9876543210', '', 0, 0, 0),
-(10, 'joe_blogs', 'Joe Blogs', '1990-01-01', 1, NULL, 'hashed_password', 'joe.bloggs@example.com', '1234567890', '', 0, 0, 0),
-(11, 'jane_de', 'Jane De', '1995-01-01', 2, NULL, 'hashed_password', 'jane.doe@example.com', '9876543210', '', 0, 0, 0);
+(3, 'DAnastacio', 'Diogo Ferreira Anastácio', '0000-00-00', 1, NULL, '123456789', 'diogo.anastacio.30473@esgc.pt', '962187271', '', 1, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -277,6 +227,25 @@ INSERT INTO `roles` (`role_id`, `role`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `roles_department`
+--
+
+CREATE TABLE `roles_department` (
+  `department_id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `roles_department`
+--
+
+INSERT INTO `roles_department` (`department_id`, `role_id`) VALUES
+(1, 1),
+(2, 2);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `room`
 --
 
@@ -293,22 +262,7 @@ CREATE TABLE `room` (
 
 INSERT INTO `room` (`room_id`, `room_name`, `space`, `description`) VALUES
 (1, 'Meeting Room 1', 20, 'Conference room for team meetings'),
-(5, 'Meeting Room 2', 30, 'Large conference room'),
-(6, 'Meeting Room 3', 20, 'Small meeting room'),
-(7, 'Meeting Room 2', 30, 'Large conference room'),
-(8, 'Meeting Room 3', 20, 'Small meeting room'),
-(9, 'Meeting Room 2', 30, 'Large conference room'),
-(10, 'Meeting Room 3', 20, 'Small meeting room'),
-(11, 'Meeting Room 2', 30, 'Large conference room'),
-(12, 'Meeting Room 3', 20, 'Small meeting room'),
-(13, 'Meeting Room 2', 30, 'Large conference room'),
-(14, 'Meeting Room 3', 20, 'Small meeting room'),
-(15, 'Meeting Room 2', 30, 'Large conference room'),
-(16, 'Meeting Room 3', 20, 'Small meeting room'),
-(17, 'Meeting Room 2', 30, 'Large conference room'),
-(18, 'Meeting Room 3', 20, 'Small meeting room'),
-(19, 'Meeting Room 2', 30, 'Large conference room'),
-(20, 'Meeting Room 3', 20, 'Small meeting room');
+(5, 'Meeting Room 2', 30, 'Large conference room');
 
 --
 -- Indexes for dumped tables
@@ -340,8 +294,7 @@ ALTER TABLE `building_offices`
 -- Indexes for table `department`
 --
 ALTER TABLE `department`
-  ADD PRIMARY KEY (`department_id`),
-  ADD KEY `role_id` (`role_id`);
+  ADD PRIMARY KEY (`department_id`);
 
 --
 -- Indexes for table `offices`
@@ -378,6 +331,14 @@ ALTER TABLE `recover`
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`role_id`),
   ADD KEY `role` (`role`);
+
+--
+-- Indexes for table `roles_department`
+--
+ALTER TABLE `roles_department`
+  ADD PRIMARY KEY (`department_id`,`role_id`),
+  ADD KEY `department_id` (`department_id`,`role_id`),
+  ADD KEY `roles_department_roles__FK_1` (`role_id`);
 
 --
 -- Indexes for table `room`
@@ -445,8 +406,8 @@ ALTER TABLE `room`
 -- Constraints for table `bookmark`
 --
 ALTER TABLE `bookmark`
-  ADD CONSTRAINT `Bookmark_People_FK` FOREIGN KEY (`people_id`) REFERENCES `people` (`people_id`),
-  ADD CONSTRAINT `Bookmark_Offices_room_FK` FOREIGN KEY (`room_id`) REFERENCES `offices_room` (`room_id`);
+  ADD CONSTRAINT `Bookmark_Offices_room_FK` FOREIGN KEY (`room_id`) REFERENCES `offices_room` (`room_id`),
+  ADD CONSTRAINT `Bookmark_People_FK` FOREIGN KEY (`people_id`) REFERENCES `people` (`people_id`);
 
 --
 -- Constraints for table `building_offices`
@@ -454,12 +415,6 @@ ALTER TABLE `bookmark`
 ALTER TABLE `building_offices`
   ADD CONSTRAINT `Building_offices_Building_FK` FOREIGN KEY (`building_id`) REFERENCES `buildings` (`building_id`),
   ADD CONSTRAINT `Building_offices_Offices_FK` FOREIGN KEY (`office_id`) REFERENCES `offices` (`office_id`);
-
---
--- Constraints for table `department`
---
-ALTER TABLE `department`
-  ADD CONSTRAINT `Department_Roles_FK` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`);
 
 --
 -- Constraints for table `offices_room`
@@ -472,19 +427,20 @@ ALTER TABLE `offices_room`
 -- Constraints for table `people`
 --
 ALTER TABLE `people`
-  ADD CONSTRAINT `People_Department_FK` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`);
+  ADD CONSTRAINT `people_department_FK_1` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`);
 
 --
--- Constraints for table `recover`
+-- Constraints for table `roles_department`
 --
-ALTER TABLE `recover`
-  ADD CONSTRAINT `Recover_People_FK` FOREIGN KEY (`recover_id`) REFERENCES `people` (`people_id`);
+ALTER TABLE `roles_department`
+  ADD CONSTRAINT `roles_department_department__FK_2` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`),
+  ADD CONSTRAINT `roles_department_roles__FK_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`);
 
 DELIMITER $$
 --
 -- Events
 --
-CREATE DEFINER=`root`@`localhost` EVENT `delete_expired_bookmarks` ON SCHEDULE EVERY 1 DAY STARTS '2024-03-05 15:03:59' ON COMPLETION NOT PRESERVE ENABLE COMMENT 'Delete expired bookmarks every day' DO UPDATE bookmark 
+CREATE DEFINER=`company_exacthair`@`rpx.h.filess.io` EVENT `inactive_expired_bookmarks` ON SCHEDULE EVERY 1 DAY STARTS '2024-03-05 15:03:59' ON COMPLETION NOT PRESERVE ENABLE COMMENT 'Inactive expired bookmarks every day' DO UPDATE bookmark 
     SET active = 0 
     WHERE selected_date < CURDATE() AND end_hour < CURTIME()$$
 

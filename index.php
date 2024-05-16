@@ -151,9 +151,9 @@ if (!isset($_SESSION['user_id'])) {
 
 
 
+<p>
 
-
-        <nav class="navbar navbar-light bg-light navbar-expand-lg navbar-light" style="transition: height 0.5s;">
+        <nav class="navbar navbar-light bg-light navbar-expand-lg navbar-light" style="transition: height 0.5s; margin:2%">
             <div class="container-fluid">
                 <div class="col-md-1">
                     <img src="images/esgc.png" class="rounded img-fluid img-small w-50" alt="company_logo">
@@ -185,6 +185,7 @@ if (!isset($_SESSION['user_id'])) {
 
 
     ?>
+</p>
     <div class="content">
 
 
@@ -193,6 +194,7 @@ if (!isset($_SESSION['user_id'])) {
         </div> -->
 
     </div>
+    <br>
     <div class="col-md-2">
         <?php
         //  echo $_SESSION['user'];

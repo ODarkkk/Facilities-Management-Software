@@ -25,9 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           PASSWORD_DEFAULT); 
     if (isset($_GET['edit'])) {
         $edit = true;
+        $id = $_POST['peopleid'];
+        $nationality = $_POST['nationality'];
     }  
     else{
-        $id = $_POST['peopleid'];
         $date = $_POST['date'];
     }
       $logon = $_POST['logon'];
@@ -41,13 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
      else {
         // Insert or update user data
         if ($edit) {
-            $sql = "UPDATE people SET username =?, name =?, department_id =?, email =?, photo =?, phone =?, password =?, logon =?, admin =? WHERE people_id =?";
+            $sql = "UPDATE people SET username =?, name =?, role_department_id =?, email =?, photo =?, phone =?, password =?, logon =?, admin =? WHERE people_id =?";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("sssisssiii", $username, $name, $department, $email, $photo, $phone, $new_password, $logon, $admin, $id);
+            $stmt->bind_param("ssisbssiii", $username, $name, $department, $email, $photo, $phone, $new_password, $logon, $admin, $id);
         } else {
-            $sql = "INSERT INTO people (username, name, department_id, email, photo, phone, password, logon, admin) VALUES (?,?,?,?,?,?,?,?,?)";
+            $sql = "INSERT INTO people (username, name, role_department_id, email, photo, phone, password, logon, admin) VALUES (?,?,?,?,?,?,?,?,?)";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ssssisssiii", $username, $name, $date, $department, $email, $photo, $phone, $new_password, $logon, $admin);
+            $stmt->bind_param("ssssisbisii", $username, $name, $date, $nationality, $department, $email, $photo, $phone, $new_password, $logon, $admin);
         }
         
         // Redirect to a success page or display a success message

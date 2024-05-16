@@ -54,10 +54,10 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
       return true;
     }
 
-    function confirmAction(username) {
+    function confirmAction(username,$userId) {
   var result = confirm('Are you sure you want to edit ' + username + '?');
   if (result) {
-    window.location.href = 'user.php';
+    window.location.href = 'new_user.php?userId=' + $userId;
   }
 }
   </script>
@@ -91,7 +91,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
     <h1>Users</h1>
     <button type="button" onclick="location.href = 'new_user.php';" class="btn btn-success">New User</button>
 
-    <table class="table">
+    <!-- <table class="table">
       <thead>
         <tr>
           <th>User</th>
@@ -105,52 +105,71 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
           <th>Active Status</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody> -->
         <?php
 
 
         // Select all users
-        $sql = "SELECT p.people_id, p.user, p.name, d.department_id, p.photo, p.email, p.phone, p.admin, p.password_status, p.active
-FROM people p
-JOIN department d ON p.department_id = d.department_id";
+        $sql = "SELECT p.*, d.department, r.role
+        FROM people p
+        INNER JOIN department d ON d.department_id = p.role_department_id
+        INNER JOIN roles r on r.role_id = d.department_id";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
+          $list = array();
           while ($row = $result->fetch_assoc()) {
             // echo "<form action='add_user.php' method='post'>";
-
-            echo "<input type='hidden' name='user_id' id='user_id' value='" . $row['people_id'] . "'>";
-            echo "<tr>";
-            echo "<td>" . $row['user'] . "</td>";
-            echo "<td>" . $row['name'] . "</td>";
-            echo "<td>" . $row['email'] . "</td>";
-            echo "<td>" . $row['phone'] . "</td>";
-            echo "<td>" . $row['photo'] . "</td>";
-            echo "<td>" . $row['department_id'] . "</td>";
-            echo "<td>" . ($row['admin'] ? "Admin" : "Not Admin") . "</td>";
-            echo "<td>" . ($row['password_status'] ? "Will Changed" : "Don't changed") . "</td>";
-
-            echo "<td><button class='btn " . ($row['active'] == 1 ? 'btn-danger' : 'btn-secondary') . "'
-onclick='return confirm(\"Are you sure you want to change the active status of " . $row['user'] . "?\") && changeActiveStatus(" . $row['people_id'] . ", " . ($row['active'] == 1 ? 0 : 1) . ")'>
-" . ($row['active'] == 1 ? 'Active' : 'Don\'t Active') . " </button></td>";
-
-
-            echo "<td>";
-            echo "<form method='GET' action='user.php?user_id= ". $row['people_id'] ." '>";
-            echo "<input type='hidden' name='userId' value='" . $row['people_id'] . "'>";
-            echo "<button class='btn btn-primary' onclick='confirmAction(\"" . $row['user'] . "\")'>Edit</button>";
-            echo "</form>";
-            echo "</form>";
-            echo "</td>";
-        ?>
-            </td>
-        <?php
-            echo "</tr>";
+               
+            $imageData = $row["photo"];
+            $tempFileName = tempnam(sys_get_temp_dir(), 'image');
+            file_put_contents($tempFileName, $imageData);
+            $imageType = exif_imagetype($tempFileName);
+            $mimeType = "";
+            switch ($imageType) {
+              case IMAGETYPE_JPEG:
+                $mimeType = "image/jpeg";
+                break;
+              case IMAGETYPE_PNG:
+                $mimeType = "image/png";
+                break;
+              default:
+                $mimeType = "application/octet-stream";
+              }
+            
+            $list[]='<div class="col-md-4">' .
+            '<div class="card mb-4">' .
+            '<div class="card-body">' .
+            '<h5 class="card-title">' . htmlspecialchars($row["user"]) . '</h5>' .
+            '<p class="card-text">' . htmlspecialchars($row["name"]) . '</p>' .
+            '<p class="card-text">' . htmlspecialchars($row["email"]) . '</p>' .
+            '<p class="card-text">' . htmlspecialchars($row["phone"]) . '</p>' .
+            '<p class="card-text">'.
+            '<img src="data:'. $mimeType .'; base64,'.base64_encode($imageData).'" alt="' . $row["user"] . 'photo" class="img-fluid"/>'.
+            '</p>' .
+            '<p class="card-text">' . htmlspecialchars($row["department"]) . '</p>' .
+            '<p class="card-text">' . htmlspecialchars($row["role"]) . '</p>' .
+            '<p class="card-text">' . ($row["admin"] ? "Admin" : "Not Admin") . '</p>' .
+            '<p class="card-text">Password status: ' . ($row["password_status"] ? "Will Changed" : "It won't change") . '</p>' .
+            '<div class="d-flex justify-content-between align-items-center">' .
+              '<button type="button" class="btn btn-primary" onclick="confirmAction(\'' . $row["user"] . $row["people_id"] .'\')">Edit</button>' .
+              '<button class="btn ' . ($row["active"] == 1 ? 'btn-danger' : 'btn-secondary') . '"
+              onclick="return confirm(\'Are you sure you want to change the active status of ' . $row["user"] . '?\') && changeActiveStatus(' . $row["people_id"] . ', ' . ($row["active"] == 1 ? 0 : 1) . ')">' .
+              ($row["active"] == 1 ? 'Active' : 'Don\'t Active') . ' </button>' .
+            '</div>' .
+            '</div>' .
+            '</div>' .
+            '</div>';
+           
+       
           }
-        } else {
-          echo "<tr><td colspan='7'>No users found.</td></tr>";
-        }
+          foreach ($list as $card) {
+            echo $card;
+          }
 
+  } else {
+    echo "<div class='col-md-4'><p>No users found.</p></div>";
+  }
         ?>
       </tbody>
     </table>

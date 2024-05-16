@@ -7,7 +7,7 @@ $id = $_POST['id'];
 $active = $_POST['active'];
 
 // Prepare an SQL statement to update the active status of the user
-$stmt = $conn->prepare("UPDATE people SET active = ? WHERE id = ?");
+$stmt = $conn->prepare("UPDATE people SET active = ? WHERE people_id = ?");
 $stmt->bind_param('ii', $active, $id);
 
 // Execute the SQL statement

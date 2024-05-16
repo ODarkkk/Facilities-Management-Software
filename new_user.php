@@ -229,7 +229,7 @@ if (isset($_POST['submit'])) {
                     </div>
                     <?php
                     if($edit){
-                    echo "<input type='hidden' id=peopleid' name='peopleId' value=''".$row['people_id']."'' /> ";
+                    echo "<input type='hidden' id='peopleid' name='peopleId' value='". $row['people_id']."' /> ";
                     }
                     if (isset($error_message)) {
                         echo "<p style='color: red;'>$error_message</p>";

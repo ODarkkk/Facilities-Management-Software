@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 16, 2024 at 11:40 AM
+-- Generation Time: May 16, 2024 at 12:01 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -165,7 +165,7 @@ CREATE TABLE `people` (
   `user` varchar(55) NOT NULL,
   `name` varchar(255) NOT NULL,
   `date of birth` date NOT NULL,
-  `department_id` int(11) DEFAULT NULL,
+  `role_department_id` int(11) DEFAULT NULL,
   `photo` longblob DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -180,7 +180,7 @@ CREATE TABLE `people` (
 -- Dumping data for table `people`
 --
 
-INSERT INTO `people` (`people_id`, `user`, `name`, `date of birth`, `department_id`, `photo`, `password`, `email`, `phone`, `nationality`, `admin`, `password_status`, `active`) VALUES
+INSERT INTO `people` (`people_id`, `user`, `name`, `date of birth`, `role_department_id`, `photo`, `password`, `email`, `phone`, `nationality`, `admin`, `password_status`, `active`) VALUES
 (3, 'DAnastacio', 'Diogo Ferreira Anastácio', '0000-00-00', 1, NULL, '123456789', 'diogo.anastacio.30473@esgc.pt', '962187271', '', 1, 0, 0);
 
 -- --------------------------------------------------------
@@ -317,7 +317,7 @@ ALTER TABLE `people`
   ADD PRIMARY KEY (`people_id`),
   ADD UNIQUE KEY `user` (`user`),
   ADD UNIQUE KEY `user_2` (`user`),
-  ADD KEY `department_id` (`department_id`);
+  ADD KEY `department_id` (`role_department_id`);
 
 --
 -- Indexes for table `recover`
@@ -427,7 +427,7 @@ ALTER TABLE `offices_room`
 -- Constraints for table `people`
 --
 ALTER TABLE `people`
-  ADD CONSTRAINT `people_department_FK_1` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`);
+  ADD CONSTRAINT `people_roles_department_1` FOREIGN KEY (`role_department_id`) REFERENCES `roles_department` (`department_id`);
 
 --
 -- Constraints for table `roles_department`
@@ -440,7 +440,7 @@ DELIMITER $$
 --
 -- Events
 --
-CREATE DEFINER=`company_exacthair`@`rpx.h.filess.io` EVENT `inactive_expired_bookmarks` ON SCHEDULE EVERY 1 DAY STARTS '2024-03-05 15:03:59' ON COMPLETION NOT PRESERVE ENABLE COMMENT 'Inactive expired bookmarks every day' DO UPDATE bookmark 
+CREATE DEFINER=`root`@`localhost` EVENT `inactive_expired_bookmarks` ON SCHEDULE EVERY 1 DAY STARTS '2024-03-05 15:03:59' ON COMPLETION NOT PRESERVE ENABLE COMMENT 'Inactive expired bookmarks every day' DO UPDATE bookmark 
     SET active = 0 
     WHERE selected_date < CURDATE() AND end_hour < CURTIME()$$
 

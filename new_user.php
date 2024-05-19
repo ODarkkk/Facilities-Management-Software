@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
 $edit = false;
 $error_message = "";
 $role = null;
-$selected = null;
+$selected = null; //pre select the values 
 if (isset($_GET['userId'])) {
     $edit = true;
     $id = $_GET['userId'];
@@ -72,37 +72,9 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="script.js"></script>
-    <script>
-    // $(document).ready(function() {
-    //     // $('#department').ready(function() {
-    //     //     var department_id = $(this).val();
-    //     //     updateRoles(departmentId);
-    //     // });
-    //     $('#department').ready(function()
-    //     {
-    //         const department_id = $('#department').val();
-    //         updateRoles(department_id);
-    //     })
-    //     $('#department').change(function() {
-    //         const department_id = $('#department').val();
-    //         updateRoles(department_id);
-    //     })
-    // });
 
-    function updateRoles(departmentId) {
-        $.ajax({
-            url: "get_roles.php",
-            type:"GET",
-            method: "GET",
-            data: {
-                department_id: departmentId
-            },
-            success: function(data) {
-                $("#role").html(data);
-            }
-        });
-    }
-</script>
+
+
     <script type="importmap">
         {
 		  "imports": {
@@ -168,7 +140,7 @@ if (isset($_POST['submit'])) {
                     <label for="username" class="form-label">Username</label>
                     <input type="text" class="form-control custom-input" name="username" id="username" value="<?php if ($edit) {
                                                                                                                     echo $row['user'];
-                                                                                                                } ?>" required>
+                                                                                                                }?>" required>
                 </div>
                 <div class="col-md-6">
                     <label for="name" class="form-label">Name</label>
@@ -188,9 +160,13 @@ if (isset($_POST['submit'])) {
                 ?>
                 <div class="col-md-6">
                     <label for="name" class="form-label">Department:</label>
-                    <select name="department" id="department" onchange="updateRoles(this.value)">
-                        <option value="" selected disabled hidden>Select Department</option>
-                        <?php
+                    <select name="department" id="department">
+                    <?php
+                    if ($edit == false){
+                      echo '<option value="" selected >Select Department</option>';
+
+                    }
+                     
 
 
                         $sql = "SELECT * FROM department";
@@ -201,10 +177,15 @@ if (isset($_POST['submit'])) {
                         // Check if there are any departments
                         if ($result->num_rows > 0) {
                             // Output options for each department
-
+                        if ($edit ==false){
+                                    echo '<option value="" selected hidden>Select Department</option>';
+              
+                                  }
                             while ($row2 = $result->fetch_assoc()) {
-                                $selected = ($row['role_department_id'] == $row2['department_id']) ? 'selected' : '';
-                                echo "<option value='" . $row2['department_id'] . "' " . $selected . ">" . $row2['department'] . "</option>";
+                                if ($edit ==true){
+                                $selected = ($row['role_department_id'] == $row2['department_id']) ? 'selected' : null;
+                                  }
+                                echo "<option value='" . $row2['department_id'] . "' " . $selected . ">".  $row2['department'] . "</option>";
                             }
                         } else {
                             // Output a default option if no departments found
@@ -219,15 +200,7 @@ if (isset($_POST['submit'])) {
                 <div class="col-md-6">
                     <label for="name" class="form-label">Role:</label>
                     <select name="role" id="role">
-                        <option value="" selected disabled hidden>Select Role</option>
-                        <script>
-                            // fetch('get_roles.php').then(response => response.text()).then(data => {
-                            //     const selectElement = document.getElementById('roleSelect')
-                            //     selectElement.innerHTML = data;
-                            // }).catch(error => {
-                            //     console.error("Error fetching data:", error);
-                            // });
-                        </script>
+                      
 
                     </select>
                 </div>
@@ -235,7 +208,7 @@ if (isset($_POST['submit'])) {
 
                 <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control custom-input" name="Email" id="Email" value="<?php if ($edit) {
+                    <input type="email" class="form-control custom-input" name="email" id="Email" value="<?php if ($edit) {
                                                                                                                 echo $row['email'];
                                                                                                             } ?>" required>
                 </div>

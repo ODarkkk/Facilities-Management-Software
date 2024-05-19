@@ -5,7 +5,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
     exit(); // Ensure script stops after redirect
 }
 
-$departmentId = (isset($_GET['department_id'])? [$_GET['department_id']] : null);
+$departmentId = (isset($_GET['department_id'])? $_GET['department_id'] : null);
 
 
 // Consulta SQL para obter as funções disponíveis para o departamento selecionado
@@ -21,14 +21,22 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 $options = "";
+
+if ($departmentId == null){
+    if ($row['p.role_department_id'] == null){
+        echo '<option value="" selected >Select a Department first</option>';
+      }
+}
+else{
 if ($result->num_rows > 0) {
+
     while ($row = $result->fetch_assoc()) {
         $options .= "<option value='" . $row['roles_department_id'] . "'>" . $row['role'] . "</option>";
     }
 } else {
     $options .= "<option value=''>No results found</option>";
 }
-
+}
 // Retorne a string HTML como resposta
 echo $options;
 

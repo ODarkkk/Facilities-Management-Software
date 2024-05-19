@@ -87,85 +87,100 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
     </nav>
 
 
-    <div class="container mt-5">
-        <h1>Users</h1>
-        <button type="button" onclick="location.href = 'user.php';" class="btn btn-success">New User</button>
-
-        <table class="table">
-            <thead>
-                <tr>
-
-                    <!-- office structure
-                    office_image
-                    office_name
-                    description
-
-                    buildings structure
-                    building_name
-                    descreiption
-
-                    room structure
-                    room_name
-                    description -->
-                    
-                    <th>Name</th>
-                    <?php 
-                    echo "<th>Image</th>"
-                    ?>
-                    <th>Description</th>
-                  
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-
-
-                // Select all users
-                $sql = "SELECT p.people_id, p.user, p.name, d.department_id, p.photo, p.email, p.phone, p.admin, p.password_status, p.active
-FROM people p
-JOIN department d ON p.department_id = d.department_id";
-                $result = $conn->query($sql);
-
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        // echo "<form action='add_user.php' method='post'>";
-
-                        echo "<input type='hidden' name='user_id' id='user_id' value='" . $row['people_id'] . "'>";
-                        echo "<tr>";
-                        echo "<td>" . $row['user'] . "</td>";
-                        echo "<td>" . $row['name'] . "</td>";
-                        echo "<td>" . $row['email'] . "</td>";
-                        echo "<td>" . $row['phone'] . "</td>";
-                        echo "<td>" . $row['photo'] . "</td>";
-                        echo "<td>" . $row['department_id'] . "</td>";
-                        echo "<td>" . ($row['admin'] ? "Admin" : "Not Admin") . "</td>";
-                        echo "<td>" . ($row['password_status'] ? "Will Changed" : "Don't changed") . "</td>";
-
-                        echo "<td><button class='btn " . ($row['active'] == 1 ? 'btn-danger' : 'btn-secondary') . "'
-onclick='return confirm(\"Are you sure you want to change the active status of " . $row['user'] . "?\") && changeActiveStatus(" . $row['people_id'] . ", " . ($row['active'] == 1 ? 0 : 1) . ")'>
-" . ($row['active'] == 1 ? 'Active' : 'Don\'t Active') . " </button></td>";
-
-
-                        echo "<td>";
-                        echo "<form method='GET' action='user.php?user_id= " . $row['people_id'] . " '>";
-                        echo "<input type='hidden' name='userId' value='" . $row['people_id'] . "'>";
-                        echo "<button class='btn btn-primary' onclick='confirmAction(\"" . $row['user'] . "\")'>Edit</button>";
-                        echo "</form>";
-                        echo "</form>";
-                        echo "</td>";
-                ?>
-                        </td>
-                <?php
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='7'>No users found.</td></tr>";
-                }
-
-                ?>
-            </tbody>
-        </table>
+    <div class="container-fluid mt-5">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-header">
+          <h4>Add Building</h4>
+        </div>
+        <div class="card-body">
+          <form action="/buildings" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="building_name">Building Name</label>
+              <input type="text" class="form-control" id="building_name" name="building_name" required>
+            </div>
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="offices">Add Offices</label>
+              <select class="form-control select2" id="offices" name="offices[]" multiple required>
+                <!-- Offices options will come here -->
+              </select>
+            </div>
+            <br>  <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
+
+<div class="container-fluid mt-5">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-header">
+          <h4>Add Office</h4>
+        </div>
+        <div class="card-body">
+          <form action="/offices" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="office_image">Office Image</label>
+              <input type="file" class="form-control-file" id="office_image" name="office_image" required>
+            </div>
+            <div class="form-group">
+              <label for="office_name">Office Name</label>
+              <input type="text" class="form-control" id="office_name" name="office_name" required>
+            </div>
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="rooms">Add Rooms</label>
+              <select class="form-control select2" id="rooms" name="rooms[]" multiple required>
+                <!-- Rooms options will come here -->
+              </select>
+            </div>
+            <br>  <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid mt-5">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-header">
+          <h4>Add Room</h4>
+        </div>
+        <div class="card-body">
+          <form action="/room" method="post">
+            <div class="form-group">
+              <label for="room_name">Room Name</label>
+              <input type="text" class="form-control" id="room_name" name="room_name" required>
+            </div>
+            <div class="form-group">
+              <label for="space">Space</label>
+              <input type="number" class="form-control" id="space" name="space" required>
+            </div>
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+            </div>
+           <br> <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
     <!-- <button  class="button-log"> <img src="images/exit.png" alt="exit" width="100%"></button>
 	  </div> -->
     <div class="position-fixed bottom-0 end-0">

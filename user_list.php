@@ -110,10 +110,13 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
 
 
         // Select all users
-        $sql = "SELECT p.*, d.department, r.role
+        $sql = "SELECT p.*,
+        CASE WHEN p.role_department_id IS NULL THEN 'No department assigned' ELSE d.department END AS department,
+        CASE WHEN p.role_department_id IS NULL THEN 'No role assigned' ELSE r.role END AS role
         FROM people p
-        INNER JOIN department d ON d.department_id = p.role_department_id
-        INNER JOIN roles r on r.role_id = d.department_id";
+        LEFT JOIN roles_department rd ON rd.roles_department_id = p.role_department_id
+        LEFT JOIN department d ON d.department_id = rd.department_id
+        LEFT JOIN roles r on r.role_id = rd.role_id;";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
@@ -142,11 +145,11 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
             '<div class="card-body">' .
             '<h5 class="card-title">' . htmlspecialchars($row["user"]) . '</h5>' .
             '<p class="card-text">' . htmlspecialchars($row["name"]) . '</p>' .
-            '<p class="card-text">' . htmlspecialchars($row["email"]) . '</p>' .
-            '<p class="card-text">' . htmlspecialchars($row["phone"]) . '</p>' .
             '<p class="card-text">'.
             '<img src="data:'. $mimeType .'; base64,'.base64_encode($imageData).'" alt="' . $row["user"] . 'photo" class="img-fluid"/>'.
             '</p>' .
+            '<p class="card-text">' . htmlspecialchars($row["email"]) . '</p>' .
+            '<p class="card-text">' . htmlspecialchars($row["phone"]) . '</p>' .
             '<p class="card-text">' . htmlspecialchars($row["department"]) . '</p>' .
             '<p class="card-text">' . htmlspecialchars($row["role"]) . '</p>' .
             '<p class="card-text">' . ($row["admin"] ? "Admin" : "Not Admin") . '</p>' .
@@ -163,9 +166,15 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
            
        
           }
+          echo "<br>";
+          echo "<br>";
+          echo '<div class="container">';
+          echo '<div class="row">';
           foreach ($list as $card) {
             echo $card;
           }
+          echo "</div>";
+          echo "</div>";
 
   } else {
     echo "<div class='col-md-4'><p>No users found.</p></div>";

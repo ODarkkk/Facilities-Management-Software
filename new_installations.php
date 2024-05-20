@@ -93,7 +93,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
             <h4>Add Room</h4>
           </div>
           <div class="card-body">
-            <form action="/room" method="post">
+            <form action="/insert_room.php" method="post">
               <div class="form-group">
                 <label for="room_name">Room Name</label>
                 <input type="text" class="form-control" id="room_name" name="room_name" required>
@@ -106,7 +106,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
                 <label for="description">Description</label>
                 <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
               </div>
-              <br> <button type="submit" class="btn btn-primary">Submit</button>
+             <button type="submit" class="btn btn-primary">Submit</button>
             </form>
           </div>
         </div>

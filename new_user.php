@@ -144,7 +144,7 @@ if (isset($_POST['submit'])) {
                 </div>
                 <div class="col-md-6">
                     <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control custom-input" name="Name" id="name" value="<?php if ($edit) {
+                    <input type="text" class="form-control custom-input" name="name" id="name" value="<?php if ($edit) {
                                                                                                             echo $row['name'];
                                                                                                         } ?> " required>
                 </div>
@@ -170,22 +170,20 @@ if (isset($_POST['submit'])) {
 
 
                         $sql = "SELECT * FROM department";
-
+                        
 
                         $result = $conn->query($sql);
 
                         // Check if there are any departments
                         if ($result->num_rows > 0) {
                             // Output options for each department
-                        if ($edit ==false){
-                                    echo '<option value="" selected hidden>Select Department</option>';
-              
-                                  }
+                      
                             while ($row2 = $result->fetch_assoc()) {
-                                if ($edit ==true){
-                                $selected = ($row['role_department_id'] == $row2['department_id']) ? 'selected' : null;
-                                  }
-                                echo "<option value='" . $row2['department_id'] . "' " . $selected . ">".  $row2['department'] . "</option>";
+                                if ($edit && $row['rd.roles_department_id'] == $row2['department_id']) {
+                                    echo "<option value='" . $row2['department_id'] . "' selected>" . $row2['department'] . "</option>";
+                                } else {
+                                    echo "<option value='" . $row2['department_id'] . "'>" . $row2['department'] . "</option>";
+                                }
                             }
                         } else {
                             // Output a default option if no departments found
@@ -208,7 +206,7 @@ if (isset($_POST['submit'])) {
 
                 <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control custom-input" name="email" id="Email" value="<?php if ($edit) {
+                    <input type="email" class="form-control custom-input" name="email" id="email" value="<?php if ($edit) {
                                                                                                                 echo $row['email'];
                                                                                                             } ?>" required>
                 </div>
@@ -258,8 +256,10 @@ if (isset($_POST['submit'])) {
                         </label>
                     </div>
                     <?php
-                    if ($edit) {
-                        echo "<input type='hidden' id='peopleid' name='peopleId' value='" . $row['people_id'] . "' /> ";
+                    if ($edit==true) {
+                        echo "<input type='hidden' id='peopleid' name='peopleid' value='" . $row['people_id'] . "' /> ";
+                        echo "<input type='hidden' id='edit' name='edit' value='" . $edit . "' /> ";
+
                     }
                     if (isset($error_message)) {
                         echo "<p style='color: red;'>$error_message</p>";

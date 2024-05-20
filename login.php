@@ -15,11 +15,10 @@ include_once('config.php');
 
     $user = $_POST['user'];
     $password = $_POST['password'];
-    // $decrypt = password_hash($password,  
-    //     PASSWORD_DEFAULT); 
+    $decrypt = password_hash($password,  
+        PASSWORD_DEFAULT); 
 
-
-    $sql = "SELECT * FROM `people` WHERE user = '$user' AND password = '$password'";
+    $sql = "SELECT * FROM `people` WHERE user = '$user' AND password = '$password' AND active=1";
   
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {

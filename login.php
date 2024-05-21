@@ -15,14 +15,15 @@ include_once('config.php');
 
     $user = $_POST['user'];
     $password = $_POST['password'];
-    $decrypt = password_hash($password,  
-        PASSWORD_DEFAULT); 
-
-    $sql = "SELECT * FROM `people` WHERE user = '$user' AND password = '$password' AND active=1";
+    // $decrypt = password_hash($password,  
+    //     PASSWORD_DEFAULT); 
+   
+    $sql = "SELECT * FROM `people` WHERE user = '$user' AND active=1";
   
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
       while ($row = $result->fetch_assoc()) {
+        if (password_verify($password, $row['password'])) {
         $_SESSION['user_id'] = $row["people_id"];
         $_SESSION['user'] = $row["name"];
         $_SESSION['email'] = $row["email"];
@@ -31,9 +32,14 @@ include_once('config.php');
       // // Encrypting the admin value and storing it in session
       // $encrypted_data = encrypt_session_data($row["admin"], $secret_key);
       // $_SESSION['admin'] = $encrypted_data;
-      }
+      
       echo "<script>window.location.href = 'index.php';</script>";
       exit;
+    }  else
+    {
+      $error_message = "Credential incorrect! Try again.";
+    }
+    }
     } else {
 
       // echo "<p style='color: red;'>Credential incorrect! Try again.</p>";

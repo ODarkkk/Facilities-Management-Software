@@ -129,7 +129,8 @@ while ($row = $result->fetch_assoc()) {
     '<h5 class="card-title">' . htmlspecialchars($row["room_name"]) . '</h5>' .
     '<p class="card-text">' . htmlspecialchars($row["description"]) . '</p>' .
     '<p class="room-status ' . getRoomStatusClass($row) . '">' . getRoomStatusLabel($row) . '</p>' .
-    '<button type="button" class="btn btn-primary" onclick="location.href=\'room_reserve.php?room_id=' . $row["room_id"] . '&selecteddate_js=' . $selectedDate . '\';">Reserve</button>' .
+    '<button type="button" class="btn btn-primary" onclick="location.href=\'room_reserve.php?room_id=' . $row["room_id"] . '&selecteddate_js=' . $selectedDate . '\';">Reserve</button> ' .
+     '<button type="button" class="btn btn-primary" onclick="location.href=\'room_reserve.php?room_id=' . $row["room_id"] . '&selecteddate_js=' . $selectedDate . '\';">Reserve</button>' .
     '</div>' .
     '</div>' .
     '</div>';
@@ -186,7 +187,7 @@ function getRoomStatusClass($row)
     case 'partially-available':
       return 'text-warning';
     default:
-      return '';
+      return 'text-success';
   }
 }
 

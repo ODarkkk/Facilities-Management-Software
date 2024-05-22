@@ -1,6 +1,10 @@
 <?php
 include_once('config.php');
-
+if(isset($_SESSION['user_id']))
+{
+ header("location: index.php");
+ exit;
+}
 
 // function encrypt_session_data($data, $secret_key)
 // {

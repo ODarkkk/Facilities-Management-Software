@@ -305,6 +305,10 @@ if (!isset($_SESSION['user_id'])) {
                             </script>
                             <!-- Options will be dynamically inserted here -->
                         </select>
+                        <div id="officeDropdown" class="dropdown-menu dropdown-menu-right">
+      <!-- <div class="dropdown-header">Select an office</div> -->
+         <div id="dropdownItems" class="dropdown-divider"></div>
+                    </div>
                     </div>
                     <div class="tab-pane fade" id="buildings" role="tabpanel" aria-labelledby="buildings-tab">
                         <select class="form-select" id="buildingSelect">

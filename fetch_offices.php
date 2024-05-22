@@ -31,12 +31,29 @@ $stmt->execute();
 $result = $stmt->get_result();
 // Check if there are results
 if ($result->num_rows > 0) {
+    $imageData = $row["office_image"];
+            $tempFileName = tempnam(sys_get_temp_dir(), 'image');
+            file_put_contents($tempFileName, $imageData);
+            $imageType = exif_imagetype($tempFileName);
+            $mimeType = "";
+            switch ($imageType) {
+              case IMAGETYPE_JPEG:
+                $mimeType = "image/jpeg";
+                break;
+              case IMAGETYPE_PNG:
+                $mimeType = "image/png";
+                break;
+              default:
+                $mimeType = "application/octet-stream";
+              }
     // Start the select element
     echo "<select class='form-select' id='roomSelect' name='selectedOfficeId'>";
 
     // Loop through results and print combobox options
     while($row = $result->fetch_assoc()) {
         echo "<option value='". $row["office_id"]. "'>". $row["office_name"]. "</option>";
+        // "<p><img src='data:". $mimeType ."; base64,".base64_encode($imageData)."' alt='" . $row['office_name'] . "image' class='img-fluid'/></p>;
+        
     }
  
     // End the select element

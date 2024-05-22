@@ -91,6 +91,8 @@ OR room.description = ?" : "") . "
     $stmt->bind_param("ssss", $selectedDate, $selectedDate, $selectedDate, $selectedDate);
   }
 }
+
+
 // echo "Selected office ID: " . $selectedOfficeId; // Adicione esta linha para depuração
 
 // if ($selectedDate == null){
@@ -120,6 +122,7 @@ OR room.description = ?" : "") . "
 $stmt->execute();
 $result = $stmt->get_result();
 $roomarray = array();
+
 $stats = "";
 while ($row = $result->fetch_assoc()) {
 
@@ -130,7 +133,6 @@ while ($row = $result->fetch_assoc()) {
     '<p class="card-text">' . htmlspecialchars($row["description"]) . '</p>' .
     '<p class="room-status ' . getRoomStatusClass($row) . '">' . getRoomStatusLabel($row) . '</p>' .
     '<button type="button" class="btn btn-primary" onclick="location.href=\'room_reserve.php?room_id=' . $row["room_id"] . '&selecteddate_js=' . $selectedDate . '\';">Reserve</button> ' .
-     '<button type="button" class="btn btn-primary" onclick="location.href=\'room_reserve.php?room_id=' . $row["room_id"] . '&selecteddate_js=' . $selectedDate . '\';">Reserve</button>' .
     '</div>' .
     '</div>' .
     '</div>';
@@ -166,6 +168,7 @@ try {
   foreach ($roomarray as $room) {
     echo $room;
   }
+//  unset($roomarray);
   echo "</div>";
   echo "</div>";
   echo "</div>";

@@ -104,33 +104,7 @@ $(document).ready(function () {
     const date = $("#dateFilter").val();
     const search = $("#search").val();
 
-    // const officeSelectElement = document.getElementById('officeSelect');
-    // const selectedOfficeIndex = officeSelectElement.selectedIndex;
-    // const selectedOfficeId = officeSelectElement.options[selectedOfficeIndex].value;
-
-    // Enviar o ID do escritório para room_list.php usando AJAX
-    // $.ajax({
-    //   url: 'room_list.php',
-    //   type: 'POST',
-    //   data:{
-    //     dateFilter: date,
-
-    //   },
-    // success: function(response) {
-    //   $("#roomList").html(response);
-
-    // Lidar com a resposta, se necessário
-    // window.alert("certo");
-    // console.log("Valor enviado com sucesso para room_list.php");
-
-    // error: function(xhr, status, error) {
-    //   console.error("Error fetching room list:", error);
-
-    // Lidar com erros, se houver
-    // window.alert("Errado");
-    // console.error("Erro ao enviar valor para room_list.php:", error);
-
-    // })
+  
 
     $.ajax({
       url: "room_list.php",
@@ -187,87 +161,7 @@ $(document).ready(function () {
     $("#officeModal").modal("hide");
   });
 
-  // Function to fetch offices and display the dropdown
-  // const fetchOffices = async () => {
-  //   try {
-  //     const response = await fetch('fetch_offices.php');
-  //     const data = await response.text();
-  //     const officeDropdown = document.getElementById('officeSelect');
-  //     officeDropdown.innerHTML = data;
-  //     officeDropdown.addEventListener('change', (event) => {
-  //       const selectedOfficeId = event.target.value;
-  //       console.log(`Selected office ID: ${selectedOfficeId}`);
-  //     });
-  //   } catch (error) {
-  //     console.error('Error fetching office dropdown:', error);
-  //   }
-  // };
-
-  // // Call the function to fetch offices and display the dropdown
-  // const needsFetchOffices = document.body.dataset.needsFetchOffices === 'true';
-
-  // if (needsFetchOffices) {
-  //   fetchOffices();
-  // }
-
-  // const fetch = async () =>{
-  //   try{
-  //     const response = await fetch('fetch_offices.php');
-  //     const response2 = await fetch('fetch_buildings.php');
-  //     const data = await response.text();
-  //     const data2 = await response2.text();
-  //     const officeDropdown = document.getElementById('officeSelect');
-  //     officeDropdown.innerHTML = data;
-  //     const buildingDropdown = document.getElementById('buildingSelect');
-  //     buildingDropdown.innerHTML = data2;
-
-  //     officeDropdown.addEventListener('change', (event) => {
-  //       const selectedOfficeId = event.target.value;
-  //       console.log(selectedOfficeId);
-  //     });
-  //     buildingDropdown.addEventListener('change', (event) => {
-  //       const selectedBuildingId = event.target.value;
-  //       fetch(`fetch_offices.php?buildingId=${selectedBuildingId}`)
-  //             .then(response => response.text())
-  //             .then(data => {
-  //                   const officeSelect = document.getElementById('officeSelect');
-  //                   officeSelect.innerHTML = data;
-  //               })
-  //       console.log(selectedBuildingId);
-  //     });
-
-  //   }catch (error)
-  //   {
-  //    console.error('Error fetching dropdown:', error);
-  //   }
-  //   };
-  //    // Call the function to fetch offices and display the dropdown
-  //   const needsFetch = document.body.dataset.needsFetch === 'true';
-
-  //   if(needsFetch){
-  //     fetch();
-  //   }
-
-  // const buildingSelect = document.getElementById('buildingSelect');
-  // const buildingDescriptionElement = document.getElementById('building-description');
-
-  // buildingSelect.addEventListener('change', (event) => {
-  //     const selectedBuildingId = event.target.value;
-  //     const selectedOption = buildingSelect.options[buildingSelect.selectedIndex];
-  //     const buildingDescription = selectedOption.getAttribute('data-description');
-  //     buildingDescriptionElement.innerText = buildingDescription;
-
-  //     fetch(`fetch_offices.php?buildingId=${selectedBuildingId}`)
-  //       .then(response => response.text())
-  //       .then(data => {
-  //             const officeSelect = document.getElementById('officeSelect');
-  //             officeSelect.innerHTML = data;
-  //         })
-  //       .catch(error => {
-  //             console.error("Error fetching office data:", error);
-  //         });
-  // });
-
+  
   const fetchOffices = async () => {
     try {
       const response = await fetch("fetch_offices.php");

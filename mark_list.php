@@ -4,14 +4,16 @@ include_once("config.php"); // Adjust the include file as needed
 // Get the selected filter value from the AJAX request
 $selectedDate = isset($_GET['dateFilter']) ? $_GET['dateFilter'] : date('Y-m-d');
 
-$searchbar = isset($_GET['marksearch']) ? $_GET['marksearch'] : null;
+$searchbar = isset($_GET['marksearch']) ? $_GET['marksearch'] : "";
 $active = isset($_GET['active']) ? $_GET['active'] : 1;
 
 $type = isset($_GET['type']) ? $_GET['type'] : null;
 $filterType = $type ? $type->type : null;
 $filterValue = $type ? $type->value : null;
 
-
+if (strlen(trim($searchbar)) == 0){
+  $_GET['marksearch'] = null;
+}
 
 
 
@@ -59,17 +61,17 @@ WHERE
 bookmarks.selected_date = ?
 AND 
 bookmarks.active = " . $active . "
-" . (isset($_GET['search']) ? "
-people.user LIKE ?
+" . (isset($_GET['marksearch']) ? "
+people.user = ?
 " . ($filterType === 'office' ? "
 OR offices.office_id = " . $filterValue . "
-OR offices.office_name LIKE ?" : "") . "
+OR offices.office_name = ?" : "") . "
 " . ($filterType === 'building' ? "
 OR building.building_id " . $filterValue . "
-OR building.building_name LIKE ?" : "") . "
+OR building.building_name = ?" : "") . "
 " . ($filterType === 'room' ? "
 OR room.room_name " . $filterValue . "
-OR room.room_id LIKE ?" : "") . "
+OR room.room_id = ?" : "") . "
 ." : "") . "
 ORDER BY 
 bookmarks.bookmark_id;
@@ -89,12 +91,12 @@ WHERE
 bookmarks.selected_date = ?
 AND 
 bookmarks.active = " . $active;
-if (isset($_GET['search'])) {
+if (isset($_GET['marksearch'])) {
   $sql .= " AND (
-                  people.user LIKE :user
-                  OR building.building_name LIKE :building_name
-                  OR offices.office_name LIKE :office_name
-                  OR room.room_name LIKE :room_name
+                  people.user = :user
+                  OR building.building_name = :building_name
+                  OR offices.office_name = :office_name
+                  OR room.room_name = :room_name
               )";
 }
 $sql .="ORDER BY 

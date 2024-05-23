@@ -7,8 +7,10 @@ include_once("config.php"); // Adjust the include file as needed
 
 // Get the selected date from the AJAX request
 $selectedDate = isset($_GET['dateFilter']) ? $_GET['dateFilter'] : date('Y-m-d');
-$search = isset($_GET['search']) ? $_GET['search'] : null;
-
+$search = isset($_GET['search']) ? $_GET['search'] : "";
+if (strlen(trim($search)) == 0){
+  $_GET['search'] = null;
+}
 // $selectedOfficeId = isset($_GET["officeSelect"]) ? intval($_GET["officeSelect"]) : 1;
 if (isset($_GET["officeSelect"])) {
   $selectedOfficeId = $_GET["officeSelect"];
@@ -43,7 +45,7 @@ if (isset($_GET["officeSelect"])) {
  
   ORDER BY 
   room.room_name;";
-
+// echo $sql;
   $stmt = $conn->prepare($sql);
   if (isset($_GET['search'])) {
     $searchbar_like = '%' . $search . '%';

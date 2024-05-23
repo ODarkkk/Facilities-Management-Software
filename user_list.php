@@ -123,7 +123,9 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
           $list = array();
           while ($row = $result->fetch_assoc()) {
             // echo "<form action='add_user.php' method='post'>";
-               
+            if (!empty($row["photo"])) {
+            
+            $imageData = null;
             $imageData = $row["photo"];
             $tempFileName = tempnam(sys_get_temp_dir(), 'image');
             file_put_contents($tempFileName, $imageData);
@@ -139,14 +141,14 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
               default:
                 $mimeType = "application/octet-stream";
               }
-            
+            }
             $list[]='<div class="col-md-4">' .
             '<div class="card mb-4">' .
             '<div class="card-body">' .
             '<h5 class="card-title">' . htmlspecialchars($row["user"]) . '</h5>' .
             '<p class="card-text">' . htmlspecialchars($row["name"]) . '</p>' .
             '<p class="card-text">'.
-            '<img src="data:'. $mimeType .'; base64,'.base64_encode($imageData).'" alt="' . $row["user"] . 'photo" class="img-fluid"/>'.
+            (!empty($row["photo"]) ?'<img src="data:'. $mimeType .'; base64,'.base64_encode($imageData).'" alt="' . $row["user"] . 'photo" class="img-fluid"/>' : 'No picture').
             '</p>' .
             '<p class="card-text">' . htmlspecialchars($row["email"]) . '</p>' .
             '<p class="card-text">' . htmlspecialchars($row["phone"]) . '</p>' .
@@ -156,15 +158,14 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
             '<p class="card-text">Password status: ' . ($row["password_status"] ? "Will Changed" : "It won't change") . '</p>' .
             '<div class="d-flex justify-content-between align-items-center">' .
               '<button type="button" class="btn btn-primary" onclick="confirmAction(\'' . $row["user"] . $row["people_id"] .'\')">Edit</button>' .
-              '<button class="btn ' . ($row["active"] == 1 ? 'btn-danger' : 'btn-secondary') . '"
+              '<button class="btn ' . ($row["active"] == 1 ? 'btn-danger' : 'btn-secondary') .'"
               onclick="return confirm(\'Are you sure you want to change the active status of ' . $row["user"] . '?\') && changeActiveStatus(' . $row["people_id"] . ', ' . ($row["active"] == 1 ? 0 : 1) . ')">' .
               ($row["active"] == 1 ? 'Active' : 'Don\'t Active') . ' </button>' .
             '</div>' .
             '</div>' .
             '</div>' .
             '</div>';
-           
-       
+        
           }
           echo "<br>";
           echo "<br>";

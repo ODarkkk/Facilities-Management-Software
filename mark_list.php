@@ -29,7 +29,7 @@ if (strlen(trim($searchbar)) == 0){
 //         break;
 // }
 
-if (is_null($filterType) && is_null($filterValue)) {
+if (!is_null($filterType) && !is_null($filterValue)) {
 
 $sql = "SELECT DISTINCT
 " . ($filterType === 'office' ? "
@@ -82,26 +82,25 @@ else{
 offices.*,
 buildings.*,
 room.*,
-bookmarks.bookmark_id,
-bookmarks.selected_date, 
-bookmarks.start_hour,
-bookmarks.end_hour
-FROM bookmark bookmarks,buildings, room, offices
+bookmark.bookmark_id,
+bookmark.selected_date, 
+bookmark.start_hour,
+bookmark.end_hour
+FROM bookmark, buildings, room, offices
 WHERE
-bookmarks.selected_date = ?
+bookmark.selected_date = ?
 AND 
-bookmarks.active = " . $active;
+bookmark.active = " . $active;
 if (isset($_GET['marksearch'])) {
   $sql .= " AND (
-                  people.user = :user
-                  OR building.building_name = :building_name
-                  OR offices.office_name = :office_name
-                  OR room.room_name = :room_name
+                  people.user = ?
+                  OR building.building_name = ?
+                  OR offices.office_name = ?
+                  OR room.room_name = ?
               )";
 }
-$sql .="ORDER BY 
-bookmarks.bookmark_id;
-";
+$sql .=" ORDER BY 
+bookmark.bookmark_id;";
 }
 
 // echo $sql;
@@ -109,7 +108,7 @@ $stmt = $conn->prepare($sql);
 
 if (isset($_GET['search'])) {
   $searchbar_like = '%' . $searchbar . '%';
-  $stmt->bind_param("sss", $selectedDate, $searchbar_like, $searchbar_like);
+  $stmt->bind_param("sssss", $selectedDate, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like);
 } else {
   $stmt->bind_param("s", $selectedDate);
 }

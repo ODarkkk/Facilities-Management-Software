@@ -56,7 +56,7 @@ INNER JOIN building_offices ON building_offices.office_id = offices.office_id
 INNER JOIN building ON building.building_id = building_offices.building_id" : "") . "
 " . ($filterType=== 'room' ? "
 INNER JOIN room room on room.room_id = offices_room.room_id" : "") . "
-INNER JOIN people on people.people_id = bookmarks.people_id  
+INNER JOIN people on people.people_id = bookmarks.people_id
 WHERE
 bookmarks.selected_date = ?
 AND 
@@ -65,13 +65,13 @@ bookmarks.active = " . $active . "
 people.user = ?
 " . ($filterType === 'office' ? "
 OR offices.office_id = " . $filterValue . "
-OR offices.office_name = ?" : "") . "
+OR offices.office_name like %?%" : "") . "
 " . ($filterType === 'building' ? "
 OR building.building_id " . $filterValue . "
-OR building.building_name = ?" : "") . "
+OR building.building_name like %?%" : "") . "
 " . ($filterType === 'room' ? "
-OR room.room_name " . $filterValue . "
-OR room.room_id = ?" : "") . "
+OR room.room_id =" . $filterValue . "
+OR room.room_name like %?%" : "") . "
 ." : "") . "
 ORDER BY 
 bookmarks.bookmark_id;
@@ -83,7 +83,7 @@ offices.*,
 buildings.*,
 room.*,
 bookmark.bookmark_id,
-bookmark.selected_date, 
+bookmark.selected_date,
 bookmark.start_hour,
 bookmark.end_hour
 FROM bookmark, buildings, room, offices
@@ -93,22 +93,22 @@ AND
 bookmark.active = " . $active;
 if (isset($_GET['marksearch'])) {
   $sql .= " AND (
-                  people.user = ?
-                  OR building.building_name = ?
-                  OR offices.office_name = ?
-                  OR room.room_name = ?
+                  people.user like %?%
+                  OR building.building_name = %?%
+                  OR offices.office_name = %?%
+                  OR room.room_name = %?%
               )";
 }
-$sql .=" ORDER BY 
+$sql .=" ORDER BY
 bookmark.bookmark_id;";
 }
 
 // echo $sql;
 $stmt = $conn->prepare($sql);
 
-if (isset($_GET['search'])) {
-  $searchbar_like = '%' . $searchbar . '%';
-  $stmt->bind_param("sssss", $selectedDate, $searchbar_like, $searchbar_like, $searchbar_like, $searchbar_like);
+if (isset($_GET['marksearch'])) {
+  
+  $stmt->bind_param("sssss", $selectedDate, $searchbar, $search, $search, $search);
 } else {
   $stmt->bind_param("s", $selectedDate);
 }
@@ -245,6 +245,6 @@ if ($result->num_rows > 0) {
   echo "</div>";
   echo "</div>";
 } else {
-  echo '<p>Message: No marks associated with the selected filters';
+  echo "<p>Message: No marks associated with the selected filters or there aren't. ";
 }
 // Get the CSS class for the room based on its availability

@@ -1,5 +1,5 @@
 <?php
-include_once('config.php');
+include_once 'config.php';
 if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
   header("location: logout.php");
   exit(); // Ensure script stops after redirect
@@ -8,14 +8,12 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
 
 <!DOCTYPE html>
 <html lang="en">
-<!-- <html lang="en" data-bs-theme="dark"> -->
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PAP</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  <!-- <link rel="stylesheet" href="index.js" crossorigin="anonymous">    -->
   <link rel="stylesheet" href="styles.css">
   <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
   <script src="script.js"></script>

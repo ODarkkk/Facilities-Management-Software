@@ -79,9 +79,9 @@ if (!isset($_SESSION['user_id'])) {
 
         });
         $("#dateFilter, #marksearch, #filter").change(function() {
-            const selectedDate = $("#dateFilter").val();
-            const filter = $("#filter").val();
-            const search = $("#marksearch").val();
+            var selectedDate = $("#dateFilter").val();
+            var filter = $("#filter").val();
+            var search = $("#marksearch").val();
 
 
             $.ajax({
@@ -109,18 +109,6 @@ if (!isset($_SESSION['user_id'])) {
 
 <body data-needs-fetchrooms="true">
 
-    <?php
-
-    // if (isset($_SESSION['admin'])) {
-    // $decrypted_data = decrypt_session_data($_SESSION['admin'], $secret_key);
-
-    // // Checking if decrypted value is true
-    // if ($decrypted_data && $decrypted_data == 1) {
-    //     // Setting admin session as true
-    //     $_SESSION['admin'] = 1;
-    //     // Your code for admin view
-
-    ?>
     <!-- <div class="pos-f-t">
     <div class="collapse" id="navbarToggleExternalContent">
         <div class="bg-dark p-4">
@@ -202,7 +190,7 @@ if (!isset($_SESSION['user_id'])) {
     <nav class="navbar navbar-light bg-light">
   <form class="form-inline">
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" id="marksearch" oninput="searchChanged()">
+      <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" id="marksearch">
     </div>
   </form>
 </nav>
@@ -318,12 +306,12 @@ if (!isset($_SESSION['user_id'])) {
                         </select>
                     </div>
                     <div class="tab-pane fade" value = "room" id="rooms" role="tabpanel" aria-labelledby="rooms-tab">
-                        <select class="form-select" id="roomSelect">
+                        <select class="form-select" id="roomSelect2">
                             <script>
                                 fetch('fetch_room.php')
                                    .then(response => response.text())
                                    .then(data => {
-                                        const selectElement  = document.getElementById('roomSelect')
+                                        const selectElement  = document.getElementById('roomSelect2')
                                         selectElement.innerHTML = data;
                                     })
                                    .catch(error => {

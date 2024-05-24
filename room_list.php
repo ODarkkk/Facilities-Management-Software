@@ -35,21 +35,21 @@ if (isset($_GET["officeSelect"])) {
     AND bookmarks.selected_date = ?
     AND bookmarks.active = 1
   WHERE 
-  offices_room.office_id = ? 
+  offices_room.office_id like %?%
   AND offices_room.room_id IS NOT NULL
   " . (isset($_GET['search']) ? "
-  AND room.room_id = ?
+  AND room.room_id like %?%
   OR
-  room.room_name = ?
-  OR room.description = ?" : "") . " 
+  room.room_name like %?%
+  OR room.description like %?%" : "") . "
  
   ORDER BY 
   room.room_name;";
 // echo $sql;
   $stmt = $conn->prepare($sql);
   if (isset($_GET['search'])) {
-    $searchbar_like = '%' . $search . '%';
-    $stmt->bind_param("ssssisss", $selectedDate, $selectedDate, $selectedDate, $selectedDate, $selectedOfficeId, $searchbar_like, $searchbar_like, $searchbar_like);
+
+    $stmt->bind_param("ssssisss", $selectedDate, $selectedDate, $selectedDate, $selectedDate, $selectedOfficeId, $search, $search, $search);
   } else {
 
     $stmt->bind_param("ssssi", $selectedDate, $selectedDate, $selectedDate, $selectedDate, $selectedOfficeId);
@@ -79,16 +79,16 @@ if (isset($_GET["officeSelect"])) {
   offices_room.office_id = (SELECT MIN(offices_room.office_id) FROM offices_room)
   AND offices_room.room_id IS NOT NULL
   " . (isset($_GET['search']) ? "
-   AND room.room_id = ? OR
-room.room_name = ?
-OR room.description = ?" : "") . " 
+   AND room.room_id like %?% OR
+room.room_name like %?%
+OR room.description like %?%" : "") . "
   
   ORDER BY 
   room.room_name;";
   $stmt = $conn->prepare($sql);
   if (isset($_GET['search'])) {
-    $searchbar_like = '%' . $search . '%';
-    $stmt->bind_param("sssssss", $selectedDate, $selectedDate, $selectedDate, $selectedDate, $searchbar_like, $searchbar_like, $searchbar_like);
+  
+    $stmt->bind_param("sssssss", $selectedDate, $selectedDate, $selectedDate, $selectedDate, $search, $search, $search);
   } else {
     $stmt->bind_param("ssss", $selectedDate, $selectedDate, $selectedDate, $selectedDate);
   }

@@ -234,7 +234,6 @@ $(document).ready(function () {
 
 //For marks
 $(document).ready(function () {
-  // const filter = $("#filter").val();
   const date = $("#dateFilter").val();
   // const search = $("#marksearch").val();
   // $("#Filter").click(function () {
@@ -249,7 +248,7 @@ $(document).ready(function () {
     $.ajax({
       type: "GET",
       url: "mark_list.php",
-      data: data,
+      data: data, date,
       success: function(response) {
         $("#markList").html(response);
       },
@@ -281,23 +280,31 @@ $(document).ready(function () {
     const roomSelect = $("#roomSelect").val();
 
     let type;
-    if (filter === 'room') {
+
+    switch(filter)
+    {
+        case 'room':
       type = {
         type: filter,
         value: roomSelect
       };
-    } else if (filter === 'office') {
-      type = {
-        type: filter,
-        value: officeSelect
-      };
-    } else if (filter === 'building') {
-      type = {
-        type: filter,
-        value: buildingSelect
-      };
-    } else {
-      type = '';
+        break;
+        case 'office':
+          type = {
+            type: filter,
+            value: officeSelect
+            };
+            break;
+
+        case 'building':
+          type = {
+            type: filter,
+            value: buildingSelect
+          };
+            break;
+          default:
+            type = '';  
+            break;
     }
     sendAjaxRequest({
       dateFilter: date,
@@ -314,12 +321,11 @@ $(document).ready(function () {
   });
 
   // Call the function to fetch rooms
-  const needsFetchRooms = document.body.dataset.needsFetchRooms === "true";
   const fetchOffices = async () => {
     try {
       const response = await fetch("fetch_offices.php");
       const data = await response.text();
-      const officeDropdown = document.getElementById("officeSelect");
+      const officeDropdown = document.getElementById("officeSelect2");
       officeDropdown.innerHTML = data;
     } catch (e) {
       console.error("Error fetching offices:", e.message);
@@ -412,6 +418,7 @@ $(document).ready(function () {
   };
 
   // Call the function to fetch offices and display the dropdown
+  const needsFetchRooms = document.body.dataset.needsFetchRooms === "true";
 
   if (needsFetchRooms) {
     initDropdowns();
@@ -419,11 +426,11 @@ $(document).ready(function () {
 })
 
 $(document).ready(function() {
-  var department_id = $('#department').val();
+  const department_id = $('#department').val();
   updateRoles(department_id);
 
   $('#department').change(function() {
-      var department_id = $(this).val();
+      const department_id = $(this).val();
       updateRoles(department_id);
   });
 });

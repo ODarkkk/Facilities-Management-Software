@@ -31,7 +31,7 @@ if (!isset($_SESSION['user_id'])) {
     </noscript>
 
 </head>
-
+<body>
 
     <p>
 

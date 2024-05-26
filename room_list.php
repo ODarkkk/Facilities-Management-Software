@@ -35,13 +35,13 @@ if (isset($_GET["officeSelect"])) {
     AND bookmarks.selected_date = ?
     AND bookmarks.active = 1
   WHERE 
-  offices_room.office_id like %?%
+  offices_room.office_id like '%?%'
   AND offices_room.room_id IS NOT NULL
   " . (isset($_GET['search']) ? "
-  AND room.room_id like %?%
+  AND room.room_id like '%?%'
   OR
-  room.room_name like %?%
-  OR room.description like %?%" : "") . "
+  room.room_name like '%?%'
+  OR room.description like '%?%'" : "") . "
  
   ORDER BY 
   room.room_name;";
@@ -79,9 +79,9 @@ if (isset($_GET["officeSelect"])) {
   offices_room.office_id = (SELECT MIN(offices_room.office_id) FROM offices_room)
   AND offices_room.room_id IS NOT NULL
   " . (isset($_GET['search']) ? "
-   AND room.room_id like %?% OR
-room.room_name like %?%
-OR room.description like %?%" : "") . "
+   AND room.room_id like '%?%' OR
+room.room_name like '%?%'
+OR room.description like '%?%'" : "") . "
   
   ORDER BY 
   room.room_name;";

@@ -161,7 +161,7 @@ if (!isset($_SESSION['user_id'])) {
 
     <h1 class="mb-3"></h1> -->
 
-<div class="row" id="roomList">*
+<div class="row" id="roomList">
     <!-- Room list will be dynamically inserted here -->
 </div>
 

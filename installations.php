@@ -33,6 +33,37 @@ if (!isset($_SESSION['user_id'])) {
 </head>
 
 <body>
+<script>
+$(document).ready(function() {
+    $('.dropdown-item').click(function(e) {
+        e.preventDefault();
+
+        // Remove active class from all items
+        $('.dropdown-item').removeClass('active');
+
+        // Add active class to the clicked item
+        $(this).addClass('active');
+
+        // Get the value from the data-value attribute
+        var selectedValue = $(this).data('value');
+
+        // Send the AJAX request
+        $.ajax({
+            url: 'installations_list.php',
+            type: 'GET',
+            data: { value: selectedValue },
+            success: function(response) {
+                Console.log(response);
+                // Handle the response here
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                Console.error();
+                // Handle the error here
+            }
+        });
+    });
+});
+</script>
     <p>
 
     <nav class="navbar navbar-light bg-light navbar-expand-lg navbar-light" style="transition: height 0.5s; margin:2%">
@@ -74,6 +105,9 @@ if (!isset($_SESSION['user_id'])) {
 
     </p>
 
+    <div class="row" id="installationslist">
+    <!-- Room list will be dynamically inserted here -->
+</div>
 
     <div class="fixed-bottom">
         <div class="btn-group dropup">
@@ -83,9 +117,10 @@ if (!isset($_SESSION['user_id'])) {
                 </button>
                 <div>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    <li><a class="dropdown-item active">All</a></li>
+                    <li><a class="dropdown-item" data-value="room">Room</a></li>
+                    <li><a class="dropdown-item" data-value="office">Office</a></li>
+                    <li><a class="dropdown-item" data-value="building">Building</a></li>
                     </ul>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 <?php
 include_once 'config.php';
 // Redirect to login page if the user is not logged in
-if (!isset($_SESSION['user_id']) && $_SESSION['admin'] == 1) {
+if (!isset($_SESSION['user_id'])) {
     header("location: login.php");
     exit(); // Ensure script stops after redirect
 }
@@ -73,42 +73,57 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] == 1) {
     </nav>
 
 </p>
-<div class="container mt-5">
-    <a href="new_roles.php" class='btn btn-primary'>New</a>
-        <h1 class="text-center mb-5">Roles and Departments</h1>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Department</th>
-                    <th>Role</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-$sql = "SELECT roles_department.*, roles.role, department.department FROM roles_department
-INNER JOIN roles ON roles_department.role_id = roles.role_id
-INNER JOIN department ON roles_department.department_id = department.department_id";
+
+<?php
+// Get the ID of the role to edit
+$id = $_GET['id'];
+
+// Query to retrieve the role details
+$sql = "SELECT roles_department.*, roles.role, department.department 
+        FROM roles_department 
+        INNER JOIN roles ON roles_department.role_id = roles.role_id 
+        INNER JOIN department ON roles_department.department_id = department.department_id 
+        WHERE roles_department_id = '$id'";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
-// Display each row
-while($row = $result->fetch_assoc()) {
-echo "<tr>";
-echo "<td>" . $row["department"] . "</td>";
-echo "<td>" . $row["role"] . "</td>";
-echo "<td><a href='edit_role.php?id={$row['roles_department_id']}' class='btn btn-secundary'>Edit</a></td>";
-echo "<td><a href='delete_role.php?id={$row['roles_department_id']}' class='btn btn-danger'>Delete</a></td>";
-echo "</tr>";
-}
+    $row = $result->fetch_assoc();
 } else {
-echo "<tr><td colspan='4'>No data found.</td></tr>";
+    echo "Error: Role not found";
+    exit;
 }
-                ?>
-      </tbody>
-        </table>
-    </div>
+
+// Display the edit form
+?>
+<form action="update_role.php" method="post">
+    <input type="hidden" name="id" value="<?php echo $id; ?>">
+    <label for="department">Department:</label>
+    <select name="department_id">
+        <?php
+        // Query to retrieve all departments
+        $dept_sql = "SELECT * FROM department";
+        $dept_result = $conn->query($dept_sql);
+        while ($dept_row = $dept_result->fetch_assoc()) {
+            echo "<option value='" . $dept_row['department_id'] . "'" . ($dept_row['department_id'] == $row['department_id'] ? ' selected' : '') . ">" . $dept_row['department'] . "</option>";
+        }
+        ?>
+    </select>
+    <br><br>
+    <label for="role">Role:</label>
+    <select name="role_id">
+        <?php
+        // Query to retrieve all roles
+        $role_sql = "SELECT * FROM roles";
+        $role_result = $conn->query($role_sql);
+        while ($role_row = $role_result->fetch_assoc()) {
+            echo "<option value='" . $role_row['role_id'] . "'" . ($role_row['role_id'] == $row['role_id'] ? ' selected' : '') . ">" . $role_row['role'] . "</option>";
+        }
+        ?>
+    </select>
+    <br><br>
+    <input type="submit" value="Update Role">
+</form>
+
 <div class="position-fixed bottom-0 end-0">
     <label class="switch">
         <span class="sun"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -126,7 +141,6 @@ echo "<tr><td colspan='4'>No data found.</td></tr>";
 </div>
 
 
-
 <div class="position-absolute top-0 end-0">
   <a class="Btn" onclick="goBack()">
   
@@ -135,6 +149,7 @@ echo "<tr><td colspan='4'>No data found.</td></tr>";
     <div class="text">Back</div>
   </a>
 </div>
+
 
 
 <!-- <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>

@@ -35,6 +35,19 @@ if (!isset($_SESSION['user_id'])) {
 <body>
 <script>
 $(document).ready(function() {
+    $.ajax({
+            url: 'installations_list.php',
+            type: 'GET',
+            // data: { value: selectedValue },
+            success: function(response) {
+                $("#installationslist").html(response);
+                // Handle the response here
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                Console.error();
+                // Handle the error here
+            }
+        });
     $('.dropdown-item').click(function(e) {
         e.preventDefault();
 
@@ -53,7 +66,8 @@ $(document).ready(function() {
             type: 'GET',
             data: { value: selectedValue },
             success: function(response) {
-                Console.log(response);
+                $("#installationslist").html(response);
+
                 // Handle the response here
             },
             error: function(jqXHR, textStatus, errorThrown) {
@@ -62,6 +76,23 @@ $(document).ready(function() {
             }
         });
     });
+    $("#installsearch").change(function(e) {
+    e.preventDefault();
+        var installsearch = $("#installsearch").val();
+        $.ajax({
+            url: 'installations_list.php',
+            type: 'GET',
+            data: { installsearch: installsearch },
+            success: function(response) {
+                $("#installationslist").html(response);
+                // Handle the response here
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                Console.error();
+                // Handle the error here
+            }
+        });
+    })
 });
 </script>
     <p>
@@ -104,7 +135,13 @@ $(document).ready(function() {
     </nav>
 
     </p>
-
+    <nav class="navbar">
+    <form class="form-inline">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" id="installsearch">
+        </div>
+    </form>
+</nav>
     <div class="row" id="installationslist">
     <!-- Room list will be dynamically inserted here -->
 </div>

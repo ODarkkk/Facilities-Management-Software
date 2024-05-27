@@ -4,14 +4,14 @@ include_once("config.php"); // Adjust the include file as needed
 // Get the selected filter value from the AJAX request
 $selectedDate = isset($_GET['dateFilter']) ? $_GET['dateFilter'] : date('Y-m-d');
 
-$searchbar = isset($_GET['marksearch']) ? $_GET['marksearch'] : "";
+$search = isset($_GET['marksearch']) ? $_GET['marksearch'] : "";
 $active = isset($_GET['active']) ? $_GET['active'] : 1;
 
 $type = isset($_GET['type']) ? $_GET['type'] : null;
 $filterType = $type ? $type->type : null;
 $filterValue = $type ? $type->value : null;
 
-if (strlen(trim($searchbar)) == 0){
+if (strlen(trim($search)) == 0){
   $_GET['marksearch'] = null;
 }
 
@@ -93,10 +93,10 @@ AND
 bookmark.active = " . $active;
 if (isset($_GET['marksearch'])) {
   $sql .= " AND (
-                  people.user like %?%
-                  OR building.building_name = %?%
-                  OR offices.office_name = %?%
-                  OR room.room_name = %?%
+                  people.user like ?
+                  OR building.building_name = ?
+                  OR offices.office_name = ?
+                  OR room.room_name = ?
               )";
 }
 $sql .=" ORDER BY
@@ -107,8 +107,8 @@ bookmark.bookmark_id;";
 $stmt = $conn->prepare($sql);
 
 if (isset($_GET['marksearch'])) {
-  
-  $stmt->bind_param("sssss", $selectedDate, $searchbar, $search, $search, $search);
+  $search = "%".$search."%";
+  $stmt->bind_param("sssss", $selectedDate, $search, $search, $search, $search);
 } else {
   $stmt->bind_param("s", $selectedDate);
 }

@@ -1,11 +1,57 @@
 <?php
 include_once 'config.php';
-// Redirect to login page if the user is not logged in
-if (!isset($_SESSION['user_id'])) {
-    header("location: login.php");
+if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
+    header("location: logout.php");
     exit(); // Ensure script stops after redirect
 }
+$id = $_GET['id'];
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST['name'];
+    $description = $_POST['description'];
+    $space = $_POST['space'];
+    $office_id = $_POST['office_id'];
+
+    $sql = "UPDATE room SET room_name=?, description=?, space=? WHERE room_id=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssii", $name, $description, $space, $id);
+
+    if ($stmt->execute()) {
+        echo '<div class="alert alert-success" role="alert">Record updated successfully</div>';
+    } else {
+        echo '<div class="alert alert-danger" role="alert">Error updating record: ' . $conn->error . '</div>';
+    }
+
+
+    // Atualizar a associação na tabela offices_room
+    $sql = "UPDATE offices_room SET room_id=? WHERE office_id=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ii", $id, $office_id);
+
+    if ($stmt->execute()) {
+        echo '<div class="alert alert-success" role="alert">Office association updated successfully</div>';
+    } else {
+        echo '<div class="alert alert-danger" role="alert">Error updating office association: ' . $conn->error . '</div>';
+    }
+}
+    // Busca os detalhes atuais do room
+    $sql = "SELECT r.room_id, r.room_name, r.description, r.space, o.office_id FROM room r LEFT JOIN offices_room o ON r.room_id = o.room_id WHERE r.room_id=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+
+// Busca todos os offices disponíveis
+$officeOptions = '';
+$sql = "SELECT office_id, office_name FROM offices";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+    while ($office = $result->fetch_assoc()) {
+        $selected = ($office['office_id'] == $row['office_id']) ? 'selected' : '';
+        $officeOptions .= "<option value='{$office['office_id']}' $selected>{$office['office_name']}</option>";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -33,68 +79,7 @@ if (!isset($_SESSION['user_id'])) {
 </head>
 
 <body>
-<script>
-$(document).ready(function() {
-    $.ajax({
-            url: 'installations_list.php',
-            type: 'GET',
-            // data: { value: selectedValue },
-            success: function(response) {
-                $("#installationslist").html(response);
-                // Handle the response here
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                Console.error();
-                // Handle the error here
-            }
-        });
-    $('.dropdown-item').click(function(e) {
-        e.preventDefault();
 
-        // Remove active class from all items
-        $('.dropdown-item').removeClass('active');
-
-        // Add active class to the clicked item
-        $(this).addClass('active');
-
-        // Get the value from the data-value attribute
-        var selectedValue = $(this).data('value');
-
-        // Send the AJAX request
-        $.ajax({
-            url: 'installations_list.php',
-            type: 'GET',
-            data: { value: selectedValue },
-            success: function(response) {
-                $("#installationslist").html(response);
-
-                // Handle the response here
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                Console.error();
-                // Handle the error here
-            }
-        });
-    });
-    $("#installsearch").change(function(e) {
-    e.preventDefault();
-        var installsearch = $("#installsearch").val();
-        $.ajax({
-            url: 'installations_list.php',
-            type: 'GET',
-            data: { installsearch: installsearch },
-            success: function(response) {
-                $("#installationslist").html(response);
-                // Handle the response here
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                Console.error();
-                // Handle the error here
-            }
-        });
-    })
-});
-</script>
     <p>
 
     <nav class="navbar navbar-light bg-light navbar-expand-lg navbar-light" style="transition: height 0.5s; margin:2%">
@@ -109,18 +94,10 @@ $(document).ready(function() {
                 <div class="navbar-nav ms-0 me-5  mt-auto"> <!-- Aplicando a classe me-auto para mover o session user para a margem esquerda -->
                     <a class="nav-link" href="./index.php">Home</a>
                     <a class="nav-link" href="./marks.php">Marks</a>
-
-                    <?php
-
-                    if ($_SESSION['admin'] == 1) {
-                    ?>
-                        <a class="nav-link" href="./tickets.php">Recovers requests</a>
-                        <a class="nav-link" href="./user_list.php">Users</a>
-                        <a class="nav-link" href="./roles.php">Roles</a>
-                        <a class="nav-link" href="./installations.php.php">installations</a>
-                    <?php
-                    }
-                    ?>
+                    <a class="nav-link" href="./tickets.php">Recovers requests</a>
+                    <a class="nav-link" href="./user_list.php">Users</a>
+                    <a class="nav-link" href="./roles.php">Roles</a>
+                    <a class="nav-link" href="./installations.php.php">installations</a>
                 </div>
 
                 <div class="navbar-nav mb-auto ms-auto"> <!-- Mantendo os links à direita -->
@@ -135,36 +112,38 @@ $(document).ready(function() {
     </nav>
 
     </p>
-    <nav class="navbar">
-    <form class="form-inline">
-        <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" id="installsearch">
-        </div>
-    </form>
-</nav>
-    <div class="row" id="installationslist">
-    <!-- Room list will be dynamically inserted here -->
-</div>
-
-    <div class="fixed-bottom">
-        <div class="btn-group dropup">
-            <div class="button-change">
-                <button type="button" class="beautiful-button dropdown-toggle" id="changeButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Change
-                </button>
-                <div>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item active">All</a></li>
-                    <li><a class="dropdown-item" data-value="room">Room</a></li>
-                    <li><a class="dropdown-item" data-value="office">Office</a></li>
-                    <li><a class="dropdown-item" data-value="building">Building</a></li>
-                    </ul>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">Edit Room</div>
+                    <div class="card-body">
+                        <form method="post">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="<?php echo $row['room_name']; ?>">
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" name="description"><?php echo $row['description']; ?></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="space" class="form-label">Space</label>
+                                <input type="number" class="form-control" id="space" name="space" value="<?php echo $row['space']; ?>">
+                            </div>
+                            <div class="mb-3">
+                                <label for="office" class="form-label">Office</label>
+                                <select class="form-select" id="office" name="office_id">
+                                <?php echo $officeOptions; ?>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-
     <div class="position-fixed bottom-0 end-0">
         <label class="switch">
             <span class="sun"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

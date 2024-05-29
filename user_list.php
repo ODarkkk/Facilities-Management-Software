@@ -85,7 +85,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
   </nav>
 
 
-  <div class="container mt-5">
+  <div class="container mt-1">
     <h1>Users</h1>
     <button type="button" onclick="location.href = 'new_user.php';" class="btn btn-success">New User</button>
 

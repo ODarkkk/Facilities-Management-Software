@@ -92,16 +92,7 @@ if (isset($_GET['userId'])) {
         <h2>New User</h2>
         <div class="container mt-5 d-flex justify-content-center">
             <form action="add_user.php" method="post">
-                <!-- <h5>Admin Credentials</h5>
-                <div class="col-md-6">
-                    <label for="admin-username" class="form-label">Admin-User</label>
-                    <input type="text" class="form-control custom-input" name="admin-user" id="admin-user" required>
-                </div>
-                <div class="mb-3 mx-auto">
-                    <label for="admin-password" class="form-label">Admin-Password</label>
-                    <input type="password" class="form-control custom-input" name="admin-password" id="admin-password" required>
-                </div> -->
-
+         
                 <div class="col-md-6">
                     <!-- <h5>User Credentials</h5> -->
 

@@ -135,6 +135,10 @@ $(document).ready(function() {
     </nav>
 
     </p>
+    <div class="container mt-5">
+    <h1>Users</h1>
+    <button type="button" onclick="location.href = 'new_user.php';" class="btn btn-success">New User</button>
+    </div>
     <nav class="navbar">
     <form class="form-inline">
         <div class="input-group">

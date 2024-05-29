@@ -10,7 +10,7 @@ if (strlen(trim($search)) == 0){
 
 switch ($_GET['value']){
     case "room":
-        $sql = "SELECT * FROM `room` ". (isset($_GET['installsearch']) ? "WHERE room_name LIKE ?" : "") ." order by room_name ASC";
+        $sql = "SELECT 'room' as type, room.room_id AS id, room.room_name AS name, room.space AS space, room.description AS description FROM `room` ". (isset($_GET['installsearch']) ? "WHERE name LIKE ?" : "") ." order by name ASC";
         $stmt = $conn->prepare($sql);
         if(isset($_GET['installsearch'])){
             $search = "%".$search."%";
@@ -23,7 +23,7 @@ switch ($_GET['value']){
         }
         break;
     case "office":
-        $sql = "SELECT * FROM `offices` ". (isset($_GET['installsearch']) ? "
+        $sql = "SELECT 'office' as type, offices.office_id AS id, offices.office_name AS name, offices.office_image AS office_image, offices.description AS description FROM `offices` ". (isset($_GET['installsearch']) ? "
        where office_name LIKE ?" : "") ." order by office_name ASC";
       
        $stmt = $conn->prepare($sql);
@@ -38,7 +38,7 @@ switch ($_GET['value']){
        }
         break;
     case "building":
-        $sql = "SELECT * FROM `buildings` ". (isset($_GET['installsearch']) ? "
+        $sql = "SELECT 'building' as type,  buildings.building_id AS id, buildings.building_name AS name, buildings.description AS description  FROM `buildings` ". (isset($_GET['installsearch']) ? "
         WHERE building_name LIKE ?" : "") ."order BY building_name ASC";
         $stmt = $conn->prepare($sql);
         if(isset($_GET['installsearch'])){

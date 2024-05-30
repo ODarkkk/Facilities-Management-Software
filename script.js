@@ -1,66 +1,3 @@
-// $(document).ready(function() {
-//   // Event listener for the "Select" button in the modal
-//   $("#selectOfficeButton").click(function() {
-//       // Get the selected value from the combobox
-//       var selectedOffice = $("#officeSelect").val();
-
-//       // Here you can do what you need with the selected office,
-//       // such as sending another AJAX request to fetch specific data of the selected office and updating the page, etc.
-
-//       // For now, we'll just display the selected value in the console
-//       console.log("Selected Office: " + selectedOffice);
-
-//       // Close the modal
-//       $("#officeModal").modal("hide");
-//   });
-
-//   // Function to fetch offices and display the dropdown
-//   const fetchOffices = async () => {
-//       try {
-//           const response = await fetch('fetch_offices.php');
-//           const data = await response.text();
-//           const officeDropdown = document.getElementById('officeDropdown');
-//           officeDropdown.innerHTML = data;
-//           officeDropdown.addEventListener('change', (event) => {
-//               const selectedOfficeId = event.target.value;
-//               console.log(`Selected office ID: ${selectedOfficeId}`);
-//               // Add functionality for handling the selected office
-//           });
-//       } catch (error) {
-//           console.error('Error fetching office dropdown:', error);
-//       }
-//   };
-
-//   // Function to show the office selection menu
-//   const showOfficeSelection = () => {
-//       const officeSelection = document.getElementById('officeSelection');
-//       officeSelection.classList.toggle('d-none');
-//   };
-
-//   // Check if the user clicks outside of the office selection menu
-//   const handleClickOutside = (event) => {
-//       if (!event.target.closest('.office-selection')) {
-//           showOfficeSelection();
-//       }
-//   };
-
-//   // Attach event listeners
-//   document.getElementById('toggleButton').addEventListener('click', showOfficeSelection);
-//   document.addEventListener('click', handleClickOutside);
-//   fetchOffices();
-
-//   // Now add event listener for the select button
-//   $("#selectOfficeButton").click(function() {
-//       // Get the selected office
-//       const officeSelectElement = document.getElementById('officeSelect');
-//       const selectedOfficeIndex = officeSelectElement.selectedIndex;
-//       const selectedOffice = officeSelectElement.options[selectedOfficeIndex].value;
-
-//       // Do something with the selected office
-//       console.log(`Selected office: ${selectedOffice}`);
-//   });
-// });
-
 function goBack() {
   window.history.back();
 }
@@ -82,34 +19,145 @@ function toggleMode() {
   }
 }
 
-// function updateSelectedBuildingOffice() {
-//     const selectedBuilding = $("#buildingSelect option:selected").text();
-//     const selectedOffice = $("#officeSelect option:selected").text();
-//     $("#selectedBuildingOffice").text(`Building: ${selectedBuilding}, Office: ${selectedOffice}`);
-// }
+// $(document).ready(function () {
+//   $("#selectOfficeButton").click(function () {
+//     const selectedOffice = $("#officeSelect").val();
+//     const date = $("#dateFilter").val();
+//     const search = $("#search").val();
 
-// // Call the function on page load
-// $(document).ready(function() {
-//     updateSelectedBuildingOffice();
+//     $.ajax({
+//       url: "room_list.php",
+//       type: "GET",
+//       // type: 'GET',
+//       data: {
+//         dateFilter: date,
+//         officeSelect: selectedOffice,
+//         search: search,
+//       },
+//       success: function (response) {
+//         $("#roomList").html(response);
+
+//         // Lidar com a resposta, se necessário
+//         // window.alert("certo");
+//         // console.log("Valor enviado com sucesso para room_list.php");
+//       },
+//       error: function (xhr, status, error) {
+//         console.error("Error fetching room list:", error);
+
+//         // Lidar com erros, se houver
+//         // window.alert("Errado");
+//         // console.error("Erro ao enviar valor para room_list.php:", error);
+//       },
+//     });
+//       // Fechar o modal
+//       $("#officeModal").modal("hide");
+//   });
+//   $("#search").on("input",function () {
+//     const selectedOffice = $("#officeSelect").val();
+//     const date = $("#dateFilter").val();
+//     const search = $("#search").val();
+//     $.ajax({
+//       url: "room_list.php",
+//       type: "GET",
+//       // type: 'GET',
+//       data: {
+//         dateFilter: date,
+//         officeSelect: selectedOffice,
+//         search: search,
+//       },
+//       success: function (response) {
+//         $("#roomList").html(response);
+
+//         // Lidar com a resposta, se necessário
+//         // window.alert("certo");
+//         // console.log("Valor enviado com sucesso para room_list.php");
+//       },
+//       error: function (xhr, status, error) {
+//         console.error("Error fetching room list:", error);
+//       },
+//     });
+//     // Fechar o modal
+//     $("#officeModal").modal("hide");
+//   });
+
+//   const fetchOffices = async () => {
+//     try {
+//       const response = await fetch("fetch_offices.php");
+//       const data = await response.text();
+//       const officeDropdown = document.getElementById("officeSelect");
+//       officeDropdown.innerHTML = data;
+//     } catch (e) {
+//       console.error("Error fetching offices:", e.message);
+//     }
+//   };
+
+//   const fetchBuildings = async () => {
+//     try {
+//       const response = await fetch("fetch_buildings.php");
+//       const data = await response.text();
+//       const buildingDropdown = document.getElementById("buildingSelect");
+//       buildingDropdown.innerHTML = data;
+//     } catch (e) {
+//       console.error("Error fetching buildings:", e.message);
+//     }
+//   };
+
+//   const fetchOfficesForBuilding = async (buildingId) => {
+//     try {
+//       const response = await fetch(
+//         `fetch_offices.php?selectedBuildingId=${encodeURIComponent(buildingId)}`
+//       );
+//       const data = await response.text();
+//       const officeSelect = document.getElementById("officeSelect");
+//       officeSelect.innerHTML = data;
+//     } catch (e) {
+//       console.error("Error fetching offices for building:", e.message);
+//     }
+//   };
+
+//   const initDropdowns = async () => {
+//     try {
+//       await fetchOffices();
+//       await fetchBuildings();
+
+//       const officeDropdown = document.getElementById("officeSelect");
+//       officeDropdown.addEventListener("change", (event) => {
+//         const selectedOfficeId = event.target.value;
+//         console.log(selectedOfficeId);
+//       });
+
+//       const buildingDropdown = document.getElementById("buildingSelect");
+//       buildingDropdown.addEventListener("change", async (event) => {
+//         const selectedBuildingId = event.target.value;
+//         try {
+//           await fetchOfficesForBuilding(selectedBuildingId);
+//         } catch (e) {
+//           console.error("Error fetching offices for building:", e.message);
+//         }
+//         console.log(selectedBuildingId);
+//       });
+//     } catch (e) {
+//       console.trace("Message");
+//       console.error("Error fetching dropdown:", e.message);
+//     }
+//   };
+
+//   // Call the function to fetch offices and display the dropdown
+//   const needsFetch = document.body.dataset.needsFetch === "true";
+
+//   if (needsFetch) {
+//     initDropdowns();
+//   }
 // });
-
-// // Call the function when there's a change in the office selection
-// $("#officeSelect").change(function() {
-//     updateSelectedBuildingOffice();
-// });
-
 $(document).ready(function () {
   $("#selectOfficeButton").click(function () {
     const selectedOffice = $("#officeSelect").val();
     const date = $("#dateFilter").val();
     const search = $("#search").val();
 
-  
-
     $.ajax({
       url: "room_list.php",
       type: "GET",
-      // type: 'GET',
       data: {
         dateFilter: date,
         officeSelect: selectedOffice,
@@ -117,30 +165,21 @@ $(document).ready(function () {
       },
       success: function (response) {
         $("#roomList").html(response);
-
-        // Lidar com a resposta, se necessário
-        // window.alert("certo");
-        // console.log("Valor enviado com sucesso para room_list.php");
       },
       error: function (xhr, status, error) {
         console.error("Error fetching room list:", error);
-
-        // Lidar com erros, se houver
-        // window.alert("Errado");
-        // console.error("Erro ao enviar valor para room_list.php:", error);
       },
     });
-      // Fechar o modal
-      $("#officeModal").modal("hide");
+    $("#officeModal").modal("hide");
   });
-  $("#search").change(function () {
+
+  $("#search").on("input", function () {
     const selectedOffice = $("#officeSelect").val();
     const date = $("#dateFilter").val();
     const search = $("#search").val();
     $.ajax({
       url: "room_list.php",
       type: "GET",
-      // type: 'GET',
       data: {
         dateFilter: date,
         officeSelect: selectedOffice,
@@ -148,20 +187,14 @@ $(document).ready(function () {
       },
       success: function (response) {
         $("#roomList").html(response);
-
-        // Lidar com a resposta, se necessário
-        // window.alert("certo");
-        // console.log("Valor enviado com sucesso para room_list.php");
       },
       error: function (xhr, status, error) {
         console.error("Error fetching room list:", error);
       },
     });
-    // Fechar o modal
     $("#officeModal").modal("hide");
   });
 
-  
   const fetchOffices = async () => {
     try {
       const response = await fetch("fetch_offices.php");
@@ -197,6 +230,19 @@ $(document).ready(function () {
     }
   };
 
+  const fetchOfficeDetails = async (officeId, buildingId) => {
+    try {
+      const response = await fetch(
+        `office_details.php?officeId=${encodeURIComponent(officeId)}`
+      );
+      const data = await response.text();
+      const officeContent = document.getElementById("officeContent");
+      officeContent.innerHTML = data;
+    } catch (e) {
+      console.error("Error fetching office details:", e.message);
+    }
+  };
+
   const initDropdowns = async () => {
     try {
       await fetchOffices();
@@ -205,7 +251,7 @@ $(document).ready(function () {
       const officeDropdown = document.getElementById("officeSelect");
       officeDropdown.addEventListener("change", (event) => {
         const selectedOfficeId = event.target.value;
-        console.log(selectedOfficeId);
+        fetchOfficeDetails(selectedOfficeId);
       });
 
       const buildingDropdown = document.getElementById("buildingSelect");
@@ -218,15 +264,19 @@ $(document).ready(function () {
         }
         console.log(selectedBuildingId);
       });
+      officeDropdown.addEventListener("change", (event) => {
+        const selectedOfficeId = event.target.value;
+        fetchOfficeDetails(selectedOfficeId);
+        // Para atualizar o conteúdo do officeContent
+        document.getElementById("officeContent").innerHTML = "";
+      });
     } catch (e) {
       console.trace("Message");
       console.error("Error fetching dropdown:", e.message);
     }
   };
 
-  // Call the function to fetch offices and display the dropdown
   const needsFetch = document.body.dataset.needsFetch === "true";
-
   if (needsFetch) {
     initDropdowns();
   }
@@ -235,21 +285,14 @@ $(document).ready(function () {
 //For marks
 $(document).ready(function () {
   const date = $("#dateFilter").val();
-  // const search = $("#marksearch").val();
-  // $("#Filter").click(function () {
-    // const selectedOffice = $("#officeSelect").val();
-    // // dateFilter: selectedDate,
-    // //                 officeSelect: officeSelect,
-    // //                 roomSelect: roomSelect,
-    // //                 buildingSelect: buildingSelect
-    // const selectedroom = $("#roomSelect").val();
-    // const buildingSelect = $("#buildingSelect").val();
-    const sendAjaxRequest = (data) => {
+
+  const sendAjaxRequest = (data) => {
     $.ajax({
       type: "GET",
       url: "mark_list.php",
-      data: data, date,
-      success: function(response) {
+      data: data,
+      date,
+      success: function (response) {
         $("#markList").html(response);
       },
       error: function (xhr, status, error) {
@@ -261,17 +304,17 @@ $(document).ready(function () {
       },
     });
   };
-  $("#dateFilter, #marksearch, #filter").change(function() {
+  $("#dateFilter, #marksearch, #filter").on("input", function () {
     const selectedDate = $("#dateFilter").val();
     const filter = $("#filter").val();
     const search = $("#marksearch").val();
     sendAjaxRequest({
       dateFilter: selectedDate,
       Filter: filter,
-      search: search
+      search: search,
     });
   });
-  $("#Filter").click(function() {
+  $("#Filter").click(function () {
     const date = $("#dateFilter").val();
     const filter = $("#filter").val();
     const search = $("#marksearch").val();
@@ -281,30 +324,29 @@ $(document).ready(function () {
 
     let type;
 
-    switch(filter)
-    {
-        case 'room':
-      type = {
-        type: filter,
-        value: roomSelect
-      };
+    switch (filter) {
+      case "room":
+        type = {
+          type: filter,
+          value: roomSelect,
+        };
         break;
-        case 'office':
-          type = {
-            type: filter,
-            value: officeSelect
-            };
-            break;
+      case "office":
+        type = {
+          type: filter,
+          value: officeSelect,
+        };
+        break;
 
-        case 'building':
-          type = {
-            type: filter,
-            value: buildingSelect
-          };
-            break;
-          default:
-            type = '';  
-            break;
+      case "building":
+        type = {
+          type: filter,
+          value: buildingSelect,
+        };
+        break;
+      default:
+        type = "";
+        break;
     }
     sendAjaxRequest({
       dateFilter: date,
@@ -313,7 +355,7 @@ $(document).ready(function () {
       type: type,
       officeSelect: officeSelect,
       buildingSelect: buildingSelect,
-      roomSelect: roomSelect
+      roomSelect: roomSelect,
     });
 
     // Fechar o modal
@@ -423,30 +465,30 @@ $(document).ready(function () {
   if (needsFetchRooms) {
     initDropdowns();
   }
-})
+});
 
-$(document).ready(function() {
-  const department_id = $('#department').val();
+$(document).ready(function () {
+  const department_id = $("#department").val();
   updateRoles(department_id);
 
-  $('#department').change(function() {
-      const department_id = $(this).val();
-      updateRoles(department_id);
+  $("#department").change(function () {
+    const department_id = $(this).val();
+    updateRoles(department_id);
   });
 });
 
 function updateRoles(departmentId) {
   $.ajax({
-      url: "get_roles.php",
-      method: "GET",
-      data: {
-          department_id: departmentId
-      },
-      success: function(response) {
-          $("#role").html(response);
-      },
-      error: function(response) {
-          console.error(response);
-      }
+    url: "get_roles.php",
+    method: "GET",
+    data: {
+      department_id: departmentId,
+    },
+    success: function (response) {
+      $("#role").html(response);
+    },
+    error: function (response) {
+      console.error(response);
+    },
   });
 }

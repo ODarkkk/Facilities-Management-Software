@@ -1,5 +1,4 @@
 <?php
-
 include_once 'config.php';
 $_GET['value'] = isset($_GET['value']) ? $_GET['value']: "";
 $sql = "";

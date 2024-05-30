@@ -33,72 +33,68 @@ if (!isset($_SESSION['user_id'])) {
 </head>
 
 <body>
-    <script>
-        $(document).ready(function() {
-            $.ajax({
-                url: 'installations_list.php',
-                type: 'GET',
-                // data: { value: selectedValue },
-                success: function(response) {
-                    $("#installationslist").html(response);
-                    // Handle the response here
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    Console.error();
-                    // Handle the error here
-                }
-            });
-            $('.dropdown-item').click(function(e) {
-                e.preventDefault();
-
-                // Remove active class from all items
-                $('.dropdown-item').removeClass('active');
-
-                // Add active class to the clicked item
-                $(this).addClass('active');
-
-                // Get the value from the data-value attribute
-                var selectedValue = $(this).data('value');
-
-                // Send the AJAX request
-                $.ajax({
-                    url: 'installations_list.php',
-                    type: 'GET',
-                    data: {
-                        value: selectedValue
-                    },
-                    success: function(response) {
-                        $("#installationslist").html(response);
-
-                        // Handle the response here
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        Console.error();
-                        // Handle the error here
-                    }
-                });
-            });
-            $("#installsearch").change(function(e) {
-                e.preventDefault();
-                var installsearch = $("#installsearch").val();
-                $.ajax({
-                    url: 'installations_list.php',
-                    type: 'GET',
-                    data: {
-                        installsearch: installsearch
-                    },
-                    success: function(response) {
-                        $("#installationslist").html(response);
-                        // Handle the response here
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        Console.error();
-                        // Handle the error here
-                    }
-                });
-            })
+<script>
+$(document).ready(function() {
+    $.ajax({
+            url: 'installations_list.php',
+            type: 'GET',
+            // data: { value: selectedValue },
+            success: function(response) {
+                $("#installationslist").html(response);
+                // Handle the response here
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                Console.error();
+                // Handle the error here
+            }
         });
-    </script>
+    $('.dropdown-item').click(function(e) {
+        e.preventDefault();
+
+        // Remove active class from all items
+        $('.dropdown-item').removeClass('active');
+
+        // Add active class to the clicked item
+        $(this).addClass('active');
+
+        // Get the value from the data-value attribute
+        var selectedValue = $(this).data('value');
+
+        // Send the AJAX request
+        $.ajax({
+            url: 'installations_list.php',
+            type: 'GET',
+            data: { value: selectedValue },
+            success: function(response) {
+                $("#installationslist").html(response);
+
+                // Handle the response here
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                Console.error();
+                // Handle the error here
+            }
+        });
+    });
+    $("#installsearch").on("input",function(e) {
+    e.preventDefault();
+        var installsearch = $("#installsearch").val();
+        $.ajax({
+            url: 'installations_list.php',
+            type: 'GET',
+            data: { installsearch: installsearch },
+            success: function(response) {
+                $("#installationslist").html(response);
+                // Handle the response here
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                Console.error();
+                // Handle the error here
+            }
+        });
+    })
+});
+</script>
     <p>
 
     <nav class="navbar navbar-light bg-light navbar-expand-lg navbar-light" style="transition: height 0.5s; margin:2%">
@@ -139,16 +135,21 @@ if (!isset($_SESSION['user_id'])) {
     </nav>
 
     </p>
+    
+    <h1>Installations</h1>
+    <button type="button" onclick="location.href = 'new_installations.php';" class="btn btn-success">New Installations</button>
+    
+
     <nav class="navbar">
-        <form class="form-inline">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" id="installsearch">
-            </div>
-        </form>
-    </nav>
+    <form class="form-inline">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" id="installsearch">
+        </div>
+    </form>
+</nav>
     <div class="row" id="installationslist">
-        <!-- Room list will be dynamically inserted here -->
-    </div>
+    <!-- Room list will be dynamically inserted here -->
+</div>
 
     <div class="fixed-bottom">
         <div class="btn-group dropup">
@@ -158,10 +159,10 @@ if (!isset($_SESSION['user_id'])) {
                 </button>
                 <div>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item active">All</a></li>
-                        <li><a class="dropdown-item" data-value="room">Room</a></li>
-                        <li><a class="dropdown-item" data-value="office">Office</a></li>
-                        <li><a class="dropdown-item" data-value="building">Building</a></li>
+                    <li><a class="dropdown-item active">All</a></li>
+                    <li><a class="dropdown-item" data-value="room">Room</a></li>
+                    <li><a class="dropdown-item" data-value="office">Office</a></li>
+                    <li><a class="dropdown-item" data-value="building">Building</a></li>
                     </ul>
                 </div>
             </div>
@@ -185,20 +186,20 @@ if (!isset($_SESSION['user_id'])) {
         </label>
     </div>
 
-   
+    <div class="position-relative">
 
-        <div class="position-absolute top-0 end-0">
-            <a class="Btn" onclick="goBack()">
+    <div class="position-fixed top-0 end-0">
+    <a class="Btn" onclick="goBack()">
 
-                <div class="sign"><svg viewBox="0 0 512 512">
-                        <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path>
-                    </svg></div>
+      <div class="sign"><svg viewBox="0 0 512 512">
+          <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path>
+        </svg></div>
 
-                <div class="text">Back</div>
-            </a>
-        </div>
+      <div class="text">Back</div>
+    </a>
+  </div>
 
-    
+    </div>
     <!-- <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="script.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>

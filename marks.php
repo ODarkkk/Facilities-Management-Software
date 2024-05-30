@@ -78,7 +78,7 @@ if (!isset($_SESSION['user_id'])) {
             }
 
         });
-        $("#dateFilter, #marksearch, #filter").change(function() {
+        $("#dateFilter, #marksearch, #filter").on("input",function() {
             var selectedDate = $("#dateFilter").val();
             var filter = $("#filter").val();
             var search = $("#marksearch").val();
@@ -148,9 +148,20 @@ if (!isset($_SESSION['user_id'])) {
                 </button>
                 <div class="collapse navbar-collapse flex-column" id="navbarNav">
                     <div class="navbar-nav ms-0 me-5  mt-auto"> <!-- Aplicando a classe me-auto para mover o session user para a margem esquerda -->
-                        <a class="nav-link" href="#">Home</a>
-                        <a class="nav-link" href="#">Tickets</a>
-                        <a class="nav-link" href="#">Add new user</a>
+                    <a class="nav-link" href="./index.php">Home</a>
+                    <a class="nav-link" href="./marks.php">Marks</a>
+
+                    <?php
+
+                    if ($_SESSION['admin'] == 1) {
+                    ?>
+                        <a class="nav-link" href="./tickets.php">Recovers requests</a>
+                        <a class="nav-link" href="./user_list.php">Users</a>
+                        <a class="nav-link" href="./roles.php">Roles</a>
+                        <a class="nav-link" href="./installations.php">installations</a>
+                    <?php
+                    }
+                    ?>
                     </div>
 
                     <div class="navbar-nav mb-auto ms-auto"> <!-- Mantendo os links à direita -->

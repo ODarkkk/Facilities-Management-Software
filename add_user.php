@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $photo = $_POST['photo'];
     $phone = $_POST['phone'];
-    $new_password = password_hash($_POST['new-password'],  
+    $new_password = password_hash($_POST['new-password'], 
           PASSWORD_DEFAULT); 
     if (!isset($_GET['edit'])) {
         $edit = true;

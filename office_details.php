@@ -1,33 +1,36 @@
 <?php
 include_once('config.php');
 
-$officeId = isset($_GET['officeId']) ? intval($_GET['officeId']) : null;
-$selectedBuildingId = isset($_GET['selectedBuildingId'])?$_GET['selectedBuildingId']:null;
+$officeId = isset($_GET['officeId']) ? ($_GET['officeId']) : null;
+$selectedBuildingId = isset($_GET['selectedBuildingId']) ? $_GET['selectedBuildingId'] : null;
 
 
-if ($officeId == null && $selectedBuildingId == null) {
-    $sql = "SELECT * FROM offices AS o
+if ($officeId !== null) {
+    $sql = "SELECT * FROM offices AS o INNER JOIN building_offices AS b ON b.office_id = o.office_id
+    WHERE o.office_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $officeId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+} elseif ($selectedBuildingId !== null) {
+    echo $selectedBuildingId;
+    $sql = "SELECT * FROM offices AS o INNER JOIN building_offices AS b ON b.office_id = o.office_id
+    WHERE b.building_id = ? AND o.office_id = (SELECT MIN(office_id) FROM building_offices where building_id = ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ii", $selectedBuildingId, $selectedBuildingId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+}
+else{
+    $sql = "SELECT MIN(o.office_id), o.* FROM offices AS o
     INNER JOIN building_offices AS b ON b.office_id = o.office_id
     WHERE b.building_id = (SELECT MIN(building_id) FROM building_offices)";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $result = $stmt->get_result();
-} elseif ($selectedBuildingId != null && $officeId != null) {
-    $sql = "SELECT * FROM offices INNER JOIN building_offices AS b ON b.office_id = o.office_id
-    WHERE b.building_id = ? AND office_id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ii", $officeId, $selectedBuildingId);
-    $stmt->execute();
-    $result = $stmt->get_result();
 }
-else{
-    $sql = "SELECT * FROM offices INNER JOIN building_offices AS b ON b.office_id = o.office_id
-    WHERE office_id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $officeId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-}
+// echo $sql;  //For sql debugging
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
     if (!empty($row["photo"])) {

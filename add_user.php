@@ -17,7 +17,7 @@ $edit = false;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $name = $_POST['name'];
-    $role_department = isset($_POST['role'])?  null: $_POST['role'];
+    $role_department = isset($_POST['role'])?  $_POST['role']: null;
     $email = $_POST['email'];
     $photo = $_POST['photo'];
     $phone = $_POST['phone'];
@@ -52,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         }
         $stmt->execute();
+        echo "<script>window.location = user.php;</script>"
         // Redirect to a success page or display a success message
     }
 }

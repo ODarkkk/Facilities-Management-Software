@@ -19,8 +19,6 @@ if(isset($_SESSION['user_id']))
 
     $user = $_POST['user'];
     $password = $_POST['password'];
-    // $decrypt = password_hash($password,  
-    //     PASSWORD_DEFAULT); 
    
     $sql = "SELECT * FROM `people` WHERE user = '$user' AND active=1";
   
@@ -28,15 +26,16 @@ if(isset($_SESSION['user_id']))
     if ($result->num_rows > 0) {
       while ($row = $result->fetch_assoc()) {
         if (password_verify($password, $row['password'])) {
+        if($row['password_status'] == 1){
+          $_SESSION['user_id2'] = $row["people_id"];
+          $_SESSION['user2'] = $row["name"];
+          echo "<script>window.location.href = 'new_password.php';</script>";
+          exit;
+        }
         $_SESSION['user_id'] = $row["people_id"];
         $_SESSION['user'] = $row["name"];
         $_SESSION['email'] = $row["email"];
         $_SESSION['admin'] = $row["admin"];
-      // $login = true;
-      // // Encrypting the admin value and storing it in session
-      // $encrypted_data = encrypt_session_data($row["admin"], $secret_key);
-      // $_SESSION['admin'] = $encrypted_data;
-      
       echo "<script>window.location.href = 'index.php';</script>";
       exit;
     }  else

@@ -49,7 +49,7 @@ if (isset($_POST['submit'])) {
 
     if (!securePassword($new_password)) {
         //password is invalid
-        $error_message = "Password is invalid.";
+    $error_message = "Password must be at least 8 characters long and contain at least one";
     }
     if ((error($error_message)) == "") {
         $error_message = error($error_message);

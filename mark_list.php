@@ -130,15 +130,15 @@ if ($result->num_rows > 0) {
     if($_SESSION['admin'] == 1)
     {
       
-      $buttons = '<button type="button" class="btn btn-secundary" onclick="location.href=\'marks_edit.php?bookmarkid=' . $row["bookmark_id"] . '\';">Edit</button> '.
-       '<button type="button" class="btn btn-danger" onclick="location.href=\'marks.delete.php?room_id=' . $row["bookmark_id"] . '\';">Delete</button> ';
+      $buttons = '<button type="button" class="btn btn-secundary" onclick="location.href=\'reserves_edit.php?bookmarkid=' . $row["bookmark_id"] . '\';">Edit</button> '.
+       '<button type="button" class="btn btn-danger" onclick="location.href=\'reserves.php?room_id=' . $row["bookmark_id"] . '\';">Delete</button> ';
     }
     $markarray[] = '<div class="col-md-4">' .
       '<div class="card mb-4"  >' .
       '<div class="card-body">' .
       '<h5 class="card-title">' . htmlspecialchars($row[$name."_name"]) . '</h5>' .
       '<p class="card-text">' . htmlspecialchars($row["description"]) . '</p>' .
-      '<button type="button" class="btn btn-primary" onclick="location.href=\'marks_view.php?bookmark_id=' . $row["bookmark_id"] . '&selecteddate_js=' . $selectedDate . '\';">Reserve</button> ' .
+      '<button type="button" class="btn btn-primary" onclick="location.href=\'reserves.php?bookmark_id=' . $row["bookmark_id"] . '&selecteddate_js=' . $selectedDate . '\';">Reserve</button> ' .
       $buttons .
       '</div>' .
       '</div>' .

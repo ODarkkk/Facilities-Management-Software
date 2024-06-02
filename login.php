@@ -1,5 +1,5 @@
 <?php
-include_once('config.php');
+include_once 'config.php' ;
 if(isset($_SESSION['user_id']))
 {
  header("location: index.php");
@@ -125,7 +125,7 @@ if(isset($_SESSION['user_id']))
     ?>
         <button type="submit" style="margin-left: 30%" class="btn btn-primary">Submit</button>
         <div class="text-left mt-5">
-          <span><a a href="recorver.php">I forgot my password</a></span>
+          <span><a a href="recover.php">I forgot my password</a></span>
         </div>
     </div>
     </form>

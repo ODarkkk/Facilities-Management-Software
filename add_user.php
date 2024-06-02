@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         }
         $stmt->execute();
-        echo "<script>window.location = user.php;</script>"
+        echo "<script>window.location = user.php;</script>";
         // Redirect to a success page or display a success message
     }
 }

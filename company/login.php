@@ -64,7 +64,8 @@ include_once('config.php');
         .pagecontainer {display:none;}
     </style>
     <div class="noscriptmsg">
-    You don't have javascript enabled. For this site to work, javascript is required.    </div>
+    You don't have javascript enabled. For this site to work, javascript is required.</div>
+    
 </noscript>
   <!-- <script type="importmap">
     {

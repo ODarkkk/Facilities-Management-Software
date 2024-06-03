@@ -6,7 +6,6 @@ $selectedDate = isset($_GET['dateFilter']) ? $_GET['dateFilter'] : date('Y-m-d')
 
 $search = isset($_GET['marksearch']) ? $_GET['marksearch'] : "";
 $active = isset($_GET['active']) ? $_GET['active'] : 1;
-
 $type = isset($_GET['type']) ? $_GET['type'] : null;
 $filterType = $type ? $type->type : null;
 $filterValue = $type ? $type->value : null;
@@ -131,14 +130,14 @@ if ($result->num_rows > 0) {
     {
       
       $buttons = '<button type="button" class="btn btn-secundary" onclick="location.href=\'reserves_edit.php?bookmarkid=' . $row["bookmark_id"] . '\';">Edit</button> '.
-       '<button type="button" class="btn btn-danger" onclick="location.href=\'reserves.php?room_id=' . $row["bookmark_id"] . '\';">Delete</button> ';
+       '<button type="button" class="btn btn-danger" onclick="location.href=\'reserves_delete.php?bookmarkid=' . $row["bookmark_id"] . '\';">Delete</button> ';
     }
     $markarray[] = '<div class="col-md-4">' .
       '<div class="card mb-4"  >' .
       '<div class="card-body">' .
       '<h5 class="card-title">' . htmlspecialchars($row[$name."_name"]) . '</h5>' .
       '<p class="card-text">' . htmlspecialchars($row["description"]) . '</p>' .
-      '<button type="button" class="btn btn-primary" onclick="location.href=\'reserves.php?bookmark_id=' . $row["bookmark_id"] . '&selecteddate_js=' . $selectedDate . '\';">Reserve</button> ' .
+      '<button type="button" class="btn btn-primary" onclick="location.href=\'reserves_view.php?bookmarkid=' . $row["bookmark_id"] . '&selecteddate_js=' . $selectedDate . '\';">Reserve</button> ' .
       $buttons .
       '</div>' .
       '</div>' .

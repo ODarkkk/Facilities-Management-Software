@@ -57,7 +57,7 @@ $selectedDate = $_GET['selecteddate_js'];
         while($row = $result->fetch_assoc()) {
           $room_name = $row['room_name'];
         }
-        echo "<p>" . $room_name . "</p>";   
+        echo "<p>" . $room_name . "</p>";
       } else {
         echo "<p>No room selected</p>";
       }   

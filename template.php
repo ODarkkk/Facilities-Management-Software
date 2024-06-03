@@ -46,16 +46,16 @@ if (!isset($_SESSION['user_id'])) {
             <div class="collapse navbar-collapse flex-column" id="navbarNav">
                 <div class="navbar-nav ms-0 me-5  mt-auto"> <!-- Aplicando a classe me-auto para mover o session user para a margem esquerda -->
                     <a class="nav-link" href="./index.php">Home</a>
-                    <a class="nav-link" href="./marks.php">Marks</a>
+                    <a class="nav-link" href="./reserves.php">Reserves</a>
+                    <a class="nav-link" href="./user.php">Users</a>
+                    <a class="nav-link" href="./installations.php.php">installations</a>
                     
                     <?php
 
                     if ($_SESSION['admin'] == 1) {
                     ?>
                         <a class="nav-link" href="./tickets.php">Recovers requests</a>
-                        <a class="nav-link" href="./user_list.php">Users</a>
                         <a class="nav-link" href="./roles.php">Roles</a>
-                        <a class="nav-link" href="./installations.php.php">installations</a>
                         <?php
                     }
 ?>

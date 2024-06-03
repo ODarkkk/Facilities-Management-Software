@@ -1,6 +1,6 @@
 <?php
 include_once 'config.php';
-if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
+if (!isset($_SESSION['user_id'])) {
     header("location: logout.php");
     exit(); // Ensure script stops after redirect
 }
@@ -51,6 +51,12 @@ if ($result->num_rows > 0) {
                     $mimeType = "application/octet-stream";
             }
         }
+        if($_SESSION['admin']== 1){
+
+           $btt = '<button type="button" class="btn btn-primary" onclick="confirmAction(\'' . $row["user"] . $row["people_id"] . '\')">Edit</button>' .
+            '<button class="btn ' . ($row["active"] == 1 ? 'btn-danger' : 'btn-secondary') . '"
+              onclick="return confirm(\'Are you sure you want to change the active status of ' . $row["user"] . '?\') && changeActiveStatus(' . $row["people_id"] . ', ' . ($row["active"] == 1 ? 0 : 1) . ')">';
+        }
         echo '<div class="col-md-4">' .
             '<div class="card mb-4">' .
             '<div class="card-body">' .
@@ -66,9 +72,7 @@ if ($result->num_rows > 0) {
             '<p class="card-text">' . ($row["admin"] ? "Admin" : "Not Admin") . '</p>' .
             '<p class="card-text">Password status: ' . ($row["password_status"] ? "Will Changed" : "It won't change") . '</p>' .
             '<div class="d-flex justify-content-between align-items-center">' .
-            '<button type="button" class="btn btn-primary" onclick="confirmAction(\'' . $row["user"] . $row["people_id"] . '\')">Edit</button>' .
-            '<button class="btn ' . ($row["active"] == 1 ? 'btn-danger' : 'btn-secondary') . '"
-              onclick="return confirm(\'Are you sure you want to change the active status of ' . $row["user"] . '?\') && changeActiveStatus(' . $row["people_id"] . ', ' . ($row["active"] == 1 ? 0 : 1) . ')">' .
+             $btt.
             ($row["active"] == 1 ? 'Active' : 'Don\'t Active') . ' </button>' .
             '</div>' .
             '</div>' .

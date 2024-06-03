@@ -1,6 +1,6 @@
 <?php
 include_once('config.php');
-if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
+if (!isset($_SESSION['user_id'])) {
     header("location: logout.php");
     exit(); // Ensure script stops after redirect
 }

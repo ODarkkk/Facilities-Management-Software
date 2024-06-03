@@ -29,9 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $overlap = $stmt->get_result()->fetch_assoc();
 
   if ($overlap) {
-      http_response_code(409);
-      echo 'Room is already booked at the selected time.';
-      exit;
+    http_response_code(409);
+    echo 'Room is already booked at the selected time.';
+    exit;
   }
 
   // Atualiza os dados na tabela
@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   </p>
 
   <form action="reserves_edit.php" method="post">
-  <div class="mb-3">
+    <div class="mb-3">
       <label for="people_id" class="form-label">People</label>
       <select id="people_id" class="form-select" required>
         <?php
@@ -142,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       </select>
     </div>
 
-  
+
 
     <div class="mb-3">
       <label for="selected_date" class="form-label">Selected Date</label>

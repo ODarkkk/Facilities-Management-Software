@@ -103,10 +103,33 @@ $(document).ready(function () {
     try {
       const response = await fetch(`office_details.php`);
       const data = await response.text();
-      const officeContent = document.getElementById("officeContent");
+      const officeContent = document.getElementById("buildingContent");
       officeContent.innerHTML = data;
     } catch (e) {
       console.error("Error fetching office details:", e.message);
+    }
+  };
+  const fetchbuildingsDetails = async () => {
+    try {
+      const response = await fetch(`building_details.php`);
+      const data = await response.text();
+      const buildingContent = document.getElementById("buildingContent");
+      buildingContent.innerHTML = data;
+    } catch (e) {
+      console.error("Error fetching office details:", e.message);
+    }
+  };
+  const fetchbuildingsdetailsforbuilding = async (selectedBuildingId) => {
+    try{
+      const response = await fetch(
+      `building_details.php?selectedBuildingId=${encodeURIComponent(selectedBuildingId)}`
+    );
+    const data = await response.text();
+    const buildingContent = document.getElementById("buildingContent");
+    buildingContent.innerHTML = data;
+  }
+    catch(e){
+      console.error("Error fetching building details for building:", e.message);
     }
   };
   const fetchOfficeDetailsForOffice = async (officeID) => {
@@ -141,6 +164,7 @@ $(document).ready(function () {
       await fetchOffices();
       await fetchBuildings();
       await fetchOfficeDetails();
+      await fetchbuildingsDetails();
 
       const officeDropdown = document.getElementById("officeSelect");
       officeDropdown.addEventListener("change", async (event) => {
@@ -160,6 +184,7 @@ $(document).ready(function () {
         try {
           await fetchOfficeDetailsForBuilding(selectedBuildingId);
           await fetchOfficesForBuilding(selectedBuildingId);
+          await fetchbuildingsdetailsforbuilding(selectedBuildingId);
         } catch (e) {
           console.error("Error fetching offices for building:", e.message);
         }
@@ -170,10 +195,15 @@ $(document).ready(function () {
         // Para atualizar o conteúdo do officeContent
         document.getElementById("officeContent").innerHTML = "";
       });
+      buildingDropdown.addEventListener("change", () =>{
+        fetchbuildingsDetails();
+        document.getElementById("buildingContent").innerHTML = "";
+      });
     } catch (e) {
       console.trace("Message");
       console.error("Error fetching dropdown:", e.message);
     }
+    
   };
 
   const needsFetch = document.body.dataset.needsFetch === "true";
@@ -184,7 +214,7 @@ $(document).ready(function () {
 
 //For marks
 $(document).ready(function () {
-  var date = $("#dateFilter").val();
+  const date = $("#dateFilter").val();
 
   // Enviar a requisição AJAX inicial
   sendAjaxRequest({
@@ -208,28 +238,27 @@ $(document).ready(function () {
 
   function triggerAjaxRequest() {
     const selectedDate = $("#dateFilter").val();
-    const filter = $("#filter").val();
-    const search = $("#marksearch").val();
-    $("#active").val($("#active").is(":checked") ? 1 : 0);
-    const active = $("#active").val();
-    const officeSelect = $("#officeSelect").val();
-    const buildingSelect = $("#buildingSelect").val();
-    const roomSelect = $("#roomSelect").val();
+        const filter = $("#filter").val();
+        const search = $("#marksearch").val();
+        const active = $("#active").is(":checked") ? 1 : 0;
+        const officeSelect = $("#officeSelect2").val();
+        const buildingSelect = $("#buildingSelect2").val();
+        const roomSelect = $("#roomSelect2").val();
 
-    let type;
-    switch (filter) {
-      case "room":
-        type = { type: filter, value: roomSelect };
-        break;
-      case "office":
-        type = { type: filter, value: officeSelect };
-        break;
-      case "building":
-        type = { type: filter, value: buildingSelect };
-        break;
-      default:
-        type = "";
-        break;
+        let type;
+        switch (filter) {
+            case "room":
+                type = { type: filter, value: roomSelect };
+                break;
+            case "office":
+                type = { type: filter, value: officeSelect };
+                break;
+            case "building":
+                type = { type: filter, value: buildingSelect };
+                break;
+            default:
+                type = "";
+                break;
     }
 
     sendAjaxRequest({
@@ -238,9 +267,9 @@ $(document).ready(function () {
       search: search,
       active: active,
       type: type,
-      officeSelect: officeSelect,
-      buildingSelect: buildingSelect,
-      roomSelect: roomSelect,
+      // officeSelect: officeSelect,
+      // buildingSelect: buildingSelect,
+      // roomSelect: roomSelect,
     });
   }
 

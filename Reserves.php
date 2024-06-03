@@ -43,6 +43,11 @@ if (!isset($_SESSION['user_id'])) {
     </noscript>
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script>
+
+            function confirmdelete(bookmark_id){
+                
+            }
+
         $(document).ready(function() {
             var selectedDate = document.getElementById("dateFilter").value;
             // var officeSelect = 1;
@@ -64,7 +69,7 @@ if (!isset($_SESSION['user_id'])) {
                 method: "GET",
                 url: "reserves_list.php",
                 data: {
-                    dateFilter: selectedDate,
+                    dateFilter: dateString,
                     // officeSelect: officeSelect,
                     // roomSelect: roomSelect,
                     // buildingSelect: buildingSelect
@@ -286,34 +291,18 @@ if (!isset($_SESSION['user_id'])) {
                 </div>
                 <div class="modal-body">
                     <ul class="nav nav-tabs" id="office-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="offices-tab" data-bs-toggle="tab" href="#offices" role="tab" aria-controls="offices" aria-selected="true">Offices</a>
+                    <li class="nav-item">
+                            <a class="nav-link active" id="buildings-tab" data-bs-toggle="tab" href="#buildings" role="tab" aria-controls="buildings" aria-selected="false">Buildings</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="buildings-tab" data-bs-toggle="tab" href="#buildings" role="tab" aria-controls="buildings" aria-selected="false">Buildings</a>
+                            <a class="nav-link" id="offices-tab" data-bs-toggle="tab" href="#offices" role="tab" aria-controls="offices" aria-selected="true">Offices</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="room-tab" data-bs-toggle="tab" href="#rooms" role="tab" aria-controls="rooms" aria-selected="false">Rooms</a>
                         </li>
                     </ul>
                     <div class="tab-content" id="office-tabs-content">
-                        <div class="tab-pane fade show active" value="office" id="offices" role="tabpanel" aria-labelledby="offices-tab">
-                            <select class="form-select" id="officeSelect2">
-                                <script>
-                                    fetch('fetch_offices.php')
-                                        .then(response => response.text())
-                                        .then(data => {
-                                            const selectElement = document.getElementById('officeSelect2')
-                                            selectElement.innerHTML = data;
-                                        })
-                                        .catch(error => {
-                                            console.error("Error fetching data:", error);
-                                        });
-                                </script>
-                                <!-- Options will be dynamically inserted here -->
-                            </select>
-                        </div>
-                        <div class="tab-pane fade" value="building" id="buildings" role="tabpanel" aria-labelledby="buildings-tab">
+                    <div class="tab-pane fade show active" value="building" id="buildings" role="tabpanel" aria-labelledby="buildings-tab">
                             <select class="form-select" id="buildingSelect2">
                                 <script>
                                     fetch('fetch_buildings.php')
@@ -329,6 +318,23 @@ if (!isset($_SESSION['user_id'])) {
                                 <!-- Options will be dynamically inserted here -->
                             </select>
                         </div>
+                        <div class="tab-pane fade" value="office" id="offices" role="tabpanel" aria-labelledby="offices-tab">
+                            <select class="form-select" id="officeSelect2">
+                                <script>
+                                    fetch('fetch_offices.php')
+                                        .then(response => response.text())
+                                        .then(data => {
+                                            const selectElement = document.getElementById('officeSelect2')
+                                            selectElement.innerHTML = data;
+                                        })
+                                        .catch(error => {
+                                            console.error("Error fetching data:", error);
+                                        });
+                                </script>
+                                <!-- Options will be dynamically inserted here -->
+                            </select>
+                        </div>
+                       
                         <div class="tab-pane fade" value="room" id="rooms" role="tabpanel" aria-labelledby="rooms-tab">
                             <select class="form-select" id="roomSelect2">
                                 <script>

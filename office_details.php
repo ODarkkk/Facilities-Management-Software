@@ -14,7 +14,6 @@ if ($officeId !== null) {
     $result = $stmt->get_result();
 
 } elseif ($selectedBuildingId !== null) {
-    echo $selectedBuildingId;
     $sql = "SELECT * FROM offices AS o INNER JOIN building_offices AS b ON b.office_id = o.office_id
     WHERE b.building_id = ? AND o.office_id = (SELECT MIN(office_id) FROM building_offices where building_id = ?)";
     $stmt = $conn->prepare($sql);
@@ -52,7 +51,6 @@ if ($result->num_rows > 0) {
                 $mimeType = "application/octet-stream";
         }
     }
-    echo "<h5>" . htmlspecialchars($row['office_name']) . "</h5>";
     echo "<p>" . htmlspecialchars($row['description']) . "</p>";
     echo !empty($row["photo"]) ? "<img src='data:$mimeType;base64," . base64_encode($imageData) . "' alt='" . htmlspecialchars($row['office_name']) . " image' class='img-fluid'/>" : "";
 } else {

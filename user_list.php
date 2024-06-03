@@ -1,3 +1,4 @@
+
 <?php
 include_once 'config.php';
 if (!isset($_SESSION['user_id'])) {
@@ -9,7 +10,7 @@ $search = isset($_GET['usersearch']) ? $_GET['usersearch'] : "";
 if (strlen(trim($search)) == 0) {
     $_GET['usersearch'] = null;
 }
-
+$btt = '';
 
 // Select all users
 $sql = "SELECT p.*,
@@ -20,10 +21,14 @@ $sql = "SELECT p.*,
         LEFT JOIN department d ON d.department_id = rd.department_id
         LEFT JOIN roles r on r.role_id = rd.role_id ";
 
+if ($_SESSION['admin'] != 1) {
+    $sql .= "WHERE p.active = 1 ";
+}
+
 if ($_GET['usersearch'] != null) {
-    $sql .= " WHERE p.user LIKE '%" . $conn->real_escape_string($search) . "%' 
-          OR p.name LIKE '%" . $conn->real_escape_string($search) . "%'
-          OR p.email LIKE '%" . $conn->real_escape_string($search) . "%'";
+    $searchTerm = $conn->real_escape_string($search);
+    $sql .= ($_SESSION['admin'] != 1) ? "AND " : "WHERE ";
+    $sql .= "p.user LIKE '%$searchTerm%' OR p.name LIKE '%$searchTerm%' OR p.email LIKE '%$searchTerm%' ";
 }
 $sql .= "Order by p.name ASC";
 $result = $conn->query($sql);
@@ -51,11 +56,12 @@ if ($result->num_rows > 0) {
                     $mimeType = "application/octet-stream";
             }
         }
-        if($_SESSION['admin']== 1){
+        if ($_SESSION['admin'] == 1) {
 
-           $btt = '<button type="button" class="btn btn-primary" onclick="confirmAction(\'' . $row["user"] . $row["people_id"] . '\')">Edit</button>' .
-            '<button class="btn ' . ($row["active"] == 1 ? 'btn-danger' : 'btn-secondary') . '"
-              onclick="return confirm(\'Are you sure you want to change the active status of ' . $row["user"] . '?\') && changeActiveStatus(' . $row["people_id"] . ', ' . ($row["active"] == 1 ? 0 : 1) . ')">';
+            $btt = '<button type="button" class="btn btn-primary" onclick="confirmAction(\'' . $row["user"] . $row["people_id"] . '\')">Edit</button>' .
+                '<button class="btn ' . ($row["active"] == 1 ? 'btn-danger' : 'btn-secondary') . '"
+              onclick="return confirm(\'Are you sure you want to change the active status of ' . $row["user"] . '?\') && changeActiveStatus(' . $row["people_id"] . ', ' . ($row["active"] == 1 ? 0 : 1) . ')">' .
+                ($row["active"] == 1 ? 'Active' : 'Don\'t Active') . ' </button>';
         }
         echo '<div class="col-md-4">' .
             '<div class="card mb-4">' .
@@ -69,12 +75,13 @@ if ($result->num_rows > 0) {
             '<p class="card-text">' . htmlspecialchars($row["phone"]) . '</p>' .
             '<p class="card-text">' . htmlspecialchars($row["department"]) . '</p>' .
             '<p class="card-text">' . htmlspecialchars($row["role"]) . '</p>' .
-            '<p class="card-text">' . ($row["admin"] ? "Admin" : "Not Admin") . '</p>' .
-            '<p class="card-text">Password status: ' . ($row["password_status"] ? "Will Changed" : "It won't change") . '</p>' .
-            '<div class="d-flex justify-content-between align-items-center">' .
-             $btt.
-            ($row["active"] == 1 ? 'Active' : 'Don\'t Active') . ' </button>' .
-            '</div>' .
+            '<p class="card-text">' . ($row["admin"] ? "Admin" : "Not Admin") . '</p>';
+
+        if ($_SESSION['admin'] == 1) {
+            echo '<p class="card-text">Password status: ' . ($row["password_status"] ? "Will Changed" : "It won't change") . '</p>';
+        }
+
+        echo '<div class="d-flex justify-content-between align-items-center">' . $btt . '</div>' .
             '</div>' .
             '</div>' .
             '</div>';

@@ -76,7 +76,7 @@ if (!isset($_SESSION['user_id'])) {
 
 <form>
   <div class="mb-3">
-    <label for="room_id" class="form-label">Room ID</label>
+    <label for="room_id" class="form-label">Room</label>
     <select id="room_id" class="form-select" required>
       <?php
         // Fetch rooms from database and populate select options
@@ -89,7 +89,7 @@ if (!isset($_SESSION['user_id'])) {
   </div>
 
   <div class="mb-3">
-    <label for="people_id" class="form-label">People ID</label>
+    <label for="people_id" class="form-label">User</label>
     <select id="people_id" class="form-select" required>
       <?php
         // Fetch people from database and populate select options

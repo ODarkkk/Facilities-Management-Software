@@ -74,6 +74,10 @@ if (!isset($_SESSION['user_id'])) {
 
 </p>
 
+<?php 
+$sql = "SELECT * from bookmar where bookmark_id = "
+?>
+
 <form>
   <div class="mb-3">
     <label for="room_id" class="form-label">Room</label>

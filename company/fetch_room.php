@@ -1,6 +1,6 @@
 <?php
 // Include the database configuration file
-include_once('config.php');
+include_once 'config.php';
 
 // Get the selected building ID
 $selectedofficeid = isset($_GET['OfficeId'])? : null;
@@ -33,7 +33,7 @@ $result = $stmt->get_result();
 // Check if there are results
 if ($result->num_rows > 0) {
     // Start the select element
-    echo "<select class='form-select' id='roomSelect' name='selectedRoomId'>";
+    // echo "<select class='form-select' id='roomSelect' name='selectedRoomId'>";
 
     // Loop through results and print combobox options
     while($row = $result->fetch_assoc()) {
@@ -41,7 +41,7 @@ if ($result->num_rows > 0) {
     }
  
     // End the select element
-    echo "</select>";
+    // echo "</select>";
     
 } else {
     echo "<option value=''>No rooms found</option>";

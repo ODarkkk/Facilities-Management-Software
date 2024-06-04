@@ -7,8 +7,10 @@ include_once("config.php"); // Adjust the include file as needed
 
 // Get the selected date from the AJAX request
 $selectedDate = isset($_GET['dateFilter']) ? $_GET['dateFilter'] : date('Y-m-d');
-$search = isset($_GET['search']) ? $_GET['search'] : null;
-
+$search = isset($_GET['search']) ? $_GET['search'] : "";
+if (strlen(trim($search)) == 0){
+  $_GET['search'] = null;
+}
 // $selectedOfficeId = isset($_GET["officeSelect"]) ? intval($_GET["officeSelect"]) : 1;
 if (isset($_GET["officeSelect"])) {
   $selectedOfficeId = $_GET["officeSelect"];
@@ -33,21 +35,21 @@ if (isset($_GET["officeSelect"])) {
     AND bookmarks.selected_date = ?
     AND bookmarks.active = 1
   WHERE 
-  offices_room.office_id = ? 
+  offices_room.office_id = ?
   AND offices_room.room_id IS NOT NULL
   " . (isset($_GET['search']) ? "
-  AND room.room_id = ?
+  AND room.room_id like ?
   OR
-  room.room_name = ?
-  OR room.description = ?" : "") . " 
+  room.room_name like ?
+  OR room.description like ?" : "") . "
  
   ORDER BY 
   room.room_name;";
-
+// echo $sql;
   $stmt = $conn->prepare($sql);
   if (isset($_GET['search'])) {
-    $searchbar_like = '%' . $search . '%';
-    $stmt->bind_param("ssssisss", $selectedDate, $selectedDate, $selectedDate, $selectedDate, $selectedOfficeId, $searchbar_like, $searchbar_like, $searchbar_like);
+$search = "%".$search."%";
+    $stmt->bind_param("ssssisss", $selectedDate, $selectedDate, $selectedDate, $selectedDate, $selectedOfficeId, $search, $search, $search);
   } else {
 
     $stmt->bind_param("ssssi", $selectedDate, $selectedDate, $selectedDate, $selectedDate, $selectedOfficeId);
@@ -77,20 +79,22 @@ if (isset($_GET["officeSelect"])) {
   offices_room.office_id = (SELECT MIN(offices_room.office_id) FROM offices_room)
   AND offices_room.room_id IS NOT NULL
   " . (isset($_GET['search']) ? "
-   AND room.room_id = ? OR
-room.room_name = ?
-OR room.description = ?" : "") . " 
+   AND room.room_id like ? OR
+room.room_name like ?
+OR room.description like ?" : "") . "
   
   ORDER BY 
   room.room_name;";
   $stmt = $conn->prepare($sql);
   if (isset($_GET['search'])) {
-    $searchbar_like = '%' . $search . '%';
-    $stmt->bind_param("sssssss", $selectedDate, $selectedDate, $selectedDate, $selectedDate, $searchbar_like, $searchbar_like, $searchbar_like);
+    $search = "%".$search."%";
+    $stmt->bind_param("sssssss", $selectedDate, $selectedDate, $selectedDate, $selectedDate, $search, $search, $search);
   } else {
     $stmt->bind_param("ssss", $selectedDate, $selectedDate, $selectedDate, $selectedDate);
   }
 }
+
+
 // echo "Selected office ID: " . $selectedOfficeId; // Adicione esta linha para depuração
 
 // if ($selectedDate == null){
@@ -120,21 +124,22 @@ OR room.description = ?" : "") . "
 $stmt->execute();
 $result = $stmt->get_result();
 $roomarray = array();
-$roomList = "";
+
 $stats = "";
 while ($row = $result->fetch_assoc()) {
 
-  $roomList = '<div class="col-md-4">' .
+  $roomarray[] = '<div class="col-md-4">' .
     '<div class="card mb-4 ' . getRoomClass($row) . '">' .
     '<div class="card-body">' .
     '<h5 class="card-title">' . htmlspecialchars($row["room_name"]) . '</h5>' .
     '<p class="card-text">' . htmlspecialchars($row["description"]) . '</p>' .
     '<p class="room-status ' . getRoomStatusClass($row) . '">' . getRoomStatusLabel($row) . '</p>' .
-    '<button type="button" class="btn btn-primary" onclick="location.href=\'room_reserve.php?room_id=' . $row["room_id"] . '&selecteddate_js=' . $selectedDate . '\';">Reserve</button>' .
+    '<button type="button" class="btn btn-primary" onclick="location.href=\'room_reserve.php?room_id=' . $row["room_id"] . '&selecteddate_js=' . $selectedDate . '\';">Reserve</button> ' .
     '</div>' .
     '</div>' .
     '</div>';
-  $roomarray[] = $roomList;
+  
+
   $selectedOfficeId = $row['office_id'];
 
   // Output the room list
@@ -159,10 +164,15 @@ try {
 
   echo "</h2>";
   echo "<br>";
-
+  echo '<div class="container">';
+  echo '<div class="row">';
+  
   foreach ($roomarray as $room) {
     echo $room;
   }
+//  unset($roomarray);
+  echo "</div>";
+  echo "</div>";
   echo "</div>";
 } catch (Exception $e) {
   echo '<p>Message: No office associated with the selected building';
@@ -182,7 +192,7 @@ function getRoomStatusClass($row)
     case 'partially-available':
       return 'text-warning';
     default:
-      return '';
+      return 'text-success';
   }
 }
 

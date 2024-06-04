@@ -1,7 +1,10 @@
 <?php
 // Connect to the database
-require_once('config.php');
-
+require_once 'config.php';
+if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
+  header("location: logout.php");
+  exit(); // Ensure script stops after redirect
+}
 // Get the user ID and new active status from the AJAX request
 $id = $_POST['id'];
 $active = $_POST['active'];

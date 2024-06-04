@@ -78,7 +78,7 @@ if (!isset($_SESSION['user_id'])) {
                     success: function(response) {
                         // Display the received HTML
                         $("#roomList").html(response);
-                        fetchOfficeDetails(officeSelect);
+                        // fetchOfficeDetails(officeSelect);
                         // Store the selected date in a JavaScript variable
                         selectedDate = dateString;
                     }
@@ -98,7 +98,7 @@ if (!isset($_SESSION['user_id'])) {
     <nav class="navbar navbar-light bg-light navbar-expand-lg navbar-light" style="transition: height 0.5s; margin:2%">
         <div class="container-fluid">
             <div class="col-md-1">
-                <img src="images/esgc.png" class="rounded img-fluid img-small w-50" alt="company_logo">
+                <a href="index.php"><img src="images/esgc.png" class="rounded img-fluid img-small w-50" alt="company_logo"></a>
             </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -107,21 +107,21 @@ if (!isset($_SESSION['user_id'])) {
                 <div class="navbar-nav ms-0 me-5  mt-auto"> <!-- Aplicando a classe me-auto para mover o session user para a margem esquerda -->
                     <a class="nav-link" href="./index.php">Home</a>
                     <a class="nav-link" href="./reserves.php">Reserves</a>
+                    <a class="nav-link" href="./user.php">Users</a>
+                    <a class="nav-link" href="./installations.php.php">installations</a>
 
                     <?php
 
                     if ($_SESSION['admin'] == 1) {
                     ?>
                         <a class="nav-link" href="./tickets.php">Recovers requests</a>
-                        <a class="nav-link" href="./user_list.php">Users</a>
                         <a class="nav-link" href="./roles.php">Roles</a>
-                        <a class="nav-link" href="./installations.php">installations</a>
                     <?php
                     }
                     ?>
                 </div>
 
-                <div class="navbar-nav mb-auto ms-auto">
+                <div class="navbar-nav mb-auto ms-auto"> <!-- Mantendo os links à direita -->
                     <div class="nav-link">
                         <?php
                         echo $_SESSION['user'];

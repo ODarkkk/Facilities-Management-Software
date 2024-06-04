@@ -9,7 +9,7 @@ $result = $conn->query($sql);
 // Check if there are results
 if ($result->num_rows > 0) {
     // Start the select element
-    echo "<select class='form-select' id='buildingSelect' name='selectedBuildingId'>";
+    // echo "<select class='form-select' id='buildingSelect' name='selectedBuildingId'>";
 
     // Loop through results and print combobox options
     while($row = $result->fetch_assoc()) {
@@ -17,7 +17,7 @@ if ($result->num_rows > 0) {
     }
  
     // End the select element
-    echo "</select>";
+    // echo "</select>";
     
 } else {
     echo "<option value=''>No buildings found</option>";

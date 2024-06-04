@@ -95,49 +95,50 @@ $(document).ready(function() {
     })
 });
 </script>
-    <p>
+<p>
 
-    <nav class="navbar navbar-light bg-light navbar-expand-lg navbar-light" style="transition: height 0.5s; margin:2%">
-        <div class="container-fluid">
-            <div class="col-md-1">
-                <img src="images/esgc.png" class="rounded img-fluid img-small w-50" alt="company_logo">
+<nav class="navbar navbar-light bg-light navbar-expand-lg navbar-light" style="transition: height 0.5s; margin:2%">
+    <div class="container-fluid">
+        <div class="col-md-1">
+            <a href="index.php"><img src="images/esgc.png" class="rounded img-fluid img-small w-50" alt="company_logo"></a>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse flex-column" id="navbarNav">
+            <div class="navbar-nav ms-0 me-5  mt-auto"> <!-- Aplicando a classe me-auto para mover o session user para a margem esquerda -->
+                <a class="nav-link" href="./index.php">Home</a>
+                <a class="nav-link" href="./reserves.php">Reserves</a>
+                <a class="nav-link" href="./user.php">Users</a>
+                <a class="nav-link" href="./installations.php.php">installations</a>
+                
+                <?php
+
+                if ($_SESSION['admin'] == 1) {
+                ?>
+                    <a class="nav-link" href="./tickets.php">Recovers requests</a>
+                    <a class="nav-link" href="./roles.php">Roles</a>
+                    <?php
+                }
+?>
             </div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse flex-column" id="navbarNav">
-                <div class="navbar-nav ms-0 me-5  mt-auto"> <!-- Aplicando a classe me-auto para mover o session user para a margem esquerda -->
-                    <a class="nav-link" href="./index.php">Home</a>
-                    <a class="nav-link" href="./marks.php">Marks</a>
 
+            <div class="navbar-nav mb-auto ms-auto"> <!-- Mantendo os links à direita -->
+                <div class="nav-link">
                     <?php
-
-                    if ($_SESSION['admin'] == 1) {
+                    echo $_SESSION['user'];
                     ?>
-                        <a class="nav-link" href="./tickets.php">Recovers requests</a>
-                        <a class="nav-link" href="./user_list.php">Users</a>
-                        <a class="nav-link" href="./roles.php">Roles</a>
-                        <a class="nav-link" href="./installations.php.php">installations</a>
-                    <?php
-                    }
-                    ?>
-                </div>
-
-                <div class="navbar-nav mb-auto ms-auto"> <!-- Mantendo os links à direita -->
-                    <div class="nav-link">
-                        <?php
-                        echo $_SESSION['user'];
-                        ?>
-                    </div>
                 </div>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
 
-    </p>
+</p>
     
     <h1>Installations</h1>
-    <button type="button" onclick="location.href = 'new_installations.php';" class="btn btn-success">New Installations</button>
+    <?php if($_SESSION['admin']){ ?>
+    <button type="button" onclick="location.href = 'new_installations.php';" class="btn btn-success">New Installations</button> <?php } ?>
     
 
     <nav class="navbar">

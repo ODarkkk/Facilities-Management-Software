@@ -1,6 +1,10 @@
 <?php
-include_once('config.php');
-
+include_once 'config.php' ;
+if(isset($_SESSION['user_id']))
+{
+ header("location: index.php");
+ exit;
+}
 
 // function encrypt_session_data($data, $secret_key)
 // {
@@ -15,26 +19,30 @@ include_once('config.php');
 
     $user = $_POST['user'];
     $password = $_POST['password'];
-    // $decrypt = password_hash($password,  
-    //     PASSWORD_DEFAULT); 
-
-
-    $sql = "SELECT * FROM `people` WHERE user = '$user' AND password = '$password'";
+   
+    $sql = "SELECT * FROM `people` WHERE user = '$user' AND active=1";
   
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
       while ($row = $result->fetch_assoc()) {
+        if (password_verify($password, $row['password'])) {
+        if($row['password_status'] == 1){
+          $_SESSION['user_id2'] = $row["people_id"];
+          $_SESSION['user2'] = $row["name"];
+          echo "<script>window.location.href = 'new_password.php';</script>";
+          exit;
+        }
         $_SESSION['user_id'] = $row["people_id"];
         $_SESSION['user'] = $row["name"];
         $_SESSION['email'] = $row["email"];
         $_SESSION['admin'] = $row["admin"];
-      // $login = true;
-      // // Encrypting the admin value and storing it in session
-      // $encrypted_data = encrypt_session_data($row["admin"], $secret_key);
-      // $_SESSION['admin'] = $encrypted_data;
-      }
       echo "<script>window.location.href = 'index.php';</script>";
       exit;
+    }  else
+    {
+      $error_message = "Credential incorrect! Try again.";
+    }
+    }
     } else {
 
       // echo "<p style='color: red;'>Credential incorrect! Try again.</p>";
@@ -64,8 +72,7 @@ include_once('config.php');
         .pagecontainer {display:none;}
     </style>
     <div class="noscriptmsg">
-    You don't have javascript enabled. For this site to work, javascript is required.</div>
-    
+    You don't have javascript enabled. For this site to work, javascript is required.    </div>
 </noscript>
   <!-- <script type="importmap">
     {
@@ -118,7 +125,7 @@ include_once('config.php');
     ?>
         <button type="submit" style="margin-left: 30%" class="btn btn-primary">Submit</button>
         <div class="text-left mt-5">
-          <span><a a href="recorver.php">I forgot my password</a></span>
+          <span><a a href="recover.php">I forgot my password</a></span>
         </div>
     </div>
     </form>

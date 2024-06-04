@@ -130,7 +130,7 @@ if (!isset($_SESSION['user_id'])) {
 
 
   <h1>Users</h1>
-  <button type="button" onclick="location.href = 'new_user.php';" class="btn btn-success">New User</button>
+  <?php if($_SESSION['admin'] == 1)  { ?> <button type="button" onclick="location.href = 'new_user.php';" class="btn btn-success">New User</button> <?php } ?>
   <nav class="navbar">
     <form class="form-inline">
       <div class="input-group">

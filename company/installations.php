@@ -1,173 +1,176 @@
 <?php
-include_once('config.php');
-if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
-    header("location: logout.php");
+include_once 'config.php';
+// Redirect to login page if the user is not logged in
+if (!isset($_SESSION['user_id'])) {
+    header("location: login.php");
     exit(); // Ensure script stops after redirect
 }
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-<!-- <html lang="en" data-bs-theme="dark"> -->
 
 <head>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PAP</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" href="index.js" crossorigin="anonymous">    -->
     <link rel="stylesheet" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="script.js"></script>
-
+    <noscript>
+        <style type="text/css">
+            .pagecontainer {
+                display: none;
+            }
+        </style>
+        <div class="noscriptmsg">
+            You don't have javascript enabled. For this site to work, javascript is required. </div>
+    </noscript>
 
 </head>
 
 <body>
+<script>
+$(document).ready(function() {
+    $.ajax({
+            url: 'installations_list.php',
+            type: 'GET',
+            // data: { value: selectedValue },
+            success: function(response) {
+                $("#installationslist").html(response);
+                // Handle the response here
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                Console.error();
+                // Handle the error here
+            }
+        });
+    $('.dropdown-item').click(function(e) {
+        e.preventDefault();
 
+        // Remove active class from all items
+        $('.dropdown-item').removeClass('active');
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+        // Add active class to the clicked item
+        $(this).addClass('active');
 
+        // Get the value from the data-value attribute
+        var selectedValue = $(this).data('value');
 
-    <script>
-        //     function changeActiveStatus(userid, Status) {
-        //       $.ajax({
-        //         type: 'POST',
-        //         url: 'change_active.php',
-        //         data: {
-        //           id: userid,
-        //           active: Status
-        //         },
-        //         success: function(response) {
+        // Send the AJAX request
+        $.ajax({
+            url: 'installations_list.php',
+            type: 'GET',
+            data: { value: selectedValue },
+            success: function(response) {
+                $("#installationslist").html(response);
 
-        //           alert('Active status changed successfully.');
-        //           location.reload();
+                // Handle the response here
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                Console.error();
+                // Handle the error here
+            }
+        });
+    });
+    $("#installsearch").on("input",function(e) {
+    e.preventDefault();
+        var installsearch = $("#installsearch").val();
+        $.ajax({
+            url: 'installations_list.php',
+            type: 'GET',
+            data: { installsearch: installsearch },
+            success: function(response) {
+                $("#installationslist").html(response);
+                // Handle the response here
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                Console.error();
+                // Handle the error here
+            }
+        });
+    })
+});
+</script>
+<p>
 
-        //         },
-        //         error: function(data) {
-        //           alert('Error in changing active status.');
-        //           location.reload();
-        //         }
-        //       });
-        //       return true;
-        //     }
+<nav class="navbar navbar-light bg-light navbar-expand-lg navbar-light" style="transition: height 0.5s; margin:2%">
+    <div class="container-fluid">
+        <div class="col-md-1">
+            <a href="index.php"><img src="images/esgc.png" class="rounded img-fluid img-small w-50" alt="company_logo"></a>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse flex-column" id="navbarNav">
+            <div class="navbar-nav ms-0 me-5  mt-auto"> <!-- Aplicando a classe me-auto para mover o session user para a margem esquerda -->
+                <a class="nav-link" href="./index.php">Home</a>
+                <a class="nav-link" href="./reserves.php">Reserves</a>
+                <a class="nav-link" href="./user.php">Users</a>
+                <a class="nav-link" href="./installations.php.php">installations</a>
+                
+                <?php
 
-        //     function confirmAction(username) {
-        //   var result = confirm('Are you sure you want to edit ' + username + '?');
-        //   if (result) {
-        //     window.location.href = 'user.php';
-        //   }
-        // }
-    </script>
-
-    <nav class="navbar navbar-light bg-light navbar-expand-lg navbar-light" style="transition: height 0.5s;">
-        <div class="container-fluid">
-            <div class="col-md-1">
-                <img src="images/esgc.png" class="rounded img-fluid img-small w-50" alt="company_logo">
+                if ($_SESSION['admin'] == 1) {
+                ?>
+                    <a class="nav-link" href="./tickets.php">Recovers requests</a>
+                    <a class="nav-link" href="./roles.php">Roles</a>
+                    <?php
+                }
+?>
             </div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse flex-column" id="navbarNav">
-                <div class="navbar-nav ms-0 me-5  mt-auto"> <!-- Aplicando a classe me-auto para mover o session user para a margem esquerda -->
-                    <a class="nav-link" href="#">Home</a>
-                    <a class="nav-link" href="#">About</a>
-                    <a class="nav-link" href="#">Contact</a>
-                </div>
 
-                <div class="navbar-nav mb-auto ms-auto"> <!-- Mantendo os links à direita -->
+            <div class="navbar-nav mb-auto ms-auto"> <!-- Mantendo os links à direita -->
+                <div class="nav-link">
                     <?php
                     echo $_SESSION['user'];
                     ?>
                 </div>
             </div>
         </div>
-    </nav>
-
-
-    <div class="container mt-5">
-        <h1>Users</h1>
-        <button type="button" onclick="location.href = 'user.php';" class="btn btn-success">New User</button>
-
-        <table class="table">
-            <thead>
-                <tr>
-
-                    <!-- office structure
-                    office_image
-                    office_name
-                    description
-
-                    buildings structure
-                    building_name
-                    descreiption
-
-                    room structure
-                    room_name
-                    description -->
-                    
-                    <th>Name</th>
-                    <?php 
-                    echo "<th>Image</th>"
-                    ?>
-                    <th>Description</th>
-                  
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-
-
-                // Select all users
-                $sql = "SELECT p.people_id, p.user, p.name, d.department_id, p.photo, p.email, p.phone, p.admin, p.password_status, p.active
-FROM people p
-JOIN department d ON p.department_id = d.department_id";
-                $result = $conn->query($sql);
-
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        // echo "<form action='add_user.php' method='post'>";
-
-                        echo "<input type='hidden' name='user_id' id='user_id' value='" . $row['people_id'] . "'>";
-                        echo "<tr>";
-                        echo "<td>" . $row['user'] . "</td>";
-                        echo "<td>" . $row['name'] . "</td>";
-                        echo "<td>" . $row['email'] . "</td>";
-                        echo "<td>" . $row['phone'] . "</td>";
-                        echo "<td>" . $row['photo'] . "</td>";
-                        echo "<td>" . $row['department_id'] . "</td>";
-                        echo "<td>" . ($row['admin'] ? "Admin" : "Not Admin") . "</td>";
-                        echo "<td>" . ($row['password_status'] ? "Will Changed" : "Don't changed") . "</td>";
-
-                        echo "<td><button class='btn " . ($row['active'] == 1 ? 'btn-danger' : 'btn-secondary') . "'
-onclick='return confirm(\"Are you sure you want to change the active status of " . $row['user'] . "?\") && changeActiveStatus(" . $row['people_id'] . ", " . ($row['active'] == 1 ? 0 : 1) . ")'>
-" . ($row['active'] == 1 ? 'Active' : 'Don\'t Active') . " </button></td>";
-
-
-                        echo "<td>";
-                        echo "<form method='GET' action='user.php?user_id= " . $row['people_id'] . " '>";
-                        echo "<input type='hidden' name='userId' value='" . $row['people_id'] . "'>";
-                        echo "<button class='btn btn-primary' onclick='confirmAction(\"" . $row['user'] . "\")'>Edit</button>";
-                        echo "</form>";
-                        echo "</form>";
-                        echo "</td>";
-                ?>
-                        </td>
-                <?php
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='7'>No users found.</td></tr>";
-                }
-
-                ?>
-            </tbody>
-        </table>
     </div>
-    <!-- <button  class="button-log"> <img src="images/exit.png" alt="exit" width="100%"></button>
-	  </div> -->
+</nav>
+
+</p>
+    
+    <h1>Installations</h1>
+    <?php if($_SESSION['admin']){ ?>
+    <button type="button" onclick="location.href = 'new_installations.php';" class="btn btn-success">New Installations</button> <?php } ?>
+    
+
+    <nav class="navbar">
+    <form class="form-inline">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" id="installsearch">
+        </div>
+    </form>
+</nav>
+    <div class="row" id="installationslist">
+    <!-- Room list will be dynamically inserted here -->
+</div>
+
+    <div class="fixed-bottom">
+        <div class="btn-group dropup">
+            <div class="button-change">
+                <button type="button" class="beautiful-button dropdown-toggle" id="changeButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Change
+                </button>
+                <div>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item active">All</a></li>
+                    <li><a class="dropdown-item" data-value="room">Room</a></li>
+                    <li><a class="dropdown-item" data-value="office">Office</a></li>
+                    <li><a class="dropdown-item" data-value="building">Building</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="position-fixed bottom-0 end-0">
         <label class="switch">
             <span class="sun"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -184,19 +187,23 @@ onclick='return confirm(\"Are you sure you want to change the active status of "
         </label>
     </div>
 
-    <!-- <button  class="button-log"> <img src="images/exit.png" alt="exit" width="100%"></button>
-	  </div> -->
+    <div class="position-relative">
+
     <div class="position-fixed top-0 end-0">
-        <a class="Btn" onclick="goBack()">
+    <a class="Btn" onclick="goBack()">
 
-            <div class="sign"><svg viewBox="0 0 512 512">
-                    <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path>
-                </svg></div>
+      <div class="sign"><svg viewBox="0 0 512 512">
+          <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path>
+        </svg></div>
 
-            <div class="text">Back</div>
-        </a>
+      <div class="text">Back</div>
+    </a>
+  </div>
+
     </div>
-
+    <!-- <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="script.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     </div>
 </body>
 

@@ -31,16 +31,20 @@ $stmt->execute();
 $result = $stmt->get_result();
 // Check if there are results
 if ($result->num_rows > 0) {
+    
     // Start the select element
-    echo "<select class='form-select' id='roomSelect' name='selectedOfficeId'>";
+    // echo "<select class='form-select' id='roomSelect' name='selectedOfficeId'>";
 
     // Loop through results and print combobox options
     while($row = $result->fetch_assoc()) {
+     
         echo "<option value='". $row["office_id"]. "'>". $row["office_name"]. "</option>";
+        // "<p><img src='data:". $mimeType ."; base64,".base64_encode($imageData)."' alt='" . $row['office_name'] . "image' class='img-fluid'/></p>;
+        
     }
  
     // End the select element
-    echo "</select>";
+    // echo "</select>";
    
     
 } else {

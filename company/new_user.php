@@ -1,3 +1,6 @@
+
+
+
 <?php
 include_once('config.php');
 if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
@@ -6,18 +9,26 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
 }
 $edit = false;
 $error_message = "";
+$role = null;
+$selected = null; //pre select the values 
 if (isset($_GET['userId'])) {
     $edit = true;
     $id = $_GET['userId'];
 
     // Prepare query with parameterized query
-    $stmt = $conn->prepare("SELECT p.people_id, p.user, p.name, d.department_id, d.department, p.photo, p.email, p.phone, p.admin, p.password_status, p.active FROM people p JOIN department d ON p.department_id = d.department_id WHERE p.people_id =?");
+    $stmt = $conn->prepare("SELECT p.people_id, p.user, p.name, rd.roles_department_id, d.department, r.role, p.photo, p.email, p.phone, p.admin, p.password_status, p.active 
+    FROM people p 
+    JOIN roles_department rd ON rd.roles_department_id = p.role_department_id 
+    JOIN department d ON d.department_id = rd.department_id 
+    JOIN roles r ON r.role_id = rd.role_id
+    WHERE p.people_id =?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result && $result->num_rows > 0) {
         $row = $result->fetch_assoc();
+        // $role = $row['role_department_id'];
     }
     // if ($result && $result->num_rows > 0) {
     // $row = $result->fetch_assoc();
@@ -38,13 +49,11 @@ if (isset($_POST['submit'])) {
 
     if (!securePassword($new_password)) {
         //password is invalid
-        $error_message = "Password is invalid.";
-    } 
-    if ((error($error_message))=="")
-     {
-      $error_message = error($error_message);
-     }
-   
+    $error_message = "Password must be at least 8 characters long and contain at least one";
+    }
+    if ((error($error_message)) == "") {
+        $error_message = error($error_message);
+    }
 }
 
 
@@ -63,6 +72,8 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="script.js"></script>
+
+
 
     <script type="importmap">
         {
@@ -83,29 +94,46 @@ if (isset($_POST['submit'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 
 
-    <nav class="navbar navbar-light bg-light navbar-expand-lg navbar-light" style="transition: height 0.5s;">
+    <p>
+
+    <nav class="navbar navbar-light bg-light navbar-expand-lg navbar-light" style="transition: height 0.5s; margin:2%">
         <div class="container-fluid">
             <div class="col-md-1">
-                <img src="images/esgc.png" class="rounded img-fluid img-small w-50" alt="company_logo">
+                <a href="index.php"><img src="images/esgc.png" class="rounded img-fluid img-small w-50" alt="company_logo"></a>
             </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse flex-column" id="navbarNav">
                 <div class="navbar-nav ms-0 me-5  mt-auto"> <!-- Aplicando a classe me-auto para mover o session user para a margem esquerda -->
-                    <a class="nav-link" href="#">Home</a>
-                    <a class="nav-link" href="#">About</a>
-                    <a class="nav-link" href="#">Contact</a>
+                    <a class="nav-link" href="./index.php">Home</a>
+                    <a class="nav-link" href="./reserves.php">Reserves</a>
+                    <a class="nav-link" href="./user.php">Users</a>
+                    <a class="nav-link" href="./installations.php.php">installations</a>
+                    
+                    <?php
+
+                    if ($_SESSION['admin'] == 1) {
+                    ?>
+                        <a class="nav-link" href="./tickets.php">Recovers requests</a>
+                        <a class="nav-link" href="./roles.php">Roles</a>
+                        <?php
+                    }
+?>
                 </div>
 
                 <div class="navbar-nav mb-auto ms-auto"> <!-- Mantendo os links à direita -->
-                    <?php
-                    echo $_SESSION['user'];
-                    ?>
+                    <div class="nav-link">
+                        <?php
+                        echo $_SESSION['user'];
+                        ?>
+                    </div>
                 </div>
             </div>
         </div>
     </nav>
+
+</p>
 
     <div class="container mt-5">
         <h2>New User</h2>
@@ -129,11 +157,11 @@ if (isset($_POST['submit'])) {
                     <label for="username" class="form-label">Username</label>
                     <input type="text" class="form-control custom-input" name="username" id="username" value="<?php if ($edit) {
                                                                                                                     echo $row['user'];
-                                                                                                                } ?>" required>
+                                                                                                                }?>" required>
                 </div>
                 <div class="col-md-6">
                     <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control custom-input" name="Name" id="name" value="<?php if ($edit) {
+                    <input type="text" class="form-control custom-input" name="name" id="name" value="<?php if ($edit) {
                                                                                                             echo $row['name'];
                                                                                                         } ?> " required>
                 </div>
@@ -150,35 +178,52 @@ if (isset($_POST['submit'])) {
                 <div class="col-md-6">
                     <label for="name" class="form-label">Department:</label>
                     <select name="department" id="department">
-                        <option value="" selected disabled hidden>Select Department</option>
-                        <?php
+                    <?php
+                    if ($edit == false){
+                      echo '<option value="" selected >Select Department</option>';
+
+                    }
+                     
 
 
-                        $sql = "SELECT * FROM `department`";
-
+                        $sql = "SELECT * FROM department";
+                        
 
                         $result = $conn->query($sql);
 
                         // Check if there are any departments
                         if ($result->num_rows > 0) {
                             // Output options for each department
-
+                      
                             while ($row2 = $result->fetch_assoc()) {
-                                $selected = ($row['department_id'] == $row2['department_id']) ? 'selected' : '';
-                                echo "<option value='" . $row2['department_id'] . "' " . $selected . ">" . $row2['department'] . "</option>";
+                                if ($edit && $row['rd.roles_department_id'] == $row2['department_id']) {
+                                    echo "<option value='" . $row2['department_id'] . "' selected>" . $row2['department'] . "</option>";
+                                } else {
+                                    echo "<option value='" . $row2['department_id'] . "'>" . $row2['department'] . "</option>";
+                                }
                             }
                         } else {
                             // Output a default option if no departments found
-                            echo "<option value=''>No departments found</option>";
+                            echo "<option value=''>No results found</option>";
                         }
 
                         ?>
 
                     </select>
                 </div>
+
+                <div class="col-md-6">
+                    <label for="name" class="form-label">Role:</label>
+                    <select name="role" id="role">
+                      
+
+                    </select>
+                </div>
+
+
                 <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control custom-input" name="Email" id="Email" value="<?php if ($edit) {
+                    <input type="email" class="form-control custom-input" name="email" id="email" value="<?php if ($edit) {
                                                                                                                 echo $row['email'];
                                                                                                             } ?>" required>
                 </div>
@@ -221,15 +266,17 @@ if (isset($_POST['submit'])) {
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="admin" name="admin" value="<?php if ($edit) {
-                      echo $row['admin']; ?>" <?php if ($row['admin'] == 1) echo 'checked';
-                   } ?>>
+                                                                                                            echo $row['admin']; ?>" <?php if ($row['admin'] == 1) echo 'checked';
+                                                                                                                                } ?>>
                         <label class="form-check-label" for="admin">
                             Admin
                         </label>
                     </div>
                     <?php
-                    if($edit){
-                    echo "<input type='hidden' id='peopleid' name='peopleId' value='". $row['people_id']."' /> ";
+                    if ($edit==true) {
+                        echo "<input type='hidden' id='peopleid' name='peopleid' value='" . $row['people_id'] . "' /> ";
+                        echo "<input type='hidden' id='edit' name='edit' value='" . $edit . "' /> ";
+
                     }
                     if (isset($error_message)) {
                         echo "<p style='color: red;'>$error_message</p>";

@@ -82,31 +82,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['recover_id'])) {
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 	<div class="content">
+	<p>
 
-	<nav class="navbar navbar-light bg-light navbar-expand-lg navbar-light" style="transition: height 0.5s;">
-            <div class="container-fluid">
-                 <div class="col-md-1">
-                    <img src="images/esgc.png" class="rounded img-fluid img-small w-50" alt="company_logo">
-                </div> 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse flex-column" id="navbarNav">
-                    <div class="navbar-nav ms-0 me-5  mt-auto"> <!-- Aplicando a classe me-auto para mover o session user para a margem esquerda -->
-                        <a class="nav-link" href="#">Home</a>
-                        <a class="nav-link" href="#">About</a>
-                        <a class="nav-link" href="#">Contact</a>
-                    </div>
+<nav class="navbar navbar-light bg-light navbar-expand-lg navbar-light" style="transition: height 0.5s; margin:2%">
+	<div class="container-fluid">
+		<div class="col-md-1">
+			<a href="index.php"><img src="images/esgc.png" class="rounded img-fluid img-small w-50" alt="company_logo"></a>
+		</div>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse flex-column" id="navbarNav">
+			<div class="navbar-nav ms-0 me-5  mt-auto"> <!-- Aplicando a classe me-auto para mover o session user para a margem esquerda -->
+				<a class="nav-link" href="./index.php">Home</a>
+				<a class="nav-link" href="./reserves.php">Reserves</a>
+				<a class="nav-link" href="./user.php">Users</a>
+				<a class="nav-link" href="./installations.php.php">installations</a>
+				
+				<?php
 
-                    <div class="navbar-nav mb-auto ms-auto"> <!-- Mantendo os links à direita -->
-                        <?php
-                        echo $_SESSION['user'];
-                        ?>
-                    </div>
-                </div>
-            </div>
-        </nav>
+				if ($_SESSION['admin'] == 1) {
+				?>
+					<a class="nav-link" href="./tickets.php">Recovers requests</a>
+					<a class="nav-link" href="./roles.php">Roles</a>
+					<?php
+				}
+?>
+			</div>
 
+			<div class="navbar-nav mb-auto ms-auto"> <!-- Mantendo os links à direita -->
+				<div class="nav-link">
+					<?php
+					echo $_SESSION['user'];
+					?>
+				</div>
+			</div>
+		</div>
+	</div>
+</nav>
+
+</p>
 
 
 		<div class="container mt-5">

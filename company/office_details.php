@@ -16,8 +16,10 @@ if ($officeId !== null) {
 
 } elseif ($selectedBuildingId !== null) {
     $sql = "SELECT * FROM offices AS o INNER JOIN building_offices AS b ON b.office_id = o.office_id
-    WHERE b.building_id = ? AND o.office_id = (SELECT MIN(office_id) FROM building_offices where building_id = ?)";
+    WHERE b.building_id = ? AND o.office_id = (SELECT MIN(office_id) FROM building_offices AS b ON b.office_id = o.office_id where building_id = ?)";
     $stmt = $conn->prepare($sql);
+    echo $sql;
+
     $stmt->bind_param("ii", $selectedBuildingId, $selectedBuildingId);
     $stmt->execute();
     $result = $stmt->get_result();

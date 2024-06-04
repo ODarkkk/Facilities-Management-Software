@@ -116,9 +116,10 @@ $(document).ready(function () {
       const buildingContent = document.getElementById("buildingContent");
       buildingContent.innerHTML = data;
     } catch (e) {
-      console.error("Error fetching office details:", e.message);
+      console.error("Error fetching building details:", e.message);
     }
   };
+  
   const fetchbuildingsdetailsforbuilding = async (selectedBuildingId) => {
     try {
       const response = await fetch(
@@ -232,11 +233,7 @@ $(document).ready(function () {
       triggerAjaxRequest();
     });
 
-    // $("#Filter").click(function () {
-    //   triggerAjaxRequest();
-    //   // Fechar o modal
-    //   
-    // });
+
   }
 
   function triggerAjaxRequest() {
@@ -293,7 +290,6 @@ $(document).ready(function () {
 
   // Call the function to fetch rooms
   const fetchOffices = async () => {
-   
     try {
       const response = await fetch("fetch_offices.php");
       const data = await response.text();
@@ -314,7 +310,7 @@ $(document).ready(function () {
       console.error("Error fetching buildings:", e.message);
     }
   };
-  const fetchrooms = async () => {
+  const fetchRooms = async () => {
     try {
       const response = await fetch("fetch_room.php");
       const data = await response.text();
@@ -322,6 +318,38 @@ $(document).ready(function () {
       roomDropdown.innerHTML = data;
     } catch (e) {
       console.error("Error fetching rooms:", e.message);
+    }
+  };
+  const fetchOfficeDetails = async () => {
+    try {
+      const response = await fetch(`office_details.php`);
+      const data = await response.text();
+      const officeContent = document.getElementById("officeContent");
+      officeContent.innerHTML = data;
+    } catch (e) {
+      console.error("Error fetching office details:", e.message);
+    }
+  };
+  const fetchbuildingsDetails = async () => {
+    try {
+      const response = await fetch(`building_details.php`);
+      const data = await response.text();
+      const buildingContent = document.getElementById("buildingContent");
+      buildingContent.innerHTML = data;
+    } catch (e) {
+      console.error("Error fetching building details:", e.message);
+    }
+  };
+  
+
+  const fetchRoomDetails = async () => {
+    try {
+      const response = await fetch(`room_details.php`);
+      const data = await response.text();
+      const roomContent = document.getElementById("roomContent");
+      roomContent.innerHTML = data;
+    } catch (e) {
+      console.error("Error fetching office details:", e.message);
     }
   };
 
@@ -344,16 +372,91 @@ $(document).ready(function () {
       console.error("Error fetching rooms for office:", e.message);
     }
   };
-
+  const fetchbBuildingsdetailsforBuildings = async (selectedBuildingId) => {
+    try {
+      const response = await fetch(
+        `building_details.php?selectedBuildingId=${encodeURIComponent(
+          selectedBuildingId
+        )}`
+      );
+      const data = await response.text();
+      const buildingContent = document.getElementById("buildingContent");
+      buildingContent.innerHTML = data;
+    } catch (e) {
+      console.error("Error fetching building details for building:", e.message);
+    }
+  };
+  const fetchOfficeDetailsForOffice = async (officeID) => {
+    try {
+      const response = await fetch(
+        `office_details.php?officeId=${encodeURIComponent(officeID)}`
+      );
+      const data = await response.text();
+      const officeContent = document.getElementById("officeContent");
+      officeContent.innerHTML = data;
+    } catch (e) {
+      console.error("Error fetching office details with others:", e.message);
+    }
+  };
+  const fetchRoomDetailsForRoom = async (roomID) => {
+    try {
+      const response = await fetch(
+        `room_details.php?roomId=${encodeURIComponent(roomID)}`
+      );
+      const data = await response.text();
+      const roomContent = document.getElementById("roomContent");
+      roomContent.innerHTML = data;
+    } catch (e) {
+      console.error("Error fetching room details with others:", e.message);
+    }
+  };
+  const fetchOfficeDetailsForBuilding = async (buildingId) => {
+    try {
+      const response = await fetch(
+        `office_details.php?selectedBuildingId=${encodeURIComponent(
+          buildingId
+        )}`
+      );
+      const data = await response.text();
+      const officeContent = document.getElementById("officeContent");
+      officeContent.innerHTML = data;
+    } catch (e) {
+      console.error("Error fetching office details with others:", e.message);
+    }
+  };
+  const fetchRoomDetailsForOffices = async (officeID) => {
+    try {
+      const response = await fetch(
+        `room_details.php?selectedBuildingId=${encodeURIComponent(
+          officeID
+        )}`
+      );
+      const data = await response.text();
+      const officeContent = document.getElementById("roomContent");
+      officeContent.innerHTML = data;
+    } catch (e) {
+      console.error("Error fetching room details with others:", e.message);
+    }
+  };
   const initDropdowns = async () => {
     try {
       await fetchOffices();
       await fetchBuildings();
-      await fetchrooms();
+      await fetchRooms();
+      await fetchbuildingsDetails();
+      await fetchOfficeDetails();
+      await fetchRoomDetails();
 
       const officeDropdown = document.getElementById("officeSelect");
-      officeDropdown.addEventListener("change", (event) => {
+      officeDropdown.addEventListener("change", async (event) => {
         const selectedOfficeId = event.target.value;
+        try{
+          await fetchOfficeDetailsForOffice(selectedOfficeId);
+          await fetchRoomDetailsForOffices(selectedOfficeId);
+        } catch (e) {
+          console.trace("Message");
+          console.error("Error fetching dropdown:", e.message);
+        }
         console.log(selectedOfficeId);
       }); 
 
@@ -362,6 +465,8 @@ $(document).ready(function () {
         const selectedBuildingId = event.target.value;
         try {
           await fetchOfficesForBuilding(selectedBuildingId);
+          await fetchOfficeDetailsForBuilding(selectedBuildingId);
+          await fetchbBuildingsdetailsforBuildings(selectedBuildingId);
         } catch (e) {
           console.error("Error fetching offices for building:", e.message);
         }
@@ -373,12 +478,27 @@ $(document).ready(function () {
         const selectedRoomId = event.target.value;
         try {
           await fetchroomsforoffices(selectedRoomId);
+          await fetchRoomDetailsForRoom(selectedRoomId);
         } catch (e) {
           console.error("Error fetching rooms for office:", e.message);
         }
         console.log(selectedRoomId);
       });
-    } catch (e) {
+      officeDropdown.addEventListener("change", () => {
+        fetchOfficeDetails();
+        // Para atualizar o conteúdo do officeContent
+        document.getElementById("officeContent").innerHTML = "";
+      });
+      buildingDropdown.addEventListener("change", () => {
+        fetchbuildingsDetails();     
+         document.getElementById("buildingContent").innerHTML = "";
+      });
+      roomDropdown.addEventListener("change", () => {
+        fetchRoomDetails();
+        document.getElementById("roomContent").innerHTML = "";
+
+      });
+    }  catch (e) {
       console.trace("Message");
       console.error("Error fetching dropdown:", e.message);
     }

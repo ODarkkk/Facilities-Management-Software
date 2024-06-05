@@ -1,5 +1,5 @@
 <?php
-include_once 'config.php';
+include_once ("config.php");
 if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
     header("location: logout.php");
     exit(); // Ensure script stops after redirect
@@ -14,3 +14,8 @@ if ($stmt->execute()) {
 } else {
     echo "Error deleting record: " . $conn->error;
 }
+echo '<script>',
+'goback();',
+'</script>'
+;
+?>

@@ -1,5 +1,5 @@
 <?php
-include_once 'config.php';
+include_once ("config.php");
 // Redirect to login page if the user is not logged in
 if (!isset($_SESSION['user_id'])) {
   header("location: login.php");

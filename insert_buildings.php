@@ -17,3 +17,7 @@ foreach ($_POST['offices'] as $officeid){
     
     }
   }
+  echo '<script>',
+    'goback();',
+    '</script>';
+?>

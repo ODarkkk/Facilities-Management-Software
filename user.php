@@ -1,5 +1,5 @@
 <?php
-include_once 'config.php';
+include_once("config.php");
 if (!isset($_SESSION['user_id'])) {
   header("location: logout.php");
   exit(); // Ensure script stops after redirect
@@ -92,10 +92,10 @@ if (!isset($_SESSION['user_id'])) {
   </script>
 
   <p>
-  <nav class="navbar navbar-light bg-light navbar-expand-lg navbar-light" style="transition: height 0.5s;">
+  <nav class="navbar navbar-light bg-light navbar-expand-lg navbar-light" style="transition: height 0.5s; margin:2%">
     <div class="container-fluid">
       <div class="col-md-1">
-        <img src="images/esgc.png" class="rounded img-fluid img-small w-50" alt="company_logo">
+        <a href="index.php"><img src="images/esgc.png" class="rounded img-fluid img-small w-50" alt="company_logo"></a>
       </div>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -103,34 +103,36 @@ if (!isset($_SESSION['user_id'])) {
       <div class="collapse navbar-collapse flex-column" id="navbarNav">
         <div class="navbar-nav ms-0 me-5  mt-auto"> <!-- Aplicando a classe me-auto para mover o session user para a margem esquerda -->
           <a class="nav-link" href="./index.php">Home</a>
-          <a class="nav-link" href="./marks.php">Marks</a>
+          <a class="nav-link" href="./reserves.php">Reserves</a>
+          <a class="nav-link" href="./user.php">Users</a>
+          <a class="nav-link" href="./installations.php">Installations</a>
 
           <?php
 
           if ($_SESSION['admin'] == 1) {
           ?>
             <a class="nav-link" href="./tickets.php">Recovers requests</a>
-            <a class="nav-link" href="./user_list.php">Users</a>
             <a class="nav-link" href="./roles.php">Roles</a>
-            <a class="nav-link" href="./installations.php">installations</a>
           <?php
           }
           ?>
         </div>
 
         <div class="navbar-nav mb-auto ms-auto"> <!-- Mantendo os links à direita -->
-          <?php
-          echo $_SESSION['user'];
-          ?>
+          <div class="nav-link">
+            <?php
+            echo $_SESSION['user'];
+            ?>
+          </div>
         </div>
       </div>
     </div>
   </nav>
+
   </p>
 
-
   <h1>Users</h1>
-  <?php if($_SESSION['admin'] == 1)  { ?> <button type="button" onclick="location.href = 'new_user.php';" class="btn btn-success">New User</button> <?php } ?>
+  <?php if ($_SESSION['admin'] == 1) { ?> <button type="button" onclick="location.href = 'new_user.php';" class="btn btn-success">New User</button> <?php } ?>
   <nav class="navbar">
     <form class="form-inline">
       <div class="input-group">
@@ -168,8 +170,8 @@ if (!isset($_SESSION['user_id'])) {
   </div>
 
 
- 
-  
+
+
   <!-- <button  class="button-log"> <img src="images/exit.png" alt="exit" width="100%"></button>
 	  </div> -->
   <div class="position-fixed bottom-0 end-0">

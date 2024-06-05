@@ -1,5 +1,5 @@
 <?php
-include_once('config.php');
+include_once ("config.php");
 if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
   header("location: logout.php");
   exit(); // Ensure script stops after redirect
@@ -337,6 +337,8 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
 
   <!-- <button  class="button-log"> <img src="images/exit.png" alt="exit" width="100%"></button>
 	  </div> -->
+    <div class="position-relative">
+
   <div class="position-fixed top-0 end-0">
     <a class="Btn" onclick="goBack()">
 
@@ -347,7 +349,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
       <div class="text">Back</div>
     </a>
   </div>
-
+  </div>
   </div>
 </body>
 

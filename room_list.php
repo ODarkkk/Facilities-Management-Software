@@ -1,9 +1,11 @@
 
 <?php
-
 include_once("config.php"); // Adjust the include file as needed
 
-
+if (!isset($_SESSION['user_id'])) {
+  header("location: logout.php");
+  exit(); // Ensure script stops after redirect
+}
 
 // Get the selected date from the AJAX request
 $selectedDate = isset($_GET['dateFilter']) ? $_GET['dateFilter'] : date('Y-m-d');
@@ -60,6 +62,7 @@ $search = "%".$search."%";
   room.room_id,
   room.room_name,
   room.description,
+  room.space,
   bookmarks.bookmark_id,
   bookmarks.selected_date, 
   bookmarks.start_hour,
@@ -133,6 +136,7 @@ while ($row = $result->fetch_assoc()) {
     '<div class="card-body">' .
     '<h5 class="card-title">' . htmlspecialchars($row["room_name"]) . '</h5>' .
     '<p class="card-text">' . htmlspecialchars($row["description"]) . '</p>' .
+    '<p class="card-text"> Space:' . htmlspecialchars($row["space"]) . '</p>' .
     '<p class="room-status ' . getRoomStatusClass($row) . '">' . getRoomStatusLabel($row) . '</p>' .
     '<button type="button" class="btn btn-primary" onclick="location.href=\'room_reserve.php?room_id=' . $row["room_id"] . '&selecteddate_js=' . $selectedDate . '\';">Reserve</button> ' .
     '</div>' .

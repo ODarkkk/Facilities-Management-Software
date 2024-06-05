@@ -35,14 +35,11 @@ function error($error_message) {
 
 function securePassword($password) {
     // Check if password has at least 12 characters
-    if (strlen($password) < 12) {
+    if (strlen($password) < 12 && !preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $password)) {
         return false;
     }
     
-    // Check if password contains at least 1 special character
-    if (!preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $password)) {
-        return false;
-    }
+    
     
     // Check if password is not sequential
     for ($i = 0; $i < strlen($password) - 1; $i++) {

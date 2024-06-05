@@ -1,8 +1,5 @@
-
-
-
 <?php
-include_once('config.php');
+include_once("config.php");
 if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
     header("location: logout.php");
     exit(); // Ensure script stops after redirect
@@ -49,7 +46,7 @@ if (isset($_POST['submit'])) {
 
     if (!securePassword($new_password)) {
         //password is invalid
-    $error_message = "Password must be at least 8 characters long and contain at least one";
+        $error_message = "Password must be at least 8 characters long and contain at least one";
     }
     if ((error($error_message)) == "") {
         $error_message = error($error_message);
@@ -110,16 +107,16 @@ if (isset($_POST['submit'])) {
                     <a class="nav-link" href="./reserves.php">Reserves</a>
                     <a class="nav-link" href="./user.php">Users</a>
                     <a class="nav-link" href="./installations.php.php">installations</a>
-                    
+
                     <?php
 
                     if ($_SESSION['admin'] == 1) {
                     ?>
                         <a class="nav-link" href="./tickets.php">Recovers requests</a>
                         <a class="nav-link" href="./roles.php">Roles</a>
-                        <?php
+                    <?php
                     }
-?>
+                    ?>
                 </div>
 
                 <div class="navbar-nav mb-auto ms-auto"> <!-- Mantendo os links à direita -->
@@ -133,7 +130,7 @@ if (isset($_POST['submit'])) {
         </div>
     </nav>
 
-</p>
+    </p>
 
     <div class="container mt-5">
         <h2>New User</h2>
@@ -157,7 +154,7 @@ if (isset($_POST['submit'])) {
                     <label for="username" class="form-label">Username</label>
                     <input type="text" class="form-control custom-input" name="username" id="username" value="<?php if ($edit) {
                                                                                                                     echo $row['user'];
-                                                                                                                }?>" required>
+                                                                                                                } ?>" required>
                 </div>
                 <div class="col-md-6">
                     <label for="name" class="form-label">Name</label>
@@ -178,23 +175,22 @@ if (isset($_POST['submit'])) {
                 <div class="col-md-6">
                     <label for="name" class="form-label">Department:</label>
                     <select name="department" id="department">
-                    <?php
-                    if ($edit == false){
-                      echo '<option value="" selected >Select Department</option>';
+                        <?php
+                        if ($edit == false) {
+                            echo '<option value="" selected >Select Department</option>';
+                        }
 
-                    }
-                     
 
 
                         $sql = "SELECT * FROM department";
-                        
+
 
                         $result = $conn->query($sql);
 
                         // Check if there are any departments
                         if ($result->num_rows > 0) {
                             // Output options for each department
-                      
+
                             while ($row2 = $result->fetch_assoc()) {
                                 if ($edit && $row['rd.roles_department_id'] == $row2['department_id']) {
                                     echo "<option value='" . $row2['department_id'] . "' selected>" . $row2['department'] . "</option>";
@@ -215,7 +211,7 @@ if (isset($_POST['submit'])) {
                 <div class="col-md-6">
                     <label for="name" class="form-label">Role:</label>
                     <select name="role" id="role">
-                      
+
 
                     </select>
                 </div>
@@ -273,10 +269,9 @@ if (isset($_POST['submit'])) {
                         </label>
                     </div>
                     <?php
-                    if ($edit==true) {
+                    if ($edit == true) {
                         echo "<input type='hidden' id='peopleid' name='peopleid' value='" . $row['people_id'] . "' /> ";
                         echo "<input type='hidden' id='edit' name='edit' value='" . $edit . "' /> ";
-
                     }
                     if (isset($error_message)) {
                         echo "<p style='color: red;'>$error_message</p>";
@@ -312,16 +307,18 @@ if (isset($_POST['submit'])) {
 
     <!-- <button  class="button-log"> <img src="images/exit.png" alt="exit" width="100%"></button>
 	  </div> -->
-    <div class="position-absolute top-0 end-0">
-        <a class="Btn" onclick="goBack()">
+    <div class="position-relative">
 
-            <div class="sign"><svg viewBox="0 0 512 512">
-                    <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path>
-                </svg></div>
+        <div class="position-fixed top-0 end-0">
+            <a class="Btn" onclick="goBack()">
 
-            <div class="text">Back</div>
-        </a>
-    </div>
+                <div class="sign"><svg viewBox="0 0 512 512">
+                        <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path>
+                    </svg></div>
+
+                <div class="text">Back</div>
+            </a>
+        </div>
     </div>
 </body>
 

@@ -1,5 +1,5 @@
 <?php
-include_once 'config.php';
+include_once ("config.php");
 if (isset($_SESSION['user_id'])) {
     header("location: index.php");
     exit;
@@ -44,7 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    
+    header("location: login.php");
+
 } 
 
 ?>

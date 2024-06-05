@@ -13,3 +13,7 @@ if ($stmt->execute()) {
 } else {
     echo "Error deleting record: " . $conn->error;
 }
+sleep(30);
+echo '<script>',
+    'goback();',
+    '</script>';

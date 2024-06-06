@@ -106,7 +106,7 @@ if (isset($_POST['submit'])) {
                     <a class="nav-link" href="./index.php">Home</a>
                     <a class="nav-link" href="./reserves.php">Reserves</a>
                     <a class="nav-link" href="./user.php">Users</a>
-                    <a class="nav-link" href="./installations.php.php">installations</a>
+                    <a class="nav-link" href="./installations.php">installations</a>
 
                     <?php
 

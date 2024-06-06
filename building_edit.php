@@ -99,7 +99,7 @@ if ($result->num_rows > 0) {
                     <a class="nav-link" href="./tickets.php">Recovers requests</a>
                     <a class="nav-link" href="./user_list.php">Users</a>
                     <a class="nav-link" href="./roles.php">Roles</a>
-                    <a class="nav-link" href="./installations.php.php">installations</a>
+                    <a class="nav-link" href="./installations.php">installations</a>
                 </div>
 
                 <div class="navbar-nav mb-auto ms-auto"> <!-- Mantendo os links à direita -->

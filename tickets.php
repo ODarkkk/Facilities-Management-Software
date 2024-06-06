@@ -25,12 +25,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['recover_id'])) {
 
 	// Update the status of the ticket in the database
 	$sql = "UPDATE recover SET status = '$status' WHERE id_recover = $ticket_id";
-	if ($conn->query($sql) === TRUE) {
+	if (!$conn->query($sql) ) {
 		// Status updated successfully
-	} else {
-		// Error updating status
 		echo "Error changing the status password: " . $conn->error;
 	}
+	// } else {
+	// 	// Error updating status
+	// 	echo "Error changing the status password: " . $conn->error;
+	// }
 }
 
 // Function to reset password
@@ -97,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['recover_id'])) {
 						<a class="nav-link" href="./index.php">Home</a>
 						<a class="nav-link" href="./reserves.php">Reserves</a>
 						<a class="nav-link" href="./user.php">Users</a>
-						<a class="nav-link" href="./installations.php.php">installations</a>
+						<a class="nav-link" href="./installations.php">installations</a>
 
 						<?php
 

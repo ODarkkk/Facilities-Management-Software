@@ -2,10 +2,10 @@
 include_once("config.php");
 
 
-if($_SERVER['REQUEST_METHOD']){
+if(isset($_POST['username'])){
 
   $sql = "INSERT INTO `recover` (`recover_id`, `user`, `email`, `phone`, `Description`, `status`) VALUES ?, ? ,? ,?";
-  $user = $_POST['User'];
+  $user = $_POST['username'];
 
 }
 ?>

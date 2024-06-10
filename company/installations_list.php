@@ -1,7 +1,11 @@
 
 <?php
 
-include_once 'config.php';
+include_once ("config.php");
+if (!isset($_SESSION['user_id'])) {
+  header("location: login.php");
+  exit(); // Ensure script stops after redirect
+}
 $_GET['value'] = isset($_GET['value']) ? $_GET['value']: "";
 $sql = "";
 $search = isset($_GET['installsearch']) ? $_GET['installsearch'] : "";
@@ -158,3 +162,4 @@ while ($row = $result->fetch_assoc()) {
 
 
 }
+?>

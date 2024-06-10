@@ -1,7 +1,7 @@
 <?php
-include_once('config.php');
+include_once 'config.php';
 
-$officeId = isset($_GET['officeId']) ? ($_GET['officeId']) : null;
+$officeId = isset($_GET['officeId']) ? $_GET['officeId'] : null;
 $selectedBuildingId = isset($_GET['selectedBuildingId']) ? $_GET['selectedBuildingId'] : null;
 
 
@@ -15,11 +15,9 @@ if ($officeId !== null) {
     $result = $stmt->get_result();
 
 } elseif ($selectedBuildingId !== null) {
-    $sql = "SELECT * FROM offices AS o INNER JOIN building_offices AS b ON b.office_id = o.office_id
-    WHERE b.building_id = ? AND o.office_id = (SELECT MIN(office_id) FROM building_offices AS b ON b.office_id = o.office_id where building_id = ?)";
+    $sql = "SELECT * FROM offices AS o INNER JOIN building_offices AS b
+    WHERE b.building_id = ? AND o.office_id = (SELECT MIN(office_id) FROM building_offices where building_id = ?)";
     $stmt = $conn->prepare($sql);
-    echo $sql;
-
     $stmt->bind_param("ii", $selectedBuildingId, $selectedBuildingId);
     $stmt->execute();
     $result = $stmt->get_result();

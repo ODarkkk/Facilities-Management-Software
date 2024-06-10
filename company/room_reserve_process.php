@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['room_id'])) {
     // }
 
     // Check if the end time is before the start time
-    if (strtotime($endTime) < strtotime($startTime) || $selectedDate < date('Y-m-d')) {
+    if (strtotime($endTime) < strtotime($startTime) || $selectedDate < date('m-d-Y')) {
         http_response_code(400);
         echo 'The end time must be after the start time.';
         header('Refresh: 30; URL=index.php');
@@ -44,6 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['room_id'])) {
     if ($overlap) {
         http_response_code(409);
         echo 'Room is already booked at the selected time.';
+        sleep(30);
+       
+
         exit;
     }
 
@@ -53,6 +56,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['room_id'])) {
     $stmt->execute();
 
     // Redirect to the success page
-    header('Location: index.php');
+    echo '<script>',
+    'goback();',
+    '</script>'
+;
     exit;
 }

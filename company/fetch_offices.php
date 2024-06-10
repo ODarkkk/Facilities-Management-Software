@@ -1,6 +1,6 @@
 <?php
 // Include the database configuration file
-include_once('config.php');
+include_once ("config.php");
 
 $selectedBuildingId = isset($_GET['selectedBuildingId'])?$_GET['selectedBuildingId']:null;
 
@@ -50,3 +50,4 @@ if ($result->num_rows > 0) {
 } else {
     echo "<option value=''>No rooms found</option>";
 }
+?>

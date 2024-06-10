@@ -1,5 +1,10 @@
 <?php
-include_once('config.php');
+include_once 'config.php';
+// Redirect to login page if the user is not logged in
+if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
+    header("location: logout.php");
+    exit(); // Ensure script stops after redirect
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve form data
@@ -14,36 +19,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Execute the query
     // $result = $conn->query($sql);
     // if ($result->num_rows > 0) {
-        require_once('verify_password.php');
-        if ($newPassword != $confirmNewPassword) {
-            $error_message = "New Password doesn't match! Try again.";
-        } else {
-            if (securePassword($newPassword) == true) {
-                $encryptPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-                $user = mysqli_real_escape_string($conn, $_GET['user']);
+    if ($newPassword != $confirmNewPassword) {
+        $error_message = "New Password doesn't match! Try again.";
+    } else {
+        if (securePassword($newPassword)) {
+            $encryptPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+            
+            $user = $_GET['user'];
 
-                // Create the SQL query using prepared statements
-                $sql = "UPDATE `people` SET `password` = ? WHERE `user` = ?";
+            // Create the SQL query using prepared statements
+            $sql = "UPDATE `people` SET `password` = ?, password_status = ? WHERE `user`  = ?";
 
-                // Prepare the statement
-                $stmt = $conn->prepare($sql);
-                if ($stmt) {
-                    // Bind parameters
-                    $stmt->bind_param("ss", $encryptPassword, $user);
+            // Prepare the statement
+            $stmt = $conn->prepare($sql);
+            if ($stmt) {
+                // Bind parameters
+                $stmt->bind_param("sis", $encryptPassword, $logon, $user);
 
-                    // Execute the query
-                    if ($stmt->execute()) {
-                        echo "Password updated successfully.";
-                    } else {
-                        echo "Error updating password: " . $conn->error;
-                    }
-                    // Close the statement
-                    $stmt->close();
+                // Execute the query
+                if ($stmt->execute()) {
+                    echo "Password updated successfully.";
                 } else {
-                    echo "Error preparing statement: " . $conn->error;
+                    echo "Error updating password: " . $conn->error;
                 }
+                // Close the statement
+                $stmt->close();
+            } else {
+                echo "Error preparing statement: " . $conn->error;
             }
         }
+    }
     // } else {
     //     $error_message = "Credential incorrect! Try again.";
     // }
@@ -96,19 +101,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             User must change password at next logon
                         </label>
                     </div>
-                    <?php
-                    if (isset($error_message)) {
-                        echo "<p style='color: red;'>$error_message</p>";
-                    }
-                    ?>
-                    <button type="submit" style="margin-left: 30%" class="btn btn-primary">Submit</button>
+                </div>
+
+                <?php
+                if (isset($error_message)) {
+                    echo "<p style='color: red;'>$error_message</p>";
+                }
+                ?>
+                <br>
+               <p><button type="submit" style="margin-left: 30%" class="btn btn-primary">Submit</button></p> 
 
 
             </form>
 
         </div>
 
-    </div>
     </div>
 
 </body>

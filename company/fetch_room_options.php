@@ -1,5 +1,5 @@
 <?php
-include_once("config.php");
+include_once ("config.php");
 
 $sql = "SELECT * from room 
 JOIN offices_room on offices_room.room_id = room.room_id
@@ -15,3 +15,4 @@ if ($result->num_rows > 0) {
 
 
 echo json_encode($options);
+?>

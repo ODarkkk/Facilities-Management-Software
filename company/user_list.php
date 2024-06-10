@@ -1,6 +1,6 @@
 
 <?php
-include_once 'config.php';
+include_once ("config.php");
 if (!isset($_SESSION['user_id'])) {
     header("location: logout.php");
     exit(); // Ensure script stops after redirect
@@ -89,3 +89,4 @@ if ($result->num_rows > 0) {
 } else {
     echo "<div class='col-md-4'><p>No users found.</p></div>";
 }
+?>

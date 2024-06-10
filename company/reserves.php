@@ -1,5 +1,5 @@
 <?php
-include_once('config.php');
+include_once("config.php");
 // function decrypt_session_data($data, $cret_key)
 // {
 //     $data = base64_decode($data);
@@ -97,6 +97,30 @@ if (!isset($_SESSION['user_id'])) {
                 var officeSelect = $("#officeSelect").val();
                 var roomSelect = $("#roomSelect").val();
 
+                let type;
+                switch (filter) {
+                    case "room":
+                        type = {
+                            type: filter,
+                            value: parseInt(roomSelect)
+                        }; // Ensure the value is an integer
+                        break;
+                    case "office":
+                        type = {
+                            type: filter,
+                            value: parseInt(officeSelect)
+                        }; // Ensure the value is an integer
+                        break;
+                    case "building":
+                        type = {
+                            type: filter,
+                            value: parseInt(buildingSelect)
+                        }; // Ensure the value is an integer
+                        break;
+                    default:
+                        type = "";
+                }
+
                 $.ajax({
                     type: "GET",
                     url: "reserves_list.php",
@@ -105,9 +129,7 @@ if (!isset($_SESSION['user_id'])) {
                         Filter: filter,
                         search: search,
                         active: active,
-                        buildingSelect: buildingSelect,
-                        officeSelect: officeSelect,
-                        roomSelect: roomSelect,
+                        type: type,
                     },
                     success: function(response) {
                         // Display the received HTML
@@ -155,7 +177,7 @@ if (!isset($_SESSION['user_id'])) {
                     <a class="nav-link" href="./index.php">Home</a>
                     <a class="nav-link" href="./reserves.php">Reserves</a>
                     <a class="nav-link" href="./user.php">Users</a>
-                    <a class="nav-link" href="./installations.php.php">installations</a>
+                    <a class="nav-link" href="./installations.php">Installations</a>
 
                     <?php
 
@@ -184,7 +206,6 @@ if (!isset($_SESSION['user_id'])) {
 
 
 
-    ?>
     <div class="content">
 
 
@@ -311,6 +332,12 @@ if (!isset($_SESSION['user_id'])) {
                                 </script>
                                 <!-- Options will be dynamically inserted here -->
                             </select>
+                            <div id="buildingContent" style="margin-top: 10px;">
+
+                            </div>
+                            <div id="buildingDropdown" class="dropdown-menu dropdown-menu-right">
+                                <div id="dropdownItems" class="dropdown-divider"></div>
+                            </div>
                         </div>
                         <div class="tab-pane fade" value="office" id="offices" role="tabpanel" aria-labelledby="offices-tab">
                             <select class="form-select" id="officeSelect">
@@ -327,6 +354,12 @@ if (!isset($_SESSION['user_id'])) {
                                 </script>
                                 <!-- Options will be dynamically inserted here -->
                             </select>
+                            <div id="officeContent" style="margin-top: 10px;">
+
+                            </div>
+                            <div id="officeDropdown" class="dropdown-menu dropdown-menu-right">
+                                <div id="dropdownItems" class="dropdown-divider"></div>
+                            </div>
                         </div>
 
                         <div class="tab-pane fade" value="room" id="rooms" role="tabpanel" aria-labelledby="rooms-tab">
@@ -344,18 +377,24 @@ if (!isset($_SESSION['user_id'])) {
                                 </script>
                                 <!-- Options will be dynamically inserted here -->
                             </select>
+                            <div id="roomContent" style="margin-top: 10px;">
+
+                            </div>
+                            <div id="roomDropdown" class="dropdown-menu dropdown-menu-right">
+                                <div id="dropdownItems" class="dropdown-divider"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <?php
+                            echo "<button type='button' class='btn btn-primary' id='filterButton'>Select</button>";
+                            ?>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <?php
-                    echo "<button type='button' class='btn btn-primary' id='filterButton'>Select</button>";
-                    ?>
-                </div>
             </div>
         </div>
-    </div>
 
+    </div>
 
 
 
@@ -411,10 +450,11 @@ if (!isset($_SESSION['user_id'])) {
                 <div class="text">Back</div>
             </a>
         </div>
-        <!-- <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script src="script.js"></script> -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     </div>
+    <!-- <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="script.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
 </body>
 
 </html>

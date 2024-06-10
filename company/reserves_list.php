@@ -8,7 +8,7 @@ $search = isset($_GET['marksearch']) ? $_GET['marksearch'] : "";
 $active = isset($_GET['active']) ? $_GET['active'] : 1;
 $type = isset($_GET['type']) ? $_GET['type'] : null;
 $filterType = isset($type['type']) ? $type['type'] : null;
-$filterValue = isset($type['value']) ? $type['value'] : null;
+$filterValue = isset($type['value']) ? (int)$type['value'] : null; // Convert to int
 if (strlen(trim($search)) == 0){
   $_GET['marksearch'] = null;
 }
@@ -18,154 +18,179 @@ if (strlen(trim($search)) == 0){
 
 
 if (!is_null($filterType) && !is_null($filterValue)) {
+  switch ($filterType) {
+      case "room":
+          $sqlType = "room.room_id";
+          break;
+      case "office":
+          $sqlType = "offices.office_id";
+          break;
+      case "building":
+          $sqlType = "buildings.building_id";
+          break;
+      default:
+          $sqlType = "";
+          break;
+  }
 
-$sql = "
-(SELECT 'office' AS type,
-offices.office_id AS id,
-offices.office_name AS name,
-NULL AS space,
-offices.office_image AS office_image,
-offices.description AS description,
-people.people_id,
-people.user,
-bookmarks.bookmark_id,
-bookmarks.selected_date,
-bookmarks.start_hour,
-bookmarks.end_hour
-FROM bookmarks
-INNER JOIN offices_room ON offices_room.room_id = bookmarks.room_id
-INNER JOIN offices ON offices_room.office_id = offices.office_id
-INNER JOIN people ON people.people_id = bookmarks.people_id
-WHERE bookmarks.selected_date = ?
-AND bookmarks.active = " . $active . "
-" . (isset($_GET['marksearch']) ? "AND (
-    people.user LIKE ?
-    OR offices.office_id = " . $filterValue . "
-    OR offices.office_name LIKE ?" : "") . "
-)
-UNION ALL
-(SELECT 'building' AS type,
-buildings.building_id AS id,
-buildings.building_name AS name,
-NULL AS space,
-NULL AS office_image,
-buildings.description AS description,
-people.people_id,
-people.user,
-bookmarks.bookmark_id,
-bookmarks.selected_date,
-bookmarks.start_hour,
-bookmarks.end_hour
-FROM bookmarks
-INNER JOIN offices_room ON offices_room.room_id = bookmarks.room_id
-INNER JOIN offices ON offices_room.office_id = offices.office_id
-INNER JOIN building_offices ON building_offices.office_id = offices.office_id
-INNER JOIN buildings ON buildings.building_id = building_offices.building_id
-INNER JOIN people ON people.people_id = bookmarks.people_id
-WHERE bookmarks.selected_date = ?
-AND bookmarks.active = " . $active . "
-" . (isset($_GET['marksearch']) ? "AND (
-    people.user LIKE ?
-    OR buildings.building_id = " . $filterValue . "
-    OR buildings.building_name LIKE ?" : "") . "
-)
-UNION ALL
-(SELECT 'room' AS type,
-room.room_id AS id,
-room.room_name AS name,
-room.space AS space,
-NULL AS office_image,
-room.description AS description,
-people.people_id,
-people.user,
-bookmarks.bookmark_id,
-bookmarks.selected_date,
-bookmarks.start_hour,
-bookmarks.end_hour
-FROM bookmarks
-INNER JOIN offices_room ON offices_room.room_id = bookmarks.room_id
-INNER JOIN room ON room.room_id = offices_room.room_id
-INNER JOIN people ON people.people_id = bookmarks.people_id
-WHERE bookmarks.selected_date = ?
-AND bookmarks.active = " . $active . "
-" . (isset($_GET['marksearch']) ? "AND (
-    people.user LIKE ?
-    OR room.room_id = " . $filterValue . "
-    OR room.room_name LIKE ?" : "") . "
-)
-ORDER BY id;
-";
-} else {
   $sql = "
   (SELECT 'office' AS type,
-  offices.office_id AS id,
-  offices.office_name AS name,
-  NULL AS space,
-  offices.office_image AS office_image,
-  offices.description AS description,
-  people.people_id,
-  people.user,
-  bookmarks.bookmark_id,
-  bookmarks.selected_date,
-  bookmarks.start_hour,
-  bookmarks.end_hour
-  FROM bookmark as bookmarks
+          offices.office_id AS id,
+          offices.office_name AS name,
+          NULL AS space,
+          offices.office_image AS office_image,
+          offices.description AS description,
+          people.people_id,
+          people.user,
+          bookmarks.bookmark_id,
+          bookmarks.selected_date,
+          bookmarks.start_hour,
+          bookmarks.end_hour
+  FROM bookmark bookmarks
   INNER JOIN offices_room ON offices_room.room_id = bookmarks.room_id
   INNER JOIN offices ON offices_room.office_id = offices.office_id
   INNER JOIN people ON people.people_id = bookmarks.people_id
   WHERE bookmarks.selected_date = ?
-  AND bookmarks.active = " . $active . ")
-UNION ALL
-(SELECT 'building' AS type,
-buildings.building_id AS id,
-buildings.building_name AS name,
-NULL AS space,
-NULL AS office_image,
-buildings.description AS description,
-people.people_id,
-people.user,
-bookmarks.bookmark_id,
-bookmarks.selected_date,
-bookmarks.start_hour,
-bookmarks.end_hour
-FROM bookmark as bookmarks
-INNER JOIN offices_room ON offices_room.room_id = bookmarks.room_id
-INNER JOIN offices ON offices_room.office_id = offices.office_id
-INNER JOIN building_offices ON building_offices.office_id = offices.office_id
-INNER JOIN buildings ON buildings.building_id = building_offices.building_id
-INNER JOIN people ON people.people_id = bookmarks.people_id
-WHERE bookmarks.selected_date = ?
-AND bookmarks.active = " . $active . ")
-UNION ALL
-(SELECT 'room' AS type,
-room.room_id AS id,
-room.room_name AS name,
-room.space AS space,
-NULL AS office_image,
-room.description AS description,
-people.people_id,
-people.user,
-bookmarks.bookmark_id,
-bookmarks.selected_date,
-bookmarks.start_hour,
-bookmarks.end_hour
-FROM bookmark as bookmarks
-INNER JOIN offices_room ON offices_room.room_id = bookmarks.room_id
-INNER JOIN room ON room.room_id = offices_room.room_id
-INNER JOIN people ON people.people_id = bookmarks.people_id
-WHERE bookmarks.selected_date = ?
-AND bookmarks.active = " . $active . ")
-ORDER BY id;
-";
+  AND bookmarks.active = ?
+  AND " . $sqlType . " = ?
+  " . (isset($_GET['marksearch']) ? "AND (
+      people.user LIKE ?
+      OR offices.office_name LIKE ?" : "") . "
+  )
+  UNION ALL
+  (SELECT 'building' AS type,
+          buildings.building_id AS id,
+          buildings.building_name AS name,
+          NULL AS space,
+          NULL AS office_image,
+          buildings.description AS description,
+          people.people_id,
+          people.user,
+          bookmarks.bookmark_id,
+          bookmarks.selected_date,
+          bookmarks.start_hour,
+          bookmarks.end_hour
+  FROM bookmark bookmarks
+  INNER JOIN offices_room ON offices_room.room_id = bookmarks.room_id
+  INNER JOIN offices ON offices_room.office_id = offices.office_id
+  INNER JOIN building_offices ON building_offices.office_id = offices.office_id
+  INNER JOIN buildings ON buildings.building_id = building_offices.building_id
+  INNER JOIN people ON people.people_id = bookmarks.people_id
+  WHERE bookmarks.selected_date = ?
+  AND bookmarks.active = ?
+  AND " . $sqlType . " = ?
+  " . (isset($_GET['marksearch']) ? "AND (
+      people.user LIKE ?
+      OR buildings.building_name LIKE ?" : "") . "
+  )
+  UNION ALL
+  (SELECT 'room' AS type,
+          room.room_id AS id,
+          room.room_name AS name,
+          room.space AS space,
+          NULL AS office_image,
+          room.description AS description,
+          people.people_id,
+          people.user,
+          bookmarks.bookmark_id,
+          bookmarks.selected_date,
+          bookmarks.start_hour,
+          bookmarks.end_hour
+  FROM bookmark bookmarks
+  INNER JOIN offices_room ON offices_room.room_id = bookmarks.room_id
+  INNER JOIN room ON room.room_id = offices_room.room_id
+  INNER JOIN people ON people.people_id = bookmarks.people_id
+  WHERE bookmarks.selected_date = ?
+  AND bookmarks.active = ?
+  AND " . $sqlType . " = ?
+  " . (isset($_GET['marksearch']) ? "AND (
+      people.user LIKE ?
+      OR room.room_name LIKE ?" : "") . "
+  )
+  ORDER BY id;
+  ";
+} else {
+  $sql = "
+  (SELECT 'office' AS type,
+          offices.office_id AS id,
+          offices.office_name AS name,
+          NULL AS space,
+          offices.office_image AS office_image,
+          offices.description AS description,
+          people.people_id,
+          people.user,
+          bookmarks.bookmark_id,
+          bookmarks.selected_date,
+          bookmarks.start_hour,
+          bookmarks.end_hour
+  FROM bookmark bookmarks
+  INNER JOIN offices_room ON offices_room.room_id = bookmarks.room_id
+  INNER JOIN offices ON offices_room.office_id = offices.office_id
+  INNER JOIN people ON people.people_id = bookmarks.people_id
+  WHERE bookmarks.selected_date = ?
+  AND bookmarks.active = ?)
+  UNION ALL
+  (SELECT 'building' AS type,
+          buildings.building_id AS id,
+          buildings.building_name AS name,
+          NULL AS space,
+          NULL AS office_image,
+          buildings.description AS description,
+          people.people_id,
+          people.user,
+          bookmarks.bookmark_id,
+          bookmarks.selected_date,
+          bookmarks.start_hour,
+          bookmarks.end_hour
+  FROM bookmark bookmarks
+  INNER JOIN offices_room ON offices_room.room_id = bookmarks.room_id
+  INNER JOIN offices ON offices_room.office_id = offices.office_id
+  INNER JOIN building_offices ON building_offices.office_id = offices.office_id
+  INNER JOIN buildings ON buildings.building_id = building_offices.building_id
+  INNER JOIN people ON people.people_id = bookmarks.people_id
+  WHERE bookmarks.selected_date = ?
+  AND bookmarks.active = ?)
+  UNION ALL
+  (SELECT 'room' AS type,
+          room.room_id AS id,
+          room.room_name AS name,
+          room.space AS space,
+          NULL AS office_image,
+          room.description AS description,
+          people.people_id,
+          people.user,
+          bookmarks.bookmark_id,
+          bookmarks.selected_date,
+          bookmarks.start_hour,
+          bookmarks.end_hour
+  FROM bookmark bookmarks
+  INNER JOIN offices_room ON offices_room.room_id = bookmarks.room_id
+  INNER JOIN room ON room.room_id = offices_room.room_id
+  INNER JOIN people ON people.people_id = bookmarks.people_id
+  WHERE bookmarks.selected_date = ?
+  AND bookmarks.active = ?)
+  ORDER BY id;
+  ";
 }
+
+
 
 $stmt = $conn->prepare($sql);
 
+
 if (isset($_GET['marksearch'])) {
   $search = '%' . $_GET['marksearch'] . '%';
-  $stmt->bind_param("ssssss", $selectedDate, $search, $search, $search, $search, $search);
+  if (!is_null($filterType) && !is_null($filterValue)) {
+      $stmt->bind_param("sisissisissisissis", $selectedDate, $active, $filterValue, $search, $search, $selectedDate, $active, $filterValue, $search, $search, $selectedDate, $active, $filterValue, $search, $search);
+  } else {
+      $stmt->bind_param("sssssssss", $selectedDate, $active, $search, $search, $selectedDate, $active, $search, $search, $selectedDate);
+  }
 } else {
-  $stmt->bind_param("sss", $selectedDate, $selectedDate, $selectedDate);
+  if (!is_null($filterType) && !is_null($filterValue)) {
+      $stmt->bind_param("sisisisis", $selectedDate, $active, $filterValue, $selectedDate, $active, $filterValue, $selectedDate, $active, $filterValue);
+  } else {
+    $stmt->bind_param("sisisi", $selectedDate, $active, $selectedDate, $active, $selectedDate, $active);
+  }
 }
 
 // Execute the query and fetch the results

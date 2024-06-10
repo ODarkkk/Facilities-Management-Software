@@ -1,6 +1,6 @@
 <?php
 // Connect to the database
-require_once 'config.php';
+include_once ("config.php");
 if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
   header("location: logout.php");
   exit(); // Ensure script stops after redirect
@@ -18,10 +18,11 @@ if ($stmt->execute()) {
   echo 'success';
 } else {
   echo 'error';
-  sleep(30);
-  header("location user.php");
-
-;
 }
-
-
+sleep(30);
+// echo '<script>',
+// 'goback();',
+// '</script>'
+// ;
+header("location user.php");
+?>

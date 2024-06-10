@@ -1,7 +1,7 @@
 <?php
 include_once 'config.php';
 if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
-    header("location: logout.php");
+    include_once ("config.php");
     exit(); // Ensure script stops after redirect
 }
 $id = $_GET['id'];

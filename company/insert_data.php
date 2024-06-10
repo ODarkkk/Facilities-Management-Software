@@ -1,5 +1,5 @@
 <?php
-include_once('config.php');
+include_once ("config.php");
 if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
   header("location: logout.php");
   exit(); // Ensure script stops after redirect
@@ -38,3 +38,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     }
 
 }
+// echo '<script>',
+//     'goback();',
+//     '</script>';
+header("location user.php");
+
+?>

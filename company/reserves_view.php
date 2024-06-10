@@ -1,5 +1,5 @@
 <?php
-include_once 'config.php';
+include_once ("config.php");
 // Redirect to login page if the user is not logged in
 if (!isset($_SESSION['user_id'])) {
   header("location: login.php");
@@ -49,8 +49,7 @@ if (!isset($_SESSION['user_id'])) {
                 <a class="nav-link" href="./index.php">Home</a>
                 <a class="nav-link" href="./reserves.php">Reserves</a>
                 <a class="nav-link" href="./user.php">Users</a>
-                <a class="nav-link" href="./installations.php.php">installations</a>
-                
+                <a class="nav-link" href="./installations.php">Installations</a>                
                 <?php
 
                 if ($_SESSION['admin'] == 1) {

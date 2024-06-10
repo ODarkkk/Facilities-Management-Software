@@ -65,8 +65,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute();
     }
 }
-echo '<script>',
-'goback();',
-'</script>'
-;// Retrieve department options
+// echo '<script>',
+// 'goback();',
+// '</script>'
+header("location new_user.php");
+// Retrieve department options
 ?>

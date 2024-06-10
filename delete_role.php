@@ -7,7 +7,8 @@ $sql = "DELETE FROM roles_department WHERE roles_department_id = $id";
 $conn->query($sql);
 
 // Redirect back to the original page
-echo '<script>',
-    'goback();',
-    '</script>';
+// echo '<script>',
+//     'goback();',
+//     '</script>';
+header("location user.php");
 exit;

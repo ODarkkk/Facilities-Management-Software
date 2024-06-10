@@ -14,8 +14,10 @@ if ($stmt->execute()) {
 } else {
     echo "Error deleting record: " . $conn->error;
 }
-echo '<script>',
-'goback();',
-'</script>'
-;
+// echo '<script>',
+// 'goback();',
+// '</script>'
+// ;
+header("location user.php");
+
 ?>

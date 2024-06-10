@@ -21,6 +21,7 @@ if (isset($_GET["officeSelect"])) {
   room.room_name,
   room.room_id,
   room.description,
+  room.space,
   bookmarks.bookmark_id,
   bookmarks.selected_date, 
   bookmarks.start_hour,

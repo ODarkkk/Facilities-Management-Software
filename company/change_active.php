@@ -19,9 +19,8 @@ if ($stmt->execute()) {
 } else {
   echo 'error';
   sleep(30);
-  echo '<script>',
-     'goback();',
-     '</script>'
+  header("location user.php");
+
 ;
 }
 

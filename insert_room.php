@@ -10,7 +10,9 @@ $stmt->bind_param("sss", $_POST['room_name'], $_POST['space'], $_POST['descripti
 $stmt->execute();
 
 }
-echo '<script>',
-    'goback();',
-    '</script>';
+// echo '<script>',
+//     'goback();',
+//     '</script>';
+header("location user.php");
+
 ?>

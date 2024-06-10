@@ -20,8 +20,9 @@ if ($stmt->execute()) {
   echo 'error';
 }
 sleep(30);
-echo '<script>',
-'goback();',
-'</script>'
-;
+// echo '<script>',
+// 'goback();',
+// '</script>'
+// ;
+header("location user.php");
 ?>

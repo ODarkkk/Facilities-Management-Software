@@ -37,6 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Redirect the user to the office list page
 
 }
-echo '<script>',
-'goback();',
-'</script>';
+// echo '<script>',
+// 'goback();',
+// '</script>';
+header("location user.php");
+?>

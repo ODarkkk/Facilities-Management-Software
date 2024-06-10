@@ -18,6 +18,6 @@ if ($stmt->execute()) {
 // 'goback();',
 // '</script>'
 // ;
-header("location user.php");
+header("location installations.php");
 
 ?>

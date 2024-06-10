@@ -41,6 +41,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 // echo '<script>',
 //     'goback();',
 //     '</script>';
-header("location user.php");
+header("location roles.php");
 
 ?>

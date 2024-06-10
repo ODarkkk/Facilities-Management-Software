@@ -10,5 +10,5 @@ $conn->query($sql);
 // echo '<script>',
 //     'goback();',
 //     '</script>';
-header("location user.php");
+header("location roles.php");
 exit;

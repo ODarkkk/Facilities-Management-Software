@@ -55,7 +55,7 @@ if (!isset($_SESSION['user_id'])) {
     function confirmAction(username, $userId) {
       var result = confirm('Are you sure you want to edit ' + username + '?');
       if (result) {
-        window.location.href = 'new_user.php?userId=' + $userId;
+        window.location.href = 'new_user.php?userid=' + $userId;
       }
     }
 

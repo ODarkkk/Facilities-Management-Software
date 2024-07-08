@@ -58,10 +58,11 @@ if ($result->num_rows > 0) {
         }
         if ($_SESSION['admin'] == 1) {
 
-            $btt = '<button type="button" class="btn btn-primary" onclick="confirmAction(\'' . $row["user"] . $row["people_id"] . '\')">Edit</button>' .
-                '<button class="btn ' . ($row["active"] == 1 ? 'btn-danger' : 'btn-secondary') . '"
-              onclick="return confirm(\'Are you sure you want to change the active status of ' . $row["user"] . '?\') && changeActiveStatus(' . $row["people_id"] . ', ' . ($row["active"] == 1 ? 0 : 1) . ')">' .
-                ($row["active"] == 1 ? 'Active' : 'Don\'t Active') . ' </button>';
+            $btt = '<button type="button" class="btn btn-primary" onclick="confirmAction(\'' . htmlspecialchars($row["user"]) . '\', ' . $row["people_id"] . ')">Edit</button>' .
+            '<button class="btn ' . ($row["active"] == 1 ? 'btn-danger' : 'btn-secondary') . '"
+             onclick="return confirm(\'Are you sure you want to change the active status of ' . $row["user"] . '?\') && changeActiveStatus(' . $row["people_id"] . ', ' . ($row["active"] == 1 ? 0 : 1) . ')">' .
+            ($row["active"] == 1 ? 'Active' : 'Don\'t Active') . '</button>';
+
         }
         echo '<div class="col-md-4">' .
             '<div class="card mb-4">' .

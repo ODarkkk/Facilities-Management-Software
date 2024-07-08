@@ -1,6 +1,6 @@
 <?php
 // Include the database configuration file
-include_once('config.php');
+include_once("config.php");
 
 // Query to fetch buildings
 $sql = "SELECT building_id, building_name, description FROM buildings";

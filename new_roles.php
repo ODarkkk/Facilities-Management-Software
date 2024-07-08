@@ -72,7 +72,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
     <div class="container mt-5">
         <div class="container mt-5">
             <h1 class="text-center">New Department or Role</h1>
-            <form action="/insert_data.php" method="post">
+            <form action="insert_data.php" method="post">
                 <div class="row">
                     <div class="col-md-6">
                         <h2 class="text-center">New Department</h2>
@@ -95,7 +95,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
         </div>
         <div class="container mt-5 me-5">
             <h1 class="text-center">Assign Role to Department</h1>
-            <form action="/assign_role.php" method="post">
+            <form action="assign_role.php" method="post">
                 <div class="row">
                     <div class="col-md-4">
                         <div class="mb-3"> <label for="department_id" class="form-label">Department</label> <select class="form-select" id="department_id" name="department_id" required>
@@ -111,7 +111,7 @@ if (!isset($_SESSION['user_id']) && $_SESSION['admin'] != 1) {
                     <div class="col-md-4">
                         <div class="mb-3"> <label for="role_id" class="form-label">Role</label> <select class="form-select" id="role_id" name="role_id" required>
                                 <?php
-                                $sql = "SELECT * from roles";
+                                $sql = "SELECT * from roles ORDER BY role ASC";
                                 $result = mysqli_query($conn, $sql);
                                 while ($row = mysqli_fetch_array($result)) {
                                     echo "<option value='" . $row['role_id'] . "'>" . $row['role'] . "</option>";

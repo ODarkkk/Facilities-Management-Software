@@ -8,16 +8,16 @@ $edit = false;
 $error_message = "";
 $role = null;
 $selected = null; //pre select the values 
-if (isset($_GET['userId'])) {
+if (isset($_GET['userid'])) {
     $edit = true;
-    $id = $_GET['userId'];
+    $id = $_GET['userid'];
 
     // Prepare query with parameterized query
     $stmt = $conn->prepare("SELECT p.people_id, p.user, p.name, rd.roles_department_id, d.department, r.role, p.photo, p.email, p.phone, p.admin, p.password_status, p.active 
     FROM people p 
-    JOIN roles_department rd ON rd.roles_department_id = p.role_department_id 
-    JOIN department d ON d.department_id = rd.department_id 
-    JOIN roles r ON r.role_id = rd.role_id
+    LEFT JOIN roles_department rd ON rd.roles_department_id = p.role_department_id 
+    LEFT JOIN department d ON d.department_id = rd.department_id 
+    LEFT JOIN roles r ON r.role_id = rd.role_id
     WHERE p.people_id =?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
@@ -225,12 +225,10 @@ if (isset($_POST['submit'])) {
                 </div>
                 <div class="col-md-6">
                     <label for="photo" class="form-label">Photo</label>
-                    <input type="file" class="form-control custom-input" name="photo" id="photo" value="<?php if ($edit) {
-                                                                                                            echo $row['photo'];
-                                                                                                        } ?>" required>
+                    <input type="file" class="form-control custom-input" name="photo" id="photo" value="">
                 </div>
                 <?php
-                if ($edit == false) {
+                if ($edit) {
                 ?>
                     <div class="col-md-6">
                         <label for="nationality" class="form-label">Nationality</label>

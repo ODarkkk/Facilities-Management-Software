@@ -10,12 +10,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['name'];
     $description = $_POST['description'];
     $image = $_POST['image'];
-    $building_id = $POST['building_id'];
+    $building_id = $_POST['building_id'];
     $room_id = $_POST['room_id'];
 
-    $sql = "UPDATE office SET office_name=?, description=?, office_image=? WHERE office_id=?";
+    // Atualizar a tabela offices
+    $sql = "UPDATE offices SET office_name=?, description=?, office_image=? WHERE office_id=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssbi", $name, $description, $image, $id);
+    $stmt->bind_param("ssbi", $name, $description, $image, $id);
 
     if ($stmt->execute()) {
         echo '<div class="alert alert-success" role="alert">Record updated successfully</div>';
@@ -24,15 +25,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Atualizar a associação na tabela buildings_offices
-    $sql = "UPDATE buildings_offices SET office_id=? WHERE building_id=?";
+    $sql = "UPDATE building_offices SET office_id=? WHERE building_id=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ii", $id,  $building_id);
+    $stmt->bind_param("ii", $id, $building_id);
 
     if ($stmt->execute()) {
         echo '<div class="alert alert-success" role="alert">Office association updated successfully</div>';
     } else {
         echo '<div class="alert alert-danger" role="alert">Error updating office association: ' . $conn->error . '</div>';
     }
+
     // Atualizar a associação na tabela offices_room
     $sql = "UPDATE offices_room SET office_id=? WHERE room_id=?";
     $stmt = $conn->prepare($sql);
@@ -160,7 +162,7 @@ if ($result->num_rows > 0) {
                             </div>
                             <div class="mb-3">
                                 <label for="space" class="form-label">Image</label>
-                                <input type="number" class="form-control" id="image" name="image" value="<?php echo $row['office_image']; ?>">
+                                <input type="file" class="form-control" id="image" name="image" value="">
                             </div>
                             <div class="mb-3">
                                 <label for="office" class="form-label">Building</label>

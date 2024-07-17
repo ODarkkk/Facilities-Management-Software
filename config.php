@@ -9,16 +9,12 @@ session_start([
 
 //     echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
 // }
-$servername = "rpx.h.filess.io";
-$username = "company_exacthair";
-$password = "407b8f9ebcb9893194d57c8e2e1cfaf370a62935";
-$dbname = "company_exacthair";
-$port = 3305;
+$servername = "SERVERNAME";
+$username = "USERNAME";
+$password = "PASSWORD";
+$dbname = "DATABASE";
+$port = 0000;
 
-// $servername = "localhost";
-// $username = "DAnastacio";
-// $password = "123";
-// $dbname = "company";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname, $port);

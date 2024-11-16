@@ -155,10 +155,10 @@ CREATE TABLE `people` (
 -- Extraindo dados da tabela `people`
 --
 
-INSERT INTO `people` (`id`, `user`, `name`, `date of birth`, `department_id`, `photo`, `password`, `email`, `phone`, `nationality`, `admin`, `password_status`, `active`) VALUES
+INSERT INTO `people` (`id`, `user`, `name`, `date of birth`, `department_id`, `photo`, `password`, `email`, `nationality`, `admin`, `password_status`, `active`) VALUES
 (1, 'john_doe', 'John Doe', '0000-00-00', 1, NULL, '123', 'john.doe@example.com', '1234567890', '', 1, 0, 0),
 (2, 'jane_smith', 'Jane Smith', '0000-00-00', 2, NULL, 'hashed_password', 'jane.smith@example.com', '9876543210', '', 0, 0, 0),
-(3, 'DAnastacio', 'Diogo Ferreira Anastácio', '0000-00-00', 1, NULL, '123456789', 'diogo.anastacio.30473@esgc.pt', '962187271', '', 1, 0, 0);
+(3, 'DAnastacio', 'Diogo Ferreira Anastácio', '0000-00-00', 1, NULL, '123456789', 'diogo.anastacio.30473@esgc.pt', '', 1, 0, 0);
 
 -- --------------------------------------------------------
 

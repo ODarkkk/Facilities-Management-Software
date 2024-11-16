@@ -218,7 +218,7 @@ CREATE TABLE `people` (
 
 LOCK TABLES `people` WRITE;
 /*!40000 ALTER TABLE `people` DISABLE KEYS */;
-INSERT INTO `people` VALUES (3,'DAnastacio','Diogo Ferreira Anastácio','0000-00-00',1,NULL,'123456789','diogo.anastacio.30473@esgc.pt','962187271','',1,0,0);
+INSERT INTO `people` VALUES (3,'DAnastacio','Diogo Ferreira Anastácio','0000-00-00',1,NULL,'123456789','diogo.anastacio.30473@esgc.pt','',1,0,0);
 /*!40000 ALTER TABLE `people` ENABLE KEYS */;
 UNLOCK TABLES;
 
